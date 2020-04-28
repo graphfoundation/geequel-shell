@@ -1,5 +1,6 @@
 package org.neo4j.shell.commands;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -130,23 +131,24 @@ public class CypherShellVerboseIntegrationTest extends CypherShellIntegrationTes
     public void commitScenario() throws CommandException {
         beginCommand.execute("");
         shell.execute("CREATE (:TestPerson {name: \"Joe Smith\"})");
-        assertThat(linePrinter.output(), equalTo(""));
-        // Here ^^ we assert that nothing is printed before commit on explicit transactions. This was
-        // existing behaviour on typing this comment, but it could we worth thinking that through if
-        // we change explicit transaction queries to stream results.
+        // Here we assert that text is printed before commit on explicit transactions.
+        assertThat(StringUtils.split( linePrinter.output(), '\n').length, equalTo( 2 ));
+        assertThat(linePrinter.output(), containsString("\nAdded 1 nodes, Set 1 properties, Added 1 labels\n"));
 
-        shell.execute("CREATE (:TestPerson {name: \"Jane Smith\"})");
-        assertThat(linePrinter.output(), equalTo(""));
+        shell.execute("CREATE (:TestPerson {name: \"Jane Smith\", born: 1990})");
+        assertThat(StringUtils.split( linePrinter.output(), '\n').length, equalTo( 4 ));
+        assertThat(linePrinter.output(), containsString( "\nAdded 1 nodes, Set 2 properties, Added 1 labels\n"));
 
         shell.execute("MATCH (n:TestPerson) RETURN n ORDER BY n.name");
-        assertThat(linePrinter.output(), equalTo(""));
+        assertThat(linePrinter.output(),
+                   containsString("\n| (:TestPerson {name: \"Jane Smith\", born: 1990}) |\n| (:TestPerson {name: \"Joe Smith\"})              |\n"));
 
         commitCommand.execute("");
 
-        //then
+        // then
         String result = linePrinter.output();
         assertThat(result,
-                containsString("\n| (:TestPerson {name: \"Jane Smith\"}) |\n| (:TestPerson {name: \"Joe Smith\"})  |\n"));
+                    containsString("\n| (:TestPerson {name: \"Jane Smith\", born: 1990}) |\n| (:TestPerson {name: \"Joe Smith\"})              |\n" ));
     }
 
     @Test
