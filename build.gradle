@@ -24,7 +24,7 @@ allprojects {
         systemProperty 'file.encoding', 'UTF-8'
     }
 
-    group = 'org.neo4j.shell'
+    group = 'org.graphfoundation.ongdb.shell'
     version = '1.0.0-SNAPSHOT'
 
     repositories {
@@ -58,7 +58,7 @@ subprojects {
 }
 
 ext {
-    // Only match tags starting with a number to avoid neo4j-xxx changelog tags
+    // Only match tags starting with a number to avoid ongdb-xxx changelog tags
     gitVersion = 'git describe --tags --match [0-9]*'.execute([], project.rootDir).text.trim()
 
     if (project.hasProperty('buildVersion')) {

@@ -4,4 +4,4 @@ COPY ${RPMFILE} /tmp/
 
 RUN yum --assumeyes install /tmp/${RPMFILE}
 
-ENTRYPOINT ["/usr/bin/cypher-shell"]
+ENTRYPOINT ["/usr/bin/geequel-shell"]

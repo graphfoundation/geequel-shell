@@ -102,7 +102,7 @@ public class CliArgHelper {
             // Match behavior in built-in error handling
             PrintWriter printWriter = new PrintWriter(System.err);
             parser.printUsage(printWriter);
-            printWriter.println("cypher-shell: error: Failed to parse address: '" + address + "'");
+            printWriter.println("geequel-shell: error: Failed to parse address: '" + address + "'");
             printWriter.println("\n  Address should be of the form: [scheme://][username:password@][host][:port]");
             printWriter.flush();
             return null;
@@ -112,13 +112,13 @@ public class CliArgHelper {
 
     private static ArgumentParser setupParser()
     {
-        ArgumentParser parser = ArgumentParsers.newArgumentParser( "cypher-shell" ).defaultHelp( true ).description(
+        ArgumentParser parser = ArgumentParsers.newArgumentParser( "geequel-shell" ).defaultHelp( true ).description(
                 format( "A command line shell where you can execute Cypher against an instance of Neo4j. " +
                         "By default the shell is interactive but you can use it for scripting by passing cypher " +
                         "directly on the command line or by piping a file with cypher statements (requires Powershell on Windows)." +
                         "%n%n" +
                         "example of piping a file:%n" +
-                        "  cat some-cypher.txt | cypher-shell" ) );
+                        "  cat some-cypher.txt | geequel-shell" ) );
 
         ArgumentGroup connGroup = parser.addArgumentGroup("connection arguments");
         connGroup.addArgument("-a", "--address")
@@ -179,7 +179,7 @@ public class CliArgHelper {
                 .setDefault(true);
 
         parser.addArgument("-v", "--version")
-                .help("print version of cypher-shell and exit")
+                .help("print version of geequel-shell and exit")
                 .action(new StoreTrueArgumentAction());
 
         parser.addArgument("--driver-version")

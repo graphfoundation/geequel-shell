@@ -148,8 +148,8 @@ public class CliArgHelperTest {
 
         assertNull(cliargs);
 
-        assertTrue(bout.toString().contains("cypher-shell [-h]"));
-        assertTrue(bout.toString().contains("cypher-shell: error: unrecognized arguments: '-notreally'"));
+        assertTrue(bout.toString().contains("geequel-shell [-h]"));
+        assertTrue(bout.toString().contains("geequel-shell: error: unrecognized arguments: '-notreally'"));
     }
 
     @Test
@@ -162,9 +162,9 @@ public class CliArgHelperTest {
         assertNull("should have failed", cliargs);
 
         assertTrue("expected usage: " + bout.toString(),
-                bout.toString().contains("cypher-shell [-h]"));
+                bout.toString().contains("geequel-shell [-h]"));
         assertTrue("expected error: " + bout.toString(),
-                bout.toString().contains("cypher-shell: error: Failed to parse address"));
+                bout.toString().contains("geequel-shell: error: Failed to parse address"));
         assertTrue("expected error detail: " + bout.toString(),
                 bout.toString().contains("\n  Address should be of the form:"));
     }

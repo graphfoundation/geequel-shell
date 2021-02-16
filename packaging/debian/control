@@ -1,15 +1,15 @@
-Source: cypher-shell
+Source: geequel-shell
 Section: database
 Priority: extra
-Maintainer: Neo Technology <debian@neotechnology.com>
+Maintainer: Graph Foundation, Inc. <debian@graphfoundation.org>
 Build-Depends: debhelper (>=9), pandoc
 Standards-Version: 3.9.4
-Homepage: http://neo4j.org/
+Homepage: https://graphfoundation.org/
 
-Package: cypher-shell
+Package: geequel-shell
 Architecture: all
 Depends: ${misc:Depends}, openjdk-8-jre-headless | java8-runtime-headless | openjdk-11-jre-headless | java11-runtime-headless
-Replaces: neo4j (<< 3.1.4), neo4j-enterprise (<< 3.1.4)
-Breaks: neo4j (<< 3.1.4), neo4j-enterprise (<< 3.1.4)
-Description: command line shell for neo4j
- Cypher-shell is a command line shell for Neo4j.
+Replaces: ongdb (<< 1.0.0), ongdb-enterprise (<< 1.0.0)
+Breaks: ongdb (<< 1.0.0), ongdb-enterprise (<< 1.0.0)
+Description: command line shell for ongdb
+ Geequel-shell is a command line shell for ONgDB.

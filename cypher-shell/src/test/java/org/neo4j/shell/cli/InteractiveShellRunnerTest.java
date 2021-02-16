@@ -69,7 +69,7 @@ public class InteractiveShellRunnerTest {
         historyFile = temp.newFile();
         badLineError = new ClientException("Found a bad line");
         userMessagesHandler = mock(UserMessagesHandler.class);
-        when(userMessagesHandler.getWelcomeMessage()).thenReturn("Welcome to cypher-shell!");
+        when(userMessagesHandler.getWelcomeMessage()).thenReturn("Welcome to geequel-shell!");
         when(userMessagesHandler.getExitMessage()).thenReturn("Exit message");
 
         doThrow(badLineError).when(cmdExecuter).execute(contains("bad"));
@@ -326,7 +326,7 @@ public class InteractiveShellRunnerTest {
         runner.runUntilEnd();
 
         // then
-        verify(logger).printIfVerbose("Welcome to cypher-shell!");
+        verify(logger).printIfVerbose("Welcome to geequel-shell!");
         verify(logger).printIfVerbose("Exit message");
     }
 

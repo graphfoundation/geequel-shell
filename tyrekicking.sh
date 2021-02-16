@@ -1,20 +1,20 @@
 #!/bin/bash -eu
-# Should be run in the out folder, containing cypher-shell.zip
+# Should be run in the out folder, containing geequel-shell.zip
 
 function prepare {
-  unzip cypher-shell.zip
+  unzip geequel-shell.zip
 }
 
 function prepare-bundle {
-  mkdir -p cypher-shell/tools
-  mv cypher-shell/*.jar cypher-shell/tools
+  mkdir -p geequel-shell/tools
+  mv geequel-shell/*.jar geequel-shell/tools
 }
 
 function testscript {
   # first try with encryption on (3.X series), if that fails with encryption of (4.X series)
-  if cypher-shell/cypher-shell -u neo4j -p neo --encryption true "RETURN 1;"; then
+  if geequel-shell/geequel-shell -u ongdb -p owengee --encryption true "RETURN 1;"; then
     echo "$1 Success!"
-  elif cypher-shell/cypher-shell -u neo4j -p neo --encryption false "RETURN 1;"; then
+  elif geequel-shell/geequel-shell -u ongdb -p owengee --encryption false "RETURN 1;"; then
     echo "$1 Success!"
   else
     echo "$1 Failure!"

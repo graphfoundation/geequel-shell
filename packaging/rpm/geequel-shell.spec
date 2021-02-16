@@ -1,11 +1,11 @@
-Name: cypher-shell
+Name: geequel-shell
 Version: ${VERSION}
 Release: ${RELEASE}%{?dist}
-Summary: Command line shell for Neo4j
+Summary: Command line shell for ONgDB
 
 License: GPLv3
-URL: https://github.com/neo4j/cypher-shell
-Source0: https://github.com/neo4j/cypher-shell/archive/%{version}.tar.gz
+URL: https://github.com/graphfoundation/geequel-shell
+Source0: https://github.com/graphfoundation/geequel-shell/archive/%{version}.tar.gz
 
 #Conflicts:
 Requires: which, jre == 1.8.0
@@ -13,8 +13,8 @@ BuildArch: noarch
 Prefix: /usr
 
 %description
-A command line shell where you can execute Cypher against an instance
-of Neo4j.
+A command line shell where you can execute Geequel against an instance
+of ONgDB.
 
 %prep
 # This macro will unpack the tarball into the appropriate build directory
@@ -33,6 +33,6 @@ rm -rf ${RPM_BUILD_ROOT}
 
 %files
 %defattr(-,root,root)
-%{_bindir}/cypher-shell
-%{_datadir}/cypher-shell
-%doc %{_mandir}/man1/cypher-shell.1.gz
+%{_bindir}/geequel-shell
+%{_datadir}/geequel-shell
+%doc %{_mandir}/man1/geequel-shell.1.gz

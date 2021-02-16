@@ -1,7 +1,7 @@
 @if "%DEBUG%" == "" @echo off
 @rem ##########################################################################
 @rem
-@rem  cypher-shell startup script for Windows
+@rem  geequel-shell startup script for Windows
 @rem
 @rem ##########################################################################
 
@@ -71,9 +71,9 @@ set CMD_LINE_ARGS=%$
 
 SETLOCAL EnableDelayedExpansion
 SET CYPHER_SHELL_JAR=
-FOR /f "delims=" %%a in ('dir "%NEO4J_HOME%\cypher-shell.jar" /s/b') do set CYPHER_SHELL_JAR=!CYPHER_SHELL_JAR!%%a
+FOR /f "delims=" %%a in ('dir "%NEO4J_HOME%\geequel-shell.jar" /s/b') do set CYPHER_SHELL_JAR=!CYPHER_SHELL_JAR!%%a
 
-@rem Execute cypher-shell
+@rem Execute geequel-shell
 "%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %CYPHER_SHELL_OPTS%  -jar "%CYPHER_SHELL_JAR%" %CMD_LINE_ARGS%
 
 :end

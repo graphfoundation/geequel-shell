@@ -1,5 +1,5 @@
-cypher-shell (${VERSION})  ${DISTRIBUTION}; urgency=low
+geequel-shell (${VERSION})  ${DISTRIBUTION}; urgency=low
 
-  * See https://github.com/neo4j/cypher-shell/releases for more details.
+  * See https://github.com/graphfoundation/geequel-shell/releases for more details.
 
- -- Neo Technology <debian@neotechnology.com>  ${DATE}
+ -- Graph Foundation, Inc. <debian@graphfoundation.org>  ${DATE}

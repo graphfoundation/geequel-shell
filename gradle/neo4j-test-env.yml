@@ -1,6 +1,6 @@
 version: '2'
 services:
-  neo4j:
+  ongdb:
     build: ./neo4j-container
     ports:
       - "7687:7687"

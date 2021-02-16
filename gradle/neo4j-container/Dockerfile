@@ -1,6 +1,5 @@
-RUN echo "Neo4j docker image: %%neo4j-docker-image%%"
+RUN echo "ONgDB docker image: %%ongdb-docker-image%%"
 
-FROM %%neo4j-docker-image%%
+FROM %%ongdb-docker-image%%
 
-ENV NEO4J_AUTH=neo4j/neo \
-    NEO4J_ACCEPT_LICENSE_AGREEMENT=yes
+ENV ONGDB_AUTH=ongdb/owengee
