@@ -70,8 +70,8 @@ public class CliArgHelper {
         }
 
         // Other arguments
-        // cypher string might not be given, represented by null
-        cliArgs.setCypher(ns.getString("cypher"));
+        // geequel string might not be given, represented by null
+        cliArgs.setCypher(ns.getString("geequel"));
         // Fail behavior as sensible default and returns a proper type
         cliArgs.setFailBehavior(ns.get("fail-behavior"));
 
@@ -102,7 +102,7 @@ public class CliArgHelper {
             // Match behavior in built-in error handling
             PrintWriter printWriter = new PrintWriter(System.err);
             parser.printUsage(printWriter);
-            printWriter.println("cypher-shell: error: Failed to parse address: '" + address + "'");
+            printWriter.println("geequel-shell: error: Failed to parse address: '" + address + "'");
             printWriter.println("\n  Address should be of the form: [scheme://][username:password@][host][:port]");
             printWriter.flush();
             return null;
@@ -112,13 +112,13 @@ public class CliArgHelper {
 
     private static ArgumentParser setupParser()
     {
-        ArgumentParser parser = ArgumentParsers.newArgumentParser( "cypher-shell" ).defaultHelp( true ).description(
-                format( "A command line shell where you can execute Cypher against an instance of Neo4j. " +
-                        "By default the shell is interactive but you can use it for scripting by passing cypher " +
-                        "directly on the command line or by piping a file with cypher statements (requires Powershell on Windows)." +
+        ArgumentParser parser = ArgumentParsers.newArgumentParser( "geequel-shell" ).defaultHelp( true ).description(
+                format( "A command line shell where you can execute Geequel against an instance of ONgDB. " +
+                        "By default the shell is interactive but you can use it for scripting by passing Geequel " +
+                        "directly on the command line or by piping a file with Geequel statements (requires Powershell on Windows)." +
                         "%n%n" +
                         "example of piping a file:%n" +
-                        "  cat some-cypher.txt | cypher-shell" ) );
+                        "  cat some-geequel.txt | geequel-shell" ) );
 
         ArgumentGroup connGroup = parser.addArgumentGroup("connection arguments");
         connGroup.addArgument("-a", "--address")
@@ -126,12 +126,12 @@ public class CliArgHelper {
                 .setDefault("bolt://localhost:7687");
         connGroup.addArgument("-u", "--username")
                 .setDefault("")
-                .help("username to connect as. Can also be specified using environment variable NEO4J_USERNAME");
+                .help("username to connect as. Can also be specified using environment variable ONGDB_USERNAME");
         connGroup.addArgument("-p", "--password")
                 .setDefault("")
-                .help("password to connect with. Can also be specified using environment variable NEO4J_PASSWORD");
+                .help("password to connect with. Can also be specified using environment variable ONGDB_PASSWORD");
         connGroup.addArgument("--encryption")
-                .help("whether the connection to Neo4j should be encrypted; must be consistent with Neo4j's " +
+                .help("whether the connection to ONgDB should be encrypted; must be consistent with ONgDB's " +
                         "configuration")
                 .type(new BooleanArgumentType())
                 .setDefault(true);
@@ -174,22 +174,22 @@ public class CliArgHelper {
                 .setDefault(CliArgs.DEFAULT_NUM_SAMPLE_ROWS);
 
         parser.addArgument("--wrap")
-                .help("wrap table colum values if column is too narrow (only for format=VERBOSE)")
+                .help("wrap table column values if column is too narrow (only for format=VERBOSE)")
                 .type(new BooleanArgumentType())
                 .setDefault(true);
 
         parser.addArgument("-v", "--version")
-                .help("print version of cypher-shell and exit")
+                .help("print version of geequel-shell and exit")
                 .action(new StoreTrueArgumentAction());
 
         parser.addArgument("--driver-version")
-                .help("print version of the Neo4j Driver used and exit")
+                .help("print version of the ONgDB Driver used and exit")
                 .dest("driver-version")
                 .action(new StoreTrueArgumentAction());
 
-        parser.addArgument("cypher")
+        parser.addArgument("geequel")
                 .nargs("?")
-                .help("an optional string of cypher to execute and then exit");
+                .help("an optional string of geequel to execute and then exit");
 
         return parser;
     }
