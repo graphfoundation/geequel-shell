@@ -36,13 +36,7 @@ public class UserMessagesHandler {
 
     @Nonnull
     public String getWelcomeMessage() {
-        String ongdb = "ONgDB";
-        if (!serverVersion.isEmpty()) {
-            ongdb += " " + serverVersion;
-        }
-        AnsiFormattedText welcomeMessage = AnsiFormattedText.from("Connected to ")
-                                                            .append(ongdb)
-                                                            .append(" at ")
+        AnsiFormattedText welcomeMessage = AnsiFormattedText.from("Connected to ONgDB at ")
                                                             .bold().append(connectionConfig.driverUrl()).boldOff();
 
         if (!connectionConfig.username().isEmpty()) {
