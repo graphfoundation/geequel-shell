@@ -74,7 +74,7 @@ public class CypherShell implements StatementExecuter, Connector, TransactionHan
 
         // Else it will be parsed as Cypher, but for that we need to be connected
         if (!isConnected()) {
-            throw new CommandException("Not connected to Neo4j");
+            throw new CommandException("Not connected to ONgDB");
         }
 
         executeCypher(cmdString);
@@ -120,7 +120,7 @@ public class CypherShell implements StatementExecuter, Connector, TransactionHan
     }
 
     /**
-     * Open a session to Neo4j
+     * Open a session to ONgDB
      *
      * @param connectionConfig
      */

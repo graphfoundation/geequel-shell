@@ -119,7 +119,7 @@ public class CypherShellTest {
     @Test
     public void executeOfflineThrows() throws CommandException {
         thrown.expect(CommandException.class);
-        thrown.expectMessage("Not connected to Neo4j");
+        thrown.expectMessage("Not connected to ONgDB");
 
         OfflineTestShell shell = new OfflineTestShell(logger, mockedBoltStateHandler, mockedPrettyPrinter);
         when(mockedBoltStateHandler.isConnected()).thenReturn(false);
