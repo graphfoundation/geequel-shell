@@ -380,7 +380,7 @@ public class MainTest {
         ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
 
         verify(printStream).println(argument.capture());
-        assertTrue(argument.getValue().matches("Cypher-Shell \\d+\\.\\d+\\.\\d+.*"));
+        assertTrue(argument.getValue().matches("Geequel-Shell \\d+\\.\\d+\\.\\d+.*"));
     }
 
     @Test
@@ -396,6 +396,6 @@ public class MainTest {
         ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
 
         verify(printStream).println(argument.capture());
-        assertTrue(argument.getValue().matches("Neo4j Driver \\d+\\.\\d+\\.\\d+.*"));
+        assertTrue(argument.getValue().matches("ONgDB Driver \\d+\\.\\d+\\.\\d+.*"));
     }
 }

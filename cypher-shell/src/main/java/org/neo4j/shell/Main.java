@@ -66,10 +66,10 @@ public class Main {
 
     void startShell(@Nonnull CliArgs cliArgs) {
         if (cliArgs.getVersion()) {
-            out.println("Cypher-Shell " + Build.version());
+            out.println("Geequel-Shell " + Build.version());
         }
         if (cliArgs.getDriverVersion()) {
-            out.println("Neo4j Driver " + Build.driverVersion());
+            out.println("ONgDB Driver " + Build.driverVersion());
         }
         if (cliArgs.getVersion() || cliArgs.getDriverVersion()) {
             return;
@@ -89,7 +89,7 @@ public class Main {
             // Can only prompt for password if input has not been redirected
             connectMaybeInteractively(shell, connectionConfig, isInputInteractive(), isOutputInteractive());
 
-            // Construct shellrunner after connecting, due to interrupt handling
+            // Construct shell runner after connecting, due to interrupt handling
             ShellRunner shellRunner = ShellRunner.getShellRunner(cliArgs, shell, logger, connectionConfig);
 
             CommandHelper commandHelper = new CommandHelper(logger, shellRunner.getHistorian(), shell);
