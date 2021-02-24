@@ -14,13 +14,13 @@ rem but WITHOUT ANY WARRANTY; without even the implied warranty of
 rem MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 rem GNU General Public License for more details.
 
-@rem ##########################################################################
-@rem
-@rem  geequel-shell startup script for Windows
-@rem
-@rem ##########################################################################
+rem ##########################################################################
+rem
+rem  geequel-shell startup script for Windows
+rem
+rem ##########################################################################
 
-@rem Set local scope for the variables with windows NT shell
+rem Set local scope for the variables with windows NT shell
 if "%OS%"=="Windows_NT" setlocal
 
 set DIRNAME=%~dp0
@@ -28,10 +28,10 @@ if "%DIRNAME%" == "" set DIRNAME=.
 set APP_BASE_NAME=%~n0
 set ONGDB_HOME=%DIRNAME%..
 
-@rem Add default JVM options here. You can also use JAVA_OPTS and GEEQUEL_SHELL_OPTS to pass JVM options to this script.
+rem Add default JVM options here. You can also use JAVA_OPTS and GEEQUEL_SHELL_OPTS to pass JVM options to this script.
 set DEFAULT_JVM_OPTS=
 
-@rem Find java.exe
+rem Find java.exe
 if defined JAVA_HOME goto findJavaFromJavaHome
 
 set JAVA_EXE=java.exe
@@ -61,13 +61,13 @@ echo location of your Java installation.
 goto fail
 
 :init
-@rem Get command-line arguments, handling Windows variants
+rem Get command-line arguments, handling Windows variants
 
 if not "%OS%" == "Windows_NT" goto win9xME_args
 if "%@eval[2+2]" == "4" goto 4NT_args
 
 :win9xME_args
-@rem Slurp the command line arguments.
+rem Slurp the command line arguments.
 set CMD_LINE_ARGS=
 set _SKIP=2
 
@@ -78,21 +78,21 @@ set CMD_LINE_ARGS=%*
 goto execute
 
 :4NT_args
-@rem Get arguments from the 4NT Shell from JP Software
+rem Get arguments from the 4NT Shell from JP Software
 set CMD_LINE_ARGS=%$
 
 :execute
-@rem Setup the command line
+rem Setup the command line
 
 SETLOCAL EnableDelayedExpansion
 SET GEEQUEL_SHELL_JAR=
 FOR /f "delims=" %%a in ('dir "%ONGDB_HOME%\geequel-shell.jar" /s/b') do set GEEQUEL_SHELL_JAR=!GEEQUEL_SHELL_JAR!%%a
 
-@rem Execute geequel-shell
+rem Execute geequel-shell
 "%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %GEEQUEL_SHELL_OPTS%  -jar "%GEEQUEL_SHELL_JAR%" %CMD_LINE_ARGS%
 
 :end
-@rem End local scope for the variables with windows NT shell
+rem End local scope for the variables with windows NT shell
 if "%ERRORLEVEL%"=="0" goto mainEnd
 
 :fail
