@@ -255,14 +255,14 @@ public class InteractiveShellRunnerTest {
         AnsiFormattedText prompt = runner.getPrompt();
 
         // then
-        assertEquals("neo4j> ", prompt.plainString());
+        assertEquals("ongdb> ", prompt.plainString());
 
         // when
         statementParser.parseMoreText("  \t \n   "); // whitespace
         prompt = runner.getPrompt();
 
         // then
-        assertEquals("neo4j> ", prompt.plainString());
+        assertEquals("ongdb> ", prompt.plainString());
 
         // when
         statementParser.parseMoreText("bla bla"); // non whitespace
@@ -283,14 +283,14 @@ public class InteractiveShellRunnerTest {
         AnsiFormattedText prompt = runner.getPrompt();
 
         // then
-        assertEquals("neo4j# ", prompt.plainString());
+        assertEquals("ongdb# ", prompt.plainString());
 
         // when
         statementParser.parseMoreText("  \t \n   "); // whitespace
         prompt = runner.getPrompt();
 
         // then
-        assertEquals("neo4j# ", prompt.plainString());
+        assertEquals("ongdb# ", prompt.plainString());
 
         // when
         statementParser.parseMoreText("bla bla"); // non whitespace
@@ -370,7 +370,7 @@ public class InteractiveShellRunnerTest {
 
         // then
         verifyNoMoreInteractions(cmdExecuter);
-        verify(logger).printError("@|RED \nInterrupted (Note that Cypher queries must end with a |@" +
+        verify(logger).printError("@|RED \nInterrupted (Note that Geequel queries must end with a |@" +
                 "@|RED,BOLD semicolon. |@" +
                 "@|RED Type |@@|RED,BOLD :exit|@@|RED,BOLD  |@" +
                 "@|RED to exit the shell.)|@");

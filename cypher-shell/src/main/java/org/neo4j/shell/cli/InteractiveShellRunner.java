@@ -28,9 +28,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class InteractiveShellRunner implements ShellRunner, SignalHandler {
     static final String INTERRUPT_SIGNAL = "INT";
-    private final static AnsiFormattedText freshPrompt = AnsiFormattedText.s().bold().append("neo4j> ");
+    private final static AnsiFormattedText freshPrompt = AnsiFormattedText.s().bold().append("ongdb> ");
     private final static AnsiFormattedText continuationPrompt = AnsiFormattedText.s().bold().append("       ");
-    private final static AnsiFormattedText transactionPrompt = AnsiFormattedText.s().bold().append("neo4j# ");
+    private final static AnsiFormattedText transactionPrompt = AnsiFormattedText.s().bold().append("ongdb# ");
     // Need to know if we are currently executing when catch Ctrl-C, needs to be atomic due to
     // being called from different thread
     private final AtomicBoolean currentlyExecuting;
@@ -165,7 +165,7 @@ public class InteractiveShellRunner implements ShellRunner, SignalHandler {
             // Print a literal newline here to get around us being in the middle of the prompt
             logger.printError(
                     AnsiFormattedText.s().colorRed()
-                            .append("\nInterrupted (Note that Cypher queries must end with a ")
+                            .append("\nInterrupted (Note that Geequel queries must end with a ")
                             .bold().append("semicolon. ").boldOff()
                             .append("Type ")
                             .bold().append(Exit.COMMAND_NAME).append(" ").boldOff()
