@@ -16,8 +16,8 @@ public class ConnectionConfig {
                             @Nonnull String username, @Nonnull String password, boolean encryption) {
         this.host = host;
         this.port = port;
-        this.username = fallbackToEnvVariable(username, "NEO4J_USERNAME");
-        this.password = fallbackToEnvVariable(password, "NEO4J_PASSWORD");
+        this.username = fallbackToEnvVariable(username, "ONGDB_USERNAME");
+        this.password = fallbackToEnvVariable(password, "ONGDB_PASSWORD");
         this.encryption = encryption ? Config.EncryptionLevel.REQUIRED : Config.EncryptionLevel.NONE;
         this.scheme = scheme;
     }
