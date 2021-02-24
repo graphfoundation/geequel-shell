@@ -82,5 +82,9 @@ docker run --detach -p 7687:7687 -e ONGDB_AUTH=none graphfoundation/ongdb:1.0
 make integration-test
 ```
 
+## Licensing
+
+Geequel Shell is an open source product licensed under GPLv3.
+
 ## Unaffiliated with Neo4j, Inc.
 ONgDB is an independent fork of Neo4j® Enterprise Edition version 3.4.0.rc02 licensed under the AGPLv3 and/or Community Edition licensed under GPLv3. ONgDB and Graph Foundation, Inc. are not affiliated in any way with Neo4j, Inc. or Neo4j Sweden AB. Neo4j, Inc. and Neo4j Sweden AB do not sponsor or endorse ONgDB and Graph Foundation, Inc. Neo4j Sweden AB is the owner of the copyrights for Neo4j® software and commercial use of any source code from Neo4j® Enterprise Edition beyond Neo4j® Enterprise Edition version 3.2.14, Neo4j® Enterprise Edition version 3.3.10, and/or Neo4j® Enterprise Edition version 3.4.0.rc02 is prohibited and could subject the user to claims of copyright infringement.
