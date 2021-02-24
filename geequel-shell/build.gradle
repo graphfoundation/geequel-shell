@@ -27,7 +27,7 @@ shadowJar {
 
 distributions {
   main {
-    baseName = 'cypher-shell'
+    baseName = 'geequel-shell'
     contents {
       from {'src/dist'}
       from shadowJar

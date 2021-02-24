@@ -1,7 +1,7 @@
 @if "%DEBUG%" == "" @echo off
 @rem ##########################################################################
 @rem
-@rem  cypher-shell startup script for Windows
+@rem  geequel-shell startup script for Windows
 @rem
 @rem ##########################################################################
 
@@ -13,7 +13,7 @@ if "%DIRNAME%" == "" set DIRNAME=.
 set APP_BASE_NAME=%~n0
 set ONGDB_HOME=%DIRNAME%..
 
-@rem Add default JVM options here. You can also use JAVA_OPTS and CYPHER_SHELL_OPTS to pass JVM options to this script.
+@rem Add default JVM options here. You can also use JAVA_OPTS and GEEQUEL_SHELL_OPTS to pass JVM options to this script.
 set DEFAULT_JVM_OPTS=
 
 @rem Find java.exe
@@ -70,20 +70,20 @@ set CMD_LINE_ARGS=%$
 @rem Setup the command line
 
 SETLOCAL EnableDelayedExpansion
-SET CYPHER_SHELL_JAR=
-FOR /f "delims=" %%a in ('dir "%ONGDB_HOME%\cypher-shell.jar" /s/b') do set CYPHER_SHELL_JAR=!CYPHER_SHELL_JAR!%%a
+SET GEEQUEL_SHELL_JAR=
+FOR /f "delims=" %%a in ('dir "%ONGDB_HOME%\geequel-shell.jar" /s/b') do set GEEQUEL_SHELL_JAR=!GEEQUEL_SHELL_JAR!%%a
 
-@rem Execute cypher-shell
-"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %CYPHER_SHELL_OPTS%  -jar "%CYPHER_SHELL_JAR%" %CMD_LINE_ARGS%
+@rem Execute geequel-shell
+"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %GEEQUEL_SHELL_OPTS%  -jar "%GEEQUEL_SHELL_JAR%" %CMD_LINE_ARGS%
 
 :end
 @rem End local scope for the variables with windows NT shell
 if "%ERRORLEVEL%"=="0" goto mainEnd
 
 :fail
-rem Set variable CYPHER_SHELL_EXIT_CONSOLE if you need the _script_ return code instead of
+rem Set variable GEEQUEL_SHELL_EXIT_CONSOLE if you need the _script_ return code instead of
 rem the _cmd.exe /c_ return code!
-if  not "" == "%CYPHER_SHELL_EXIT_CONSOLE%" exit 1
+if  not "" == "%GEEQUEL_SHELL_EXIT_CONSOLE%" exit 1
 exit /b 1
 
 :mainEnd
