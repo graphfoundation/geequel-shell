@@ -6,7 +6,6 @@ import org.neo4j.driver.v1.AuthTokens;
 import org.neo4j.driver.v1.Config;
 import org.neo4j.driver.v1.Driver;
 import org.neo4j.driver.v1.GraphDatabase;
-import org.neo4j.driver.v1.Record;
 import org.neo4j.driver.v1.Session;
 import org.neo4j.driver.v1.Statement;
 import org.neo4j.driver.v1.StatementResult;
@@ -21,7 +20,6 @@ import org.neo4j.shell.log.NullLogging;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -49,7 +47,7 @@ public class BoltStateHandler implements TransactionHandler, Connector {
     @Override
     public void beginTransaction() throws CommandException {
         if (!isConnected()) {
-            throw new CommandException("Not connected to Neo4j");
+            throw new CommandException("Not connected to ONgDB");
         }
         if (isTransactionOpen()) {
             throw new CommandException("There is already an open transaction");
@@ -60,7 +58,7 @@ public class BoltStateHandler implements TransactionHandler, Connector {
     @Override
     public Optional<List<BoltResult>> commitTransaction() throws CommandException {
         if (!isConnected()) {
-            throw new CommandException("Not connected to Neo4j");
+            throw new CommandException("Not connected to ONgDB");
         }
         if (!isTransactionOpen()) {
             throw new CommandException("There is no open transaction to commit");
@@ -75,7 +73,7 @@ public class BoltStateHandler implements TransactionHandler, Connector {
     @Override
     public void rollbackTransaction() throws CommandException {
         if (!isConnected()) {
-            throw new CommandException("Not connected to Neo4j");
+            throw new CommandException("Not connected to ONgDB");
         }
         if (!isTransactionOpen()) {
             throw new CommandException("There is no open transaction to rollback");
@@ -130,15 +128,19 @@ public class BoltStateHandler implements TransactionHandler, Connector {
 
     @Nonnull
     @Override
-    public String getServerVersion() {
-        if (isConnected()) {
-            if (version == null) {
-                // On versions before 3.1.0-M09
+    public String getServerVersion()
+    {
+        if ( isConnected() )
+        {
+            if ( version == null )
+            {
+                // Running unsupported version
                 version = "";
             }
-            if (version.startsWith("Neo4j/")) {
-                // Want to return '3.1.0' and not 'Neo4j/3.1.0'
-                version = version.substring(6);
+            if ( version.startsWith( "ONgDB/" ) || version.startsWith( "Neo4j/" ) )
+            {
+                // Want to return '1.0.0' and not 'ONgDB/1.0.0' or 'Neo4j/1.0.0'
+                version = version.substring( 6 );
             }
             return version;
         }
@@ -149,7 +151,7 @@ public class BoltStateHandler implements TransactionHandler, Connector {
     public Optional<BoltResult> runCypher(@Nonnull String cypher,
                                           @Nonnull Map<String, Object> queryParams) throws CommandException {
         if (!isConnected()) {
-            throw new CommandException("Not connected to Neo4j");
+            throw new CommandException("Not connected to ONgDB");
         }
         if (isTransactionOpen()) {
             // If this fails, don't try any funny business - just let it die
@@ -189,7 +191,7 @@ public class BoltStateHandler implements TransactionHandler, Connector {
     }
 
     /**
-     * Disconnect from Neo4j, clearing up any session resources, but don't give any output.
+     * Disconnect from ONgDB, clearing up any session resources, but don't give any output.
      * Intended only to be used if connect fails.
      */
     void silentDisconnect() {
