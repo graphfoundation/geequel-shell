@@ -67,8 +67,8 @@ public class FileHistorian implements Historian {
     @Nonnull
     public static File getDefaultHistoryFile() {
         // Storing in same directory as driver uses
-        File dir = new File(getProperty("user.home"), ".neo4j");
-        return new File(dir, ".neo4j_history");
+        File dir = new File(getProperty("user.home"), ".ongdb");
+        return new File(dir, ".ongdb_history");
     }
 
     @Nonnull

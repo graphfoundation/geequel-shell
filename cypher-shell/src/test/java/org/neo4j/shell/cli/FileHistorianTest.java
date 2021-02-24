@@ -39,7 +39,7 @@ public class FileHistorianTest {
 
     @Test
     public void defaultHistoryFile() throws Exception {
-        Path expectedPath = Paths.get(getProperty("user.home"), ".neo4j", ".neo4j_history");
+        Path expectedPath = Paths.get(getProperty("user.home"), ".ongdb", ".ongdb_history");
 
         File history = FileHistorian.getDefaultHistoryFile();
         assertEquals(expectedPath.toString(), history.getPath());
