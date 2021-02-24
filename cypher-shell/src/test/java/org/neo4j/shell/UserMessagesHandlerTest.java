@@ -14,10 +14,10 @@ public class UserMessagesHandlerTest {
         when(connectionConfig.username()).thenReturn("bob");
         when(connectionConfig.driverUrl()).thenReturn("bolt://some.place.com:99");
 
-        UserMessagesHandler userMessagesHandler = new UserMessagesHandler(connectionConfig, "3.1.0-Beta99");
-        assertEquals("Connected to Neo4j 3.1.0-Beta99 at @|BOLD bolt://some.place.com:99|@ as user @|BOLD bob|@.\n" +
+        UserMessagesHandler userMessagesHandler = new UserMessagesHandler(connectionConfig, "1.0.0-alpha01");
+        assertEquals("Connected to ONgDB 1.0.0-alpha01 at @|BOLD bolt://some.place.com:99|@ as user @|BOLD bob|@.\n" +
                         "Type @|BOLD :help|@ for a list of available commands or @|BOLD :exit|@ to exit the shell.\n" +
-                        "Note that Cypher queries must end with a @|BOLD semicolon.|@",
+                        "Note that Geequel queries must end with a @|BOLD semicolon.|@",
                 userMessagesHandler.getWelcomeMessage());
     }
 
@@ -26,7 +26,7 @@ public class UserMessagesHandlerTest {
         when(connectionConfig.username()).thenReturn("bob");
         when(connectionConfig.driverUrl()).thenReturn("bolt://some.place.com:99");
 
-        UserMessagesHandler userMessagesHandler = new UserMessagesHandler(connectionConfig, "3.1.0-Beta99");
+        UserMessagesHandler userMessagesHandler = new UserMessagesHandler(connectionConfig, "1.0.0-alpha01");
         assertEquals("\nBye!", userMessagesHandler.getExitMessage());
     }
 }

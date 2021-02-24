@@ -17,12 +17,12 @@ public class UserMessagesHandler {
 
     @Nonnull
     public String getWelcomeMessage() {
-        String neo4j = "Neo4j";
+        String ongdb = "ONgDB";
         if (!serverVersion.isEmpty()) {
-            neo4j += " " + serverVersion;
+            ongdb += " " + serverVersion;
         }
         AnsiFormattedText welcomeMessage = AnsiFormattedText.from("Connected to ")
-                                                            .append(neo4j)
+                                                            .append(ongdb)
                                                             .append(" at ")
                                                             .bold().append(connectionConfig.driverUrl()).boldOff();
 
@@ -38,7 +38,7 @@ public class UserMessagesHandler {
                 .append(" for a list of available commands or ")
                 .bold().append(Exit.COMMAND_NAME).boldOff()
                 .append(" to exit the shell.")
-                .append("\nNote that Cypher queries must end with a ")
+                .append("\nNote that Geequel queries must end with a ")
                 .bold().append("semicolon.").boldOff().formattedString();
     }
 
