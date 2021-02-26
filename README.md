@@ -1,3 +1,21 @@
+## Geequel Shell
+
+![Build Status](https://bamboo.graphfoundation.org/plugins/servlet/wittified/build-status/GEEQUEL-SHELL)
+
+Geequel Shell is a powerful CLI for running Geequel queries against ONgDB. It comes bundled with each ONgDB release and can be installed independently on many systems.
+
+## What is ONgDB?
+
+[ONgDB](https://graphfoundation.org) _/ Owen-Gee-Dee-Bee /_ which stands for Open Native Graph Database, is an open source, high performance, native graph store with everything you would expect from an enterprise-ready database, including high availability clustering, ACID transactions, and an intuitive, pattern-centric graph query language.
+Developers use graph theory-based structures that we call nodes and relationships instead of rows and columns.
+For many use cases, ONgDB will provide orders of magnitude performance benefits compared to non-native graph, relational and NoSQL databases.
+
+Learn more on the [Graph Foundation ONgDB site](https://graphfoundation.org/projects/ongdb).
+
+## What is Geequel?
+
+Geequel is ONgDB’s powerful Graph Query Language. It is a declarative, pattern matching language optimized for querying graph networks. Geequel is an implementation of openCypher®, the most widely adopted, fully-specified, and open query language for property graph databases. Geequel provides an intuitive way to work with ONgDB, a property graph, and is a great on-ramp to the Graph Query Language (GQL) standard being developed by ISO. Geequel is easy to learn and human-readable, making Geequel approachable, useful and unifying for business analysts, data scientists, software developers and operations professionals. The declarative nature of Geequel allows users to simply express the data they wish to retrieve while the underlying Geequel query runtime completes the task without burdening the user with Geequel implementation details.
+
 ## How to build
 
 Use `make help` (`gradlew tasks`) to list possible tasks. But you
@@ -88,3 +106,5 @@ Geequel Shell is an open source product licensed under GPLv3.
 
 ## Unaffiliated with Neo4j, Inc.
 ONgDB is an independent fork of Neo4j® Enterprise Edition version 3.4.0.rc02 licensed under the AGPLv3 and/or Community Edition licensed under GPLv3. ONgDB and Graph Foundation, Inc. are not affiliated in any way with Neo4j, Inc. or Neo4j Sweden AB. Neo4j, Inc. and Neo4j Sweden AB do not sponsor or endorse ONgDB and Graph Foundation, Inc. Neo4j Sweden AB is the owner of the copyrights for Neo4j® software and commercial use of any source code from Neo4j® Enterprise Edition beyond Neo4j® Enterprise Edition version 3.2.14, Neo4j® Enterprise Edition version 3.3.10, and/or Neo4j® Enterprise Edition version 3.4.0.rc02 is prohibited and could subject the user to claims of copyright infringement.
+
+Neo4j®, Cypher® and openCypher® are registered trademarks of Neo4j, Inc.
