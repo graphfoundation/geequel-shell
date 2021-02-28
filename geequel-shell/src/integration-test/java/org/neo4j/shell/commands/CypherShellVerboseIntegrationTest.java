@@ -61,7 +61,7 @@ public class CypherShellVerboseIntegrationTest extends CypherShellIntegrationTes
         commitCommand = new Commit( shell );
         beginCommand = new Begin( shell );
 
-        connect( "ongdb" );
+        connect( "owengee" );
     }
 
     @After
@@ -100,7 +100,7 @@ public class CypherShellVerboseIntegrationTest extends CypherShellIntegrationTes
         thrown.expectMessage( "Already connected" );
 
         assertTrue( "Shell should already be connected", shell.isConnected() );
-        connect( "ongdb" );
+        connect( "owengee" );
     }
 
     @Test

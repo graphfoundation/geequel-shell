@@ -38,7 +38,7 @@ import static org.junit.Assert.assertTrue;
 public class MainIntegrationTest
 {
 
-    private final String inputString = String.format( "ongdb%nongdb%n" );
+    private final String inputString = String.format( "ongdb%nowengee%n" );
     private ByteArrayOutputStream baos;
     private ConnectionConfig connectionConfig;
     private CypherShell shell;
@@ -88,10 +88,10 @@ public class MainIntegrationTest
         assertTrue( shell.isConnected() );
         // should have prompted and set the username and password
         assertEquals( "ongdb", connectionConfig.username() );
-        assertEquals( "ongdb", connectionConfig.password() );
+        assertEquals( "owengee", connectionConfig.password() );
 
         String out = baos.toString();
-        assertEquals( String.format( "username: ongdb%npassword: *****%n" ), out );
+        assertEquals( String.format( "username: ongdb%npassword: *******%n" ), out );
     }
 
     @Test
@@ -118,7 +118,7 @@ public class MainIntegrationTest
             assertTrue( shell.isConnected() );
             // should have prompted silently and set the username and password
             assertEquals( "ongdb", connectionConfig.username() );
-            assertEquals( "ongdb", connectionConfig.password() );
+            assertEquals( "owengee", connectionConfig.password() );
 
             String out = baos.toString();
             assertEquals( "", out );

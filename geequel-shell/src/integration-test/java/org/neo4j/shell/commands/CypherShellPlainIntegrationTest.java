@@ -47,7 +47,7 @@ public class CypherShellPlainIntegrationTest extends CypherShellIntegrationTest
     {
         linePrinter.clear();
         shell = new CypherShell( linePrinter, new PrettyConfig( Format.PLAIN, true, 1000 ) );
-        connect( "ongdb" );
+        connect( "owengee" );
     }
 
     @After

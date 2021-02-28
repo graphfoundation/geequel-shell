@@ -74,12 +74,10 @@ See `make info` for a list of variables and what the results will be.
 
 ### Integration tests
 
-#### Pre Requisites for running integration tests
+#### Prerequisites for running integration tests
 
-ONgDB server with bolt driver configured.
-
-If authentication is required, it is assumed to be username `ongdb`
-and password `ongdb`.
+1. ONgDB server with bolt driver configured
+1. Authentication with username `ongdb` and password `owengee`
 
 #### To run
 
@@ -96,7 +94,7 @@ instance of ongdb, and runs the integration tests against it.
 
 ```sh
 rm -rf ~/.ongdb/known_hosts
-docker run --detach -p 7687:7687 -e ONGDB_AUTH=none graphfoundation/ongdb:1.0
+docker run --detach -p 7687:7687 -e ONGDB_AUTH=ongdb/owengee graphfoundation/ongdb:1.0
 make integration-test
 ```
 
