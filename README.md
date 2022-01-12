@@ -1,7 +1,5 @@
 ## Geequel Shell
 
-![Build Status](https://bamboo.graphfoundation.org/plugins/servlet/wittified/build-status/GEEQUEL-SHELL)
-
 Geequel Shell is a powerful CLI for running Geequel queries against ONgDB. It comes bundled with each ONgDB release and can be installed independently on many systems.
 
 ## What is ONgDB?
