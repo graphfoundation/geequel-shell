@@ -284,6 +284,29 @@ public class CypherShellTest {
         }
     }
 
+
+    @Test
+    public void specifyingACypherStringShouldAlwaysGiveAStringRunner() throws IOException {
+        CliArgs cliArgs = CliArgHelper.parse("-f", "test-file", "MATCH (n) RETURN n ");
+
+        ConnectionConfig connectionConfig = mock(ConnectionConfig.class);
+
+        ShellRunner shellRunner = ShellRunner.getShellRunner(cliArgs, offlineTestShell, logger, connectionConfig);
+
+        if (!(shellRunner instanceof StringShellRunner)) {
+            fail("Expected a different runner than: " + shellRunner.getClass().getSimpleName());
+        }
+
+        cliArgs = CliArgHelper.parse("MATCH (n) RETURN n ", "-f", "test-file");
+
+        shellRunner = ShellRunner.getShellRunner(cliArgs, offlineTestShell, logger, connectionConfig);
+
+        if (!(shellRunner instanceof StringShellRunner)) {
+            fail("Expected a different runner than: " + shellRunner.getClass().getSimpleName());
+        }
+    }
+
+
     @Test
     public void specifyingAFilePathShouldGiveANonInteractiveRunner() throws IOException {
         File file = File.createTempFile("test-file", ".cypher");
