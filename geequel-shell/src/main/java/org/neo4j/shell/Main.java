@@ -106,7 +106,7 @@ public class Main {
         try {
             CypherShell shell = new CypherShell(logger, prettyConfig);
             // Can only prompt for password if input has not been redirected
-            connectMaybeInteractively(shell, connectionConfig, isInputInteractive(), isOutputInteractive());
+            connectMaybeInteractively(shell, connectionConfig, isInputInteractive(cliArgs), isOutputInteractive());
 
             // Construct shell runner after connecting, due to interrupt handling
             ShellRunner shellRunner = ShellRunner.getShellRunner(cliArgs, shell, logger, connectionConfig);

@@ -91,11 +91,11 @@ public class CliArgHelper {
         // Other arguments
         // geequel string might not be given, represented by null
         cliArgs.setCypher(ns.getString("geequel"));
-        // Fail behavior as sensible default and returns a proper type
-        cliArgs.setFailBehavior(ns.get("fail-behavior"));
+
+        cliArgs.setFile(ns.getString("file"));
 
         //Set Output format
-        cliArgs.setFormat(Format.parse(ns.get("format")));
+        cliArgs.setFormat(Format.parse(ns.get("format"), cliArgs));
 
         cliArgs.setEncryption(ns.getBoolean("encryption"));
 
@@ -110,6 +110,9 @@ public class CliArgHelper {
         cliArgs.setVersion(ns.getBoolean("version"));
 
         cliArgs.setDriverVersion(ns.getBoolean("driver-version"));
+
+        // Fail behavior as sensible default and returns a proper type
+        cliArgs.setFailBehavior(ns.get("fail-behavior"));
 
         return cliArgs;
     }
@@ -180,6 +183,10 @@ public class CliArgHelper {
         parser.addArgument("--debug")
                 .help("print additional debug information")
                 .action(new StoreTrueArgumentAction());
+
+        parser.addArgument("-f", "--file")
+                .help("specify a file to run as a cypher script")
+                .setDefault("");
 
         parser.addArgument("--non-interactive")
                 .help("force non-interactive mode, only useful if auto-detection fails (like on Windows)")
