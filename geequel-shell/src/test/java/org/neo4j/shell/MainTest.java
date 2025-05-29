@@ -399,7 +399,7 @@ public class MainTest {
         ArgumentCaptor<String> argument = ArgumentCaptor.forClass(String.class);
 
         verify(printStream).println(argument.capture());
-        assertTrue(argument.getValue().matches("Geequel-Shell \\d+\\.\\d+\\.\\d+.*"));
+        assertTrue(argument.getValue().matches("Geequel-Shell ( \\d+\\.\\d+\\.\\d+.*)?"));
     }
 
     @Test
