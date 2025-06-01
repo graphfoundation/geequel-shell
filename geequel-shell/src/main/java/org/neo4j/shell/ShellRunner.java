@@ -31,11 +31,10 @@ import org.neo4j.shell.log.Logger;
 import org.neo4j.shell.parser.ShellStatementParser;
 
 import javax.annotation.Nonnull;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import static org.fusesource.jansi.internal.CLibrary.STDIN_FILENO;
 import static org.fusesource.jansi.internal.CLibrary.STDOUT_FILENO;
@@ -80,8 +79,9 @@ public interface ShellRunner {
             return new InteractiveShellRunner(cypherShell, cypherShell, logger, new ShellStatementParser(),
                     System.in, FileHistorian.getDefaultHistoryFile(), userMessagesHandler);
         } else {
+            InputStream inputStream = cliArgs.getFile().isPresent() ? Files.newInputStream(Paths.get(cliArgs.getFile().get())) : System.in;
             return new NonInteractiveShellRunner(cliArgs.getFailBehavior(), cypherShell, logger,
-                    new ShellStatementParser(), System.in);
+                    new ShellStatementParser(), inputStream);
         }
     }
 
@@ -94,7 +94,7 @@ public interface ShellRunner {
             return false;
         }
 
-        return isInputInteractive();
+        return isInputInteractive(cliArgs);
     }
 
     /**
@@ -104,18 +104,18 @@ public interface ShellRunner {
      * @return true if the shell is reading from an interactive terminal, false otherwise (e.g., we are reading from a
      * file).
      */
-    static boolean isInputInteractive() {
+    static boolean isInputInteractive(@Nonnull CliArgs cliArgs) {
         if (isWindows()) {
             // Input will never be a TTY on windows and it isatty seems to be able to block forever on Windows so avoid
             // calling it.
-            return System.console() != null;
+            return System.console() != null && !cliArgs.getFile().isPresent();
         }
         try {
             return 1 == isatty(STDIN_FILENO);
         } catch (Throwable ignored) {
             // system is not using libc (like Alpine Linux)
             // Fallback to checking stdin OR stdout
-            return System.console() != null;
+            return System.console() != null && !cliArgs.getFile().isPresent();
         }
     }
 

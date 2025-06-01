@@ -117,4 +117,18 @@ public class CliArgsTest {
         cliArgs.setCypher(null);
         assertFalse(cliArgs.getCypher().isPresent());
     }
+
+    @Test
+    public void setFile() throws Exception {
+        // default
+        assertFalse(cliArgs.getFile().isPresent());
+
+        cliArgs.setFile("foo");
+        assertTrue(cliArgs.getFile().isPresent());
+        //noinspection OptionalGetWithoutIsPresent
+        assertEquals("foo", cliArgs.getFile().get());
+
+        cliArgs.setFile(null);
+        assertFalse(cliArgs.getFile().isPresent());
+    }
 }

@@ -30,6 +30,7 @@ import org.neo4j.driver.v1.Value;
 import org.neo4j.driver.v1.summary.ResultSummary;
 import org.neo4j.shell.cli.CliArgHelper;
 import org.neo4j.shell.cli.CliArgs;
+import org.neo4j.shell.cli.NonInteractiveShellRunner;
 import org.neo4j.shell.cli.StringShellRunner;
 import org.neo4j.shell.commands.CommandExecutable;
 import org.neo4j.shell.commands.CommandHelper;
@@ -41,6 +42,8 @@ import org.neo4j.shell.state.BoltResult;
 import org.neo4j.shell.state.BoltStateHandler;
 import org.neo4j.shell.state.ListBoltResult;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -279,6 +282,62 @@ public class CypherShellTest {
         if (!(shellRunner instanceof StringShellRunner)) {
             fail("Expected a different runner than: " + shellRunner.getClass().getSimpleName());
         }
+    }
+
+
+    @Test
+    public void specifyingACypherStringShouldAlwaysGiveAStringRunner() throws IOException {
+        CliArgs cliArgs = CliArgHelper.parse("-f", "test-file", "MATCH (n) RETURN n ");
+
+        ConnectionConfig connectionConfig = mock(ConnectionConfig.class);
+
+        ShellRunner shellRunner = ShellRunner.getShellRunner(cliArgs, offlineTestShell, logger, connectionConfig);
+
+        if (!(shellRunner instanceof StringShellRunner)) {
+            fail("Expected a different runner than: " + shellRunner.getClass().getSimpleName());
+        }
+
+        cliArgs = CliArgHelper.parse("MATCH (n) RETURN n ", "-f", "test-file");
+
+        shellRunner = ShellRunner.getShellRunner(cliArgs, offlineTestShell, logger, connectionConfig);
+
+        if (!(shellRunner instanceof StringShellRunner)) {
+            fail("Expected a different runner than: " + shellRunner.getClass().getSimpleName());
+        }
+    }
+
+
+    @Test
+    public void specifyingAFilePathShouldGiveANonInteractiveRunner() throws IOException {
+        File file = File.createTempFile("test-file", ".cypher");
+        file.deleteOnExit();
+        FileOutputStream fos = new FileOutputStream(file);
+        fos.write("RETURN 1;".getBytes());
+        fos.close();
+        CliArgs cliArgs = CliArgHelper.parse("-f", file.getAbsolutePath());
+
+        ConnectionConfig connectionConfig = mock(ConnectionConfig.class);
+
+        ShellRunner shellRunner = ShellRunner.getShellRunner(cliArgs, offlineTestShell, logger, connectionConfig);
+
+        if (!(shellRunner instanceof NonInteractiveShellRunner)) {
+            fail("Expected a different runner than: " + shellRunner.getClass().getSimpleName());
+        }
+    }
+
+    @Test
+    public void specifyingANonexistentFilePathShouldThrowAnError() throws IOException {
+        CliArgs cliArgs = CliArgHelper.parse("-f", "test-file");
+
+        ConnectionConfig connectionConfig = mock(ConnectionConfig.class);
+
+        try {
+            ShellRunner.getShellRunner(cliArgs, offlineTestShell, logger, connectionConfig);
+        } catch (IOException e) {
+            assertEquals("java.nio.file.NoSuchFileException: test-file", e.toString());
+            return;
+        }
+        fail("Expected an exception to be thrown");
     }
 
     @Test

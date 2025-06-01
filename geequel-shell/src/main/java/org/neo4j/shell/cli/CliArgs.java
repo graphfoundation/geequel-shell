@@ -44,6 +44,7 @@ public class CliArgs {
     private boolean driverVersion = false;
     private int numSampleRows = DEFAULT_NUM_SAMPLE_ROWS;
     private boolean wrap = true;
+    private Optional<String> file = Optional.empty();
 
     /**
      * Set the scheme to the primary value, or if null, the fallback value.
@@ -102,6 +103,13 @@ public class CliArgs {
     }
 
     /**
+     * Set the file path to the cypher script to execute
+     */
+    public void setFile (@Nullable String file) {
+        this.file = Optional.ofNullable(file);
+    }
+
+    /**
      * Set whether the connection should be encrypted
      */
     public void setEncryption(boolean encryption) {
@@ -154,6 +162,11 @@ public class CliArgs {
     @Nonnull
     public Optional<String> getCypher() {
         return cypher;
+    }
+
+    @Nonnull
+    public Optional<String> getFile() {
+        return file;
     }
 
     @Nonnull
