@@ -1,6 +1,6 @@
 ## Geequel Shell
 
-Geequel Shell is a powerful CLI for running Geequel queries against ONgDB. It comes bundled with each ONgDB release and can be installed independently on many systems.
+Geequel Shell is a powerful CLI for running GQL queries against ONgDB. It comes bundled with each ONgDB release and can be installed independently on many systems.
 
 ## What is ONgDB?
 
@@ -12,7 +12,7 @@ Learn more on the [Graph Foundation ONgDB site](https://graphfoundation.org/proj
 
 ## What is Geequel?
 
-Geequel is ONgDB’s powerful Graph Query Language. It is a declarative, pattern matching language optimized for querying graph networks. Geequel is an implementation of openCypher®, the most widely adopted, fully-specified, and open query language for property graph databases. Geequel provides an intuitive way to work with ONgDB, a property graph, and is a great on-ramp to the Graph Query Language (GQL) standard being developed by ISO. Geequel is easy to learn and human-readable, making Geequel approachable, useful and unifying for business analysts, data scientists, software developers and operations professionals. The declarative nature of Geequel allows users to simply express the data they wish to retrieve while the underlying Geequel query runtime completes the task without burdening the user with Geequel implementation details.
+Geequel is ONgDB’s powerful Graph Query Language. It is a declarative, pattern matching language optimized for querying graph networks. Geequel is an implementation of openCypher®, the most widely adopted, fully-specified, and open query language for property graph databases. Geequel provides an intuitive way to work with ONgDB, a property graph, and is a great on-ramp to the Graph Query Language (GQL) ISO standard. Geequel is easy to learn and human-readable, making Geequel approachable, useful and unifying for business analysts, data scientists, software developers and operations professionals. The declarative nature of Geequel allows users to simply express the data they wish to retrieve while the underlying Geequel query runtime completes the task without burdening the user with Geequel implementation details.
 
 ## How to build
 
