@@ -1,11 +1,12 @@
 .DEFAULT: help
 .PHONY: help build clean zip run untested-zip test integration-test tyrekicking-test mutation-test install info
 
-gitdescribe := $(shell git describe --tags --match [0-9]*)
-lasttag := $(shell git describe --tags --match [0-9]* --abbrev=0)
+gitdescribe := $(shell git describe --tags --match '[0-9]*' 2>/dev/null || echo 0.0.1-alpha)
+gitafter := $(shell git describe --tags --match '[0-9]*' --all 2>/dev/null | perl -pe 'exit unless /-\d+-/;s<^tags/><>;s<^(?:\d+\.)+\d+-><>;s<-.*><>; s/^/modified-/ if /./')
+lasttag := $(shell git describe --tags --match '[0-9]*' --abbrev=0 2>/dev/null || echo 0.0.1-alpha)
 
 version ?= $(lasttag)
-versionlabel = $(shell echo ${version} | awk '{ sub("^[0-9]+.[0-9]+.[0-9]+-?", "", $$1); print }')
+versionlabel = $(shell (echo ${version} | perl -pe 's/^\d+\.\d+\.\d+-?//'; echo ${gitafter}) | grep . | head -1)
 versionnumber = $(shell echo ${version} | awk '{ sub("-.*$$", "", $$1); print }')
 
 pkgversion ?= 1
