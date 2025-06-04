@@ -16,7 +16,11 @@ jobs:
           distribution: 'corretto'
           cache: gradle
       - name: Build with Makefile
-        run: make build && make test && make untested-zip
+        run: |
+          make info
+          make build
+          make test
+          make untested-zip
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
