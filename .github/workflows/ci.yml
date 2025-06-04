@@ -17,6 +17,11 @@ jobs:
           cache: gradle
       - name: Build with Makefile
         run: make build && make test && make untested-zip
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: geequel-shell
+          path: out/geequel-shell.zip
       - name: Upload logs
         if: failure()
         uses: actions/upload-artifact@v4
