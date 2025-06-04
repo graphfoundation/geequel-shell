@@ -59,7 +59,7 @@ subprojects {
 }
 
 ext {
-    // Only match tags starting with a number to avoid ongdb-xxx changelog tags
+    // Only match tags starting with a number to avoid ongdb-xxx / geequel-xxx changelog tags
     gitVersion = 'git describe --tags --match [0-9]*'.execute([], project.rootDir).text.trim()
 
     if (project.hasProperty('buildVersion')) {
