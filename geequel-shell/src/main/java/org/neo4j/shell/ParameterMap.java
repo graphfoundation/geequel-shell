@@ -26,7 +26,7 @@ import javax.annotation.Nonnull;
 import java.util.Map;
 
 /**
- * An object which keeps named parameters and allows them them to be set/unset.
+ * An object which keeps named parameters and allows them to be set/unset.
  */
 public interface ParameterMap {
     /**
