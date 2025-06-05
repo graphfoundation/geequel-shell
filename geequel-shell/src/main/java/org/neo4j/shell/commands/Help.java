@@ -36,7 +36,7 @@ public class Help implements Command {
     public static final String COMMAND_NAME = ":help";
     private final Logger logger;
     private final CommandHelper commandHelper;
-    public static String CYPHER_REFCARD_LINK = "https://neo4j.com/docs/developer-manual/current/cypher/";
+    public static String CYPHER_REFCARD_LINK = "https://docs.graphfoundation.org/docs/category/query-language-docs";
 
     public Help(@Nonnull final Logger shell, @Nonnull final CommandHelper commandHelper) {
         this.logger = shell;

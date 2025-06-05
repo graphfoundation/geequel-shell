@@ -82,7 +82,7 @@ rem Get arguments from the 4NT Shell from JP Software
 set CMD_LINE_ARGS=%$
 
 :execute
-rem Setup the command line
+rem Set up the command line
 
 SETLOCAL EnableDelayedExpansion
 SET GEEQUEL_SHELL_JAR=
