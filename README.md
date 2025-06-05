@@ -1,6 +1,7 @@
 ## Geequel Shell
 
-Geequel Shell is a powerful CLI for running GQL queries against ONgDB. It comes bundled with each ONgDB release and can be installed independently on many systems.
+Geequel Shell is a powerful CLI for running GQL queries against [ONgDB](https://github.com/graphfoundation/ongdb).
+It comes bundled with each [ONgDB release](https://github.com/graphfoundation/ongdb/releases) and can be installed independently on many systems.
 
 ## What is ONgDB?
 
@@ -12,19 +13,26 @@ Learn more on the [Graph Foundation ONgDB site](https://graphfoundation.org/proj
 
 ## What is Geequel?
 
-Geequel is ONgDB’s powerful Graph Query Language. It is a declarative, pattern matching language optimized for querying graph networks. Geequel is an implementation of openCypher®, the most widely adopted, fully-specified, and open query language for property graph databases. Geequel provides an intuitive way to work with ONgDB, a property graph, and is a great on-ramp to the Graph Query Language (GQL) ISO standard. Geequel is easy to learn and human-readable, making Geequel approachable, useful and unifying for business analysts, data scientists, software developers and operations professionals. The declarative nature of Geequel allows users to simply express the data they wish to retrieve while the underlying Geequel query runtime completes the task without burdening the user with Geequel implementation details.
+Geequel is ONgDB’s powerful Graph Query Language.
+It is a declarative, pattern matching language optimized for querying graph networks.
+Geequel is an implementation of [openCypher®](https://opencypher.org/), the most widely adopted, fully-specified, and open query language for property graph databases.
+Geequel provides an intuitive way to work with ONgDB, a property graph, and is a great on-ramp to the [Graph Query Language (GQL) ISO standard](https://www.iso.org/standard/76120.html).
+Geequel is easy to learn and human-readable, making Geequel approachable, useful and unifying for business analysts, data scientists, software developers and operations professionals.
+The declarative nature of Geequel allows users to simply express the data they wish to retrieve while the underlying Geequel query runtime completes the task without burdening the user with Geequel implementation details.
 
 ## How to build
 
 Use `make help` (`gradlew tasks`) to list possible tasks. But you
-probably want either
+probably want one of:
 
 -  `make build` (`gradlew installDist`) which will build an
    uber-jar and runnable script for you at
    `geequel-shell/build/install/geequel-shell`
 
 - `make zip` which builds an uber-jar with runnable script and
-   packages it up for you as: `out/geequel-shell.zip` Note that this
+   packages it up for you as: `out/geequel-shell.zip`
+
+   Note that this
    will run a test on the script which requires a instance of ongdb
    (see Integration tests below).
 
@@ -44,8 +52,8 @@ make run
 
 ## How to build packages
 
-Packages require you to have `pandoc` available. It should be
-available in your local package manager.
+Packages require you to have [`pandoc`](https://pandoc.org/) available.
+It should be available from your local package manager.
 
 Then just do
 
@@ -80,7 +88,7 @@ See `make info` for a list of variables and what the results will be.
 #### To run
 
 Integration tests are usually skipped when you run `make test`
-(`gradlew test`)
+(`gradlew test`).
 
 Use `make integration-test` (`gradlew integrationTest`) to
 specifically run integration tests.
