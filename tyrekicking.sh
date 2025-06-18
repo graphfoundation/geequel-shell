@@ -12,9 +12,9 @@ function prepare-bundle {
 
 function testscript {
   # first try with encryption on (1.0 series), if that fails with encryption of (2.0 series)
-  if geequel-shell/geequel-shell -u ongdb -p ongdb --encryption true "RETURN 1;"; then
+  if geequel-shell/geequel-shell -u ongdb -p owengee --encryption true "RETURN 1;"; then
     echo "$1 Success!"
-  elif geequel-shell/geequel-shell -u ongdb -p ongdb --encryption false "RETURN 1;"; then
+  elif geequel-shell/geequel-shell -u ongdb -p owengee --encryption false "RETURN 1;"; then
     echo "$1 Success!"
   else
     echo "$1 Failure!"
