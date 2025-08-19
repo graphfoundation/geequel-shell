@@ -21,7 +21,7 @@ package org.neo4j.shell;
 
 import jline.console.ConsoleReader;
 
-import org.neo4j.driver.v1.exceptions.AuthenticationException;
+import org.neo4j.driver.exceptions.AuthenticationException;
 import org.neo4j.shell.config.Build;
 import org.neo4j.shell.cli.CliArgHelper;
 import org.neo4j.shell.cli.CliArgs;
@@ -48,6 +48,8 @@ public class Main {
 
     public static void main(String[] args) {
         CliArgs cliArgs = CliArgHelper.parse(args);
+
+        System.out.println("Geequel-Shell parsed args " + Build.version());
 
         // if null, then command line parsing went wrong
         // CliArgs has already printed errors.
@@ -103,10 +105,14 @@ public class Main {
                 cliArgs.getPassword(),
                 cliArgs.getEncryption());
 
+        System.out.println("Geequel-Shell connecting to " + connectionConfig.toString());
+
         try {
             CypherShell shell = new CypherShell(logger, prettyConfig);
+            System.out.println("Geequel-Shell created shell");
             // Can only prompt for password if input has not been redirected
             connectMaybeInteractively(shell, connectionConfig, isInputInteractive(cliArgs), isOutputInteractive());
+            System.out.println("Geequel-Shell connected to " + shell.getServerVersion());
 
             // Construct shell runner after connecting, due to interrupt handling
             ShellRunner shellRunner = ShellRunner.getShellRunner(cliArgs, shell, logger, connectionConfig);
@@ -142,11 +148,13 @@ public class Main {
 
         try {
             // Try to connect
+            System.out.println("Geequel-Shell about to connect ");
             shell.connect(connectionConfig);
         } catch (AuthenticationException e) {
             // Fail if we already prompted,
             // or do not have interactive input,
             // or already tried with both username and password
+            System.out.println("Geequel-Shell failed to connect " + e.getMessage());
             if (didPrompt || !inputInteractive || (!connectionConfig.username().isEmpty() && !connectionConfig.password().isEmpty())) {
                 throw e;
             }

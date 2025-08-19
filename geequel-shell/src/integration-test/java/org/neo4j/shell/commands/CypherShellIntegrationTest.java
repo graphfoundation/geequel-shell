@@ -19,7 +19,7 @@
  */
 package org.neo4j.shell.commands;
 
-import org.neo4j.driver.v1.exceptions.ServiceUnavailableException;
+import org.neo4j.driver.exceptions.ServiceUnavailableException;
 import org.neo4j.shell.ConnectionConfig;
 import org.neo4j.shell.CypherShell;
 import org.neo4j.shell.exception.CommandException;

@@ -19,15 +19,15 @@
  */
 package org.neo4j.shell.test.bolt;
 
-import org.neo4j.driver.v1.*;
-import org.neo4j.driver.v1.types.TypeSystem;
+import org.neo4j.driver.*;
+import org.neo4j.driver.types.TypeSystem;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 /**
- * A fake session which returns fake StatementResults
+ * A fake session which returns fake Results
  */
 public class FakeSession implements Session {
     private boolean open = true;
@@ -106,37 +106,37 @@ public class FakeSession implements Session {
     }
 
     @Override
-    public StatementResult run( String statement, TransactionConfig config )
+    public Result run( String statement, TransactionConfig config )
     {
-        return FakeStatementResult.parseStatement(statement);
+        return FakeResult.parseStatement(statement);
     }
 
     @Override
-    public StatementResult run( String statement, Map<String,Object> parameters, TransactionConfig config )
+    public Result run( String statement, Map<String,Object> parameters, TransactionConfig config )
     {
-        return FakeStatementResult.parseStatement(statement);
+        return FakeResult.parseStatement(statement);
     }
 
     @Override
-    public StatementResult run( Statement statement, TransactionConfig config )
+    public Result run( Statement statement, TransactionConfig config )
     {
-        return new FakeStatementResult();
+        return new FakeResult();
     }
 
     @Override
-    public CompletionStage<StatementResultCursor> runAsync( String statement, TransactionConfig config )
-    {
-        return null;
-    }
-
-    @Override
-    public CompletionStage<StatementResultCursor> runAsync( String statement, Map<String,Object> parameters, TransactionConfig config )
+    public CompletionStage<ResultCursor> runAsync( String statement, TransactionConfig config )
     {
         return null;
     }
 
     @Override
-    public CompletionStage<StatementResultCursor> runAsync( Statement statement, TransactionConfig config )
+    public CompletionStage<ResultCursor> runAsync( String statement, Map<String,Object> parameters, TransactionConfig config )
+    {
+        return null;
+    }
+
+    @Override
+    public CompletionStage<ResultCursor> runAsync( Statement statement, TransactionConfig config )
     {
         return null;
     }
@@ -166,53 +166,53 @@ public class FakeSession implements Session {
     }
 
     @Override
-    public StatementResult run(String statementTemplate, Value parameters) {
-        return FakeStatementResult.parseStatement(statementTemplate);
+    public Result run(String statementTemplate, Value parameters) {
+        return FakeResult.parseStatement(statementTemplate);
     }
 
     @Override
-    public CompletionStage<StatementResultCursor> runAsync(String statementTemplate, Value parameters) {
+    public CompletionStage<ResultCursor> runAsync(String statementTemplate, Value parameters) {
         return null;
     }
 
     @Override
-    public StatementResult run(String statementTemplate, Map<String, Object> statementParameters) {
-        return FakeStatementResult.parseStatement(statementTemplate);
+    public Result run(String statementTemplate, Map<String, Object> statementParameters) {
+        return FakeResult.parseStatement(statementTemplate);
     }
 
     @Override
-    public CompletionStage<StatementResultCursor> runAsync(String statementTemplate,
+    public CompletionStage<ResultCursor> runAsync(String statementTemplate,
                                                            Map<String, Object> statementParameters) {
         return null;
     }
 
     @Override
-    public StatementResult run(String statementTemplate, Record statementParameters) {
-        return FakeStatementResult.parseStatement(statementTemplate);
+    public Result run(String statementTemplate, Record statementParameters) {
+        return FakeResult.parseStatement(statementTemplate);
     }
 
     @Override
-    public CompletionStage<StatementResultCursor> runAsync(String statementTemplate, Record statementParameters) {
+    public CompletionStage<ResultCursor> runAsync(String statementTemplate, Record statementParameters) {
         return null;
     }
 
     @Override
-    public StatementResult run(String statementTemplate) {
-        return FakeStatementResult.parseStatement(statementTemplate);
+    public Result run(String statementTemplate) {
+        return FakeResult.parseStatement(statementTemplate);
     }
 
     @Override
-    public CompletionStage<StatementResultCursor> runAsync(String statementTemplate) {
+    public CompletionStage<ResultCursor> runAsync(String statementTemplate) {
         return null;
     }
 
     @Override
-    public StatementResult run(Statement statement) {
-        return new FakeStatementResult();
+    public Result run(Statement statement) {
+        return new FakeResult();
     }
 
     @Override
-    public CompletionStage<StatementResultCursor> runAsync(Statement statement) {
+    public CompletionStage<ResultCursor> runAsync(Statement statement) {
         return null;
     }
 

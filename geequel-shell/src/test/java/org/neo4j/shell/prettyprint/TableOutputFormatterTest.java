@@ -41,17 +41,17 @@ import org.neo4j.driver.internal.value.NodeValue;
 import org.neo4j.driver.internal.value.PathValue;
 import org.neo4j.driver.internal.value.PointValue;
 import org.neo4j.driver.internal.value.RelationshipValue;
-import org.neo4j.driver.v1.Record;
-import org.neo4j.driver.v1.Statement;
-import org.neo4j.driver.v1.StatementResult;
-import org.neo4j.driver.v1.Value;
-import org.neo4j.driver.v1.Values;
-import org.neo4j.driver.v1.summary.ProfiledPlan;
-import org.neo4j.driver.v1.summary.ResultSummary;
-import org.neo4j.driver.v1.summary.StatementType;
-import org.neo4j.driver.v1.types.Node;
-import org.neo4j.driver.v1.types.Path;
-import org.neo4j.driver.v1.types.Relationship;
+import org.neo4j.driver.Record;
+import org.neo4j.driver.Statement;
+import org.neo4j.driver.Result;
+import org.neo4j.driver.Value;
+import org.neo4j.driver.Values;
+import org.neo4j.driver.summary.ProfiledPlan;
+import org.neo4j.driver.summary.ResultSummary;
+import org.neo4j.driver.summary.StatementType;
+import org.neo4j.driver.types.Node;
+import org.neo4j.driver.types.Path;
+import org.neo4j.driver.types.Relationship;
 import org.neo4j.shell.cli.Format;
 import org.neo4j.shell.state.BoltResult;
 import org.neo4j.shell.state.ListBoltResult;
@@ -318,7 +318,7 @@ public class TableOutputFormatterTest {
     @Test
     public void basicTable() {
         // GIVEN
-        StatementResult result = mockResult(asList("c1", "c2"), "a", 42);
+        Result result = mockResult(asList("c1", "c2"), "a", 42);
         // WHEN
         String table = formatResult(result);
         // THEN
@@ -329,7 +329,7 @@ public class TableOutputFormatterTest {
     @Test
     public void twoRowsWithNumbersAllSampled() {
         // GIVEN
-        StatementResult result = mockResult(asList("c1", "c2"), "a", 42, "b", 43);
+        Result result = mockResult(asList("c1", "c2"), "a", 42, "b", 43);
         // WHEN
         String table = formatResult(result);
         // THEN
@@ -340,7 +340,7 @@ public class TableOutputFormatterTest {
     @Test
     public void fiveRowsWithNumbersNotAllSampled() {
         // GIVEN
-        StatementResult result = mockResult(asList("c1", "c2"), "a", 42, "b", 43, "c", 44, "d", 45, "e", 46);
+        Result result = mockResult(asList("c1", "c2"), "a", 42, "b", 43, "c", 44, "d", 45, "e", 46);
         // WHEN
         String table = formatResult(result);
         // THEN
@@ -355,7 +355,7 @@ public class TableOutputFormatterTest {
     public void wrapStringContent()
     {
         // GIVEN
-        StatementResult result = mockResult( asList( "c1"), "a", "bb","ccc","dddd","eeeee" );
+        Result result = mockResult( asList( "c1"), "a", "bb","ccc","dddd","eeeee" );
         // WHEN
         ToStringLinePrinter printer = new ToStringLinePrinter();
         new TableOutputFormatter(true, 2).formatAndCount(new ListBoltResult(result.list(), result.summary()), printer);
@@ -381,7 +381,7 @@ public class TableOutputFormatterTest {
     public void wrapStringContentWithTwoColumns()
     {
         // GIVEN
-        StatementResult result = mockResult( asList( "c1", "c2" ), "a", "b",
+        Result result = mockResult( asList( "c1", "c2" ), "a", "b",
                                              "aa", "bb",
                                              "aaa", "b",
                                              "a", "bbb",
@@ -417,7 +417,7 @@ public class TableOutputFormatterTest {
     public void wrapNumberContentWithLongSize()
     {
         // GIVEN
-        StatementResult result = mockResult( asList( "c1"), 345, 12, 978623, 132456798, 9223372036854775807L );
+        Result result = mockResult( asList( "c1"), 345, 12, 978623, 132456798, 9223372036854775807L );
         // WHEN
         ToStringLinePrinter printer = new ToStringLinePrinter();
         new TableOutputFormatter(true, 2).formatAndCount(new ListBoltResult(result.list(), result.summary()), printer);
@@ -440,7 +440,7 @@ public class TableOutputFormatterTest {
     public void truncateContent()
     {
         // GIVEN
-        StatementResult result = mockResult( asList( "c1"), "a", "bb","ccc","dddd","eeeee" );
+        Result result = mockResult( asList( "c1"), "a", "bb","ccc","dddd","eeeee" );
         // WHEN
         ToStringLinePrinter printer = new ToStringLinePrinter();
         new TableOutputFormatter(false, 2).formatAndCount(new ListBoltResult(result.list(), result.summary()), printer);
@@ -462,7 +462,7 @@ public class TableOutputFormatterTest {
     @Test
     public void formatCollections() {
         // GIVEN
-        StatementResult result = mockResult(asList("a", "b", "c"), singletonMap("a", 42), asList(12, 13),
+        Result result = mockResult(asList("a", "b", "c"), singletonMap("a", 42), asList(12, 13),
                 singletonMap("a", asList(14, 15)));
         // WHEN
         String table = formatResult(result);
@@ -477,7 +477,7 @@ public class TableOutputFormatterTest {
         Map<String, Value> relProperties = singletonMap("since", Values.value(2016));
         InternalNode node = new InternalNode(12, asList("Person"), properties);
         InternalRelationship relationship = new InternalRelationship(24, 12, 12, "TEST", relProperties);
-        StatementResult result =
+        Result result =
                 mockResult(asList("a", "b", "c"), node, relationship, new InternalPath(node, relationship, node));
         // WHEN
         String table = formatResult(result);
@@ -487,14 +487,14 @@ public class TableOutputFormatterTest {
                 "| (:Person {name: \"Mark\"})-[:TEST {since: 2016}]->(:Person {name: \"Mark\"}) |"));
     }
 
-    private String formatResult(StatementResult result) {
+    private String formatResult(Result result) {
         ToStringLinePrinter printer = new ToStringLinePrinter();
         new TableOutputFormatter(true, 1000).formatAndCount(new ListBoltResult(result.list(), result.summary()), printer);
         return printer.result();
     }
 
-    private StatementResult mockResult(List<String> cols, Object... data) {
-        StatementResult result = mock(StatementResult.class);
+    private Result mockResult(List<String> cols, Object... data) {
+        Result result = mock(Result.class);
         Statement statement = mock(Statement.class);
         ResultSummary summary = mock(ResultSummary.class);
         when(summary.statement()).thenReturn(statement);

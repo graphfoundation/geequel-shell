@@ -31,9 +31,9 @@ import javax.annotation.Nullable;
 
 import org.neo4j.driver.internal.InternalRecord;
 import org.neo4j.driver.internal.value.NumberValueAdapter;
-import org.neo4j.driver.v1.Record;
-import org.neo4j.driver.v1.Value;
-import org.neo4j.driver.v1.summary.ResultSummary;
+import org.neo4j.driver.Record;
+import org.neo4j.driver.Value;
+import org.neo4j.driver.summary.ResultSummary;
 import org.neo4j.shell.state.BoltResult;
 
 import static java.util.Arrays.asList;

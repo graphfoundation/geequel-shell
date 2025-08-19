@@ -52,13 +52,17 @@ public class CliArgHelper {
     public static CliArgs parse(@Nonnull String... args) {
         final ArgumentParser parser = setupParser();
         final Namespace ns;
+        System.out.println("geequel-shell: " + format("Starting with arguments: %s", String.join(" ", args)));
 
         try {
             ns = parser.parseArgs(args);
         } catch (ArgumentParserException e) {
+            System.err.println("geequel-shell: parse error: " + e.getMessage());
             parser.handleError(e);
             return null;
         }
+
+        System.out.println("geequel-shell: " + format("Parsed arguments: %s", ns.toString()));
 
         // Parse address string, returns null on error
         final Matcher addressMatcher = parseAddressMatcher(parser, ns.getString("address"));
@@ -145,7 +149,7 @@ public class CliArgHelper {
         ArgumentGroup connGroup = parser.addArgumentGroup("connection arguments");
         connGroup.addArgument("-a", "--address")
                 .help("address and port to connect to")
-                .setDefault("bolt://localhost:7687");
+                .setDefault("neo4j://localhost:7687");
         connGroup.addArgument("-u", "--username")
                 .setDefault("")
                 .help("username to connect as. Can also be specified using environment variable ONGDB_USERNAME");

@@ -19,8 +19,8 @@
  */
 package org.neo4j.shell.test.bolt;
 
-import org.neo4j.driver.v1.*;
-import org.neo4j.driver.v1.types.TypeSystem;
+import org.neo4j.driver.*;
+import org.neo4j.driver.types.TypeSystem;
 
 import java.util.concurrent.CompletionStage;
 import java.util.Map;
@@ -57,27 +57,27 @@ public class FakeTransaction implements Transaction {
     }
 
     @Override
-    public StatementResult run(String query, Value parameters) {
+    public Result run(String query, Value parameters) {
         return null;
     }
 
     @Override
-    public StatementResult run(String query, Map<String, Object> parameters) {
+    public Result run(String query, Map<String, Object> parameters) {
         return null;
     }
 
     @Override
-    public StatementResult run(String query, Record parameters) {
+    public Result run(String query, Record parameters) {
         return null;
     }
 
     @Override
-    public StatementResult run(String query) {
+    public Result run(String query) {
         return null;
     }
 
     @Override
-    public StatementResult run(Statement statement) {
+    public Result run(Statement statement) {
         return null;
     }
 
@@ -87,28 +87,28 @@ public class FakeTransaction implements Transaction {
     }
 
     @Override
-    public CompletionStage<StatementResultCursor> runAsync( String statement, Map<String,Object> parameters)
+    public CompletionStage<ResultCursor> runAsync( String statement, Map<String,Object> parameters)
     {
         return null;
     }
 
     @Override
-    public CompletionStage<StatementResultCursor> runAsync(String statementTemplate, Value parameters) {
+    public CompletionStage<ResultCursor> runAsync(String statementTemplate, Value parameters) {
         return null;
     }
 
     @Override
-    public CompletionStage<StatementResultCursor> runAsync(String statementTemplate, Record statementParameters) {
+    public CompletionStage<ResultCursor> runAsync(String statementTemplate, Record statementParameters) {
         return null;
     }
 
     @Override
-    public CompletionStage<StatementResultCursor> runAsync(String statementTemplate) {
+    public CompletionStage<ResultCursor> runAsync(String statementTemplate) {
         return null;
     }
 
     @Override
-    public CompletionStage<StatementResultCursor> runAsync(Statement statement) {
+    public CompletionStage<ResultCursor> runAsync(Statement statement) {
         return null;
     }
 }

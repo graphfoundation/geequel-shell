@@ -19,22 +19,22 @@
  */
 package org.neo4j.shell.state;
 
-import org.neo4j.driver.v1.Record;
-import org.neo4j.driver.v1.StatementResult;
-import org.neo4j.driver.v1.summary.ResultSummary;
+import org.neo4j.driver.Record;
+import org.neo4j.driver.Result;
+import org.neo4j.driver.summary.ResultSummary;
 
 import javax.annotation.Nonnull;
 import java.util.Iterator;
 import java.util.List;
 
 /**
- * Wrapper around {@link StatementResult}. Might or might not be materialized.
+ * Wrapper around {@link Result}. Might or might not be materialized.
  */
 public class StatementBoltResult implements BoltResult {
 
-    private final StatementResult result;
+    private final Result result;
 
-    public StatementBoltResult(StatementResult result) {
+    public StatementBoltResult(Result result) {
         this.result = result;
     }
 
@@ -59,6 +59,6 @@ public class StatementBoltResult implements BoltResult {
     @Nonnull
     @Override
     public ResultSummary getSummary() {
-        return result.summary();
+        return result.consume();
     }
 }

@@ -19,7 +19,7 @@
  */
 package org.neo4j.shell.log;
 
-import org.neo4j.driver.v1.Logger;
+import org.neo4j.driver.Logger;
 
 public class NullLogger implements Logger
 {
@@ -52,6 +52,11 @@ public class NullLogger implements Logger
     @Override
     public void debug( String message, Object... params )
     {
+    }
+
+    @Override
+    public void debug(String s, Throwable throwable) {
+
     }
 
     @Override
