@@ -25,18 +25,19 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.neo4j.driver.Query;
 import org.neo4j.driver.internal.BoltServerAddress;
+import org.neo4j.driver.internal.messaging.BoltProtocolVersion;
 import org.neo4j.driver.internal.summary.InternalResultSummary;
 import org.neo4j.driver.internal.summary.InternalServerInfo;
 import org.neo4j.driver.internal.util.ServerVersion;
 import org.neo4j.driver.internal.value.ListValue;
 import org.neo4j.driver.internal.value.MapValue;
-import org.neo4j.driver.Statement;
 import org.neo4j.driver.Value;
 import org.neo4j.driver.Values;
 import org.neo4j.driver.summary.ProfiledPlan;
+import org.neo4j.driver.summary.QueryType;
 import org.neo4j.driver.summary.ResultSummary;
-import org.neo4j.driver.summary.StatementType;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -52,9 +53,10 @@ public class OutputFormatterTest
 
         ProfiledPlan plan = PROFILED_PLAN_FROM_VALUE.apply( planMap );
         ResultSummary summary = new InternalResultSummary(
-                new Statement( "PROFILE MATCH (n:LABEL) WHERE 20 < n.age < 35 return n" ),
-                new InternalServerInfo( new BoltServerAddress( "localhost:7687" ), ServerVersion.vInDev ),
-                StatementType.READ_ONLY,
+                new Query( "PROFILE MATCH (n:LABEL) WHERE 20 < n.age < 35 return n" ),
+                new InternalServerInfo( "testAgent", new BoltServerAddress( "localhost:7687" ), ServerVersion.vInDev, new BoltProtocolVersion(3, 5) ),
+                null,
+                QueryType.READ_ONLY,
                 null,
                 plan,
                 plan,

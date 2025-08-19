@@ -31,13 +31,13 @@ public class FakeTransaction implements Transaction {
         return true;
     }
 
-    @Override
-    public void success() {
 
+    @Override
+    public void commit() {
     }
 
     @Override
-    public void failure() {
+    public void rollback() {
 
     }
 
@@ -47,68 +47,28 @@ public class FakeTransaction implements Transaction {
     }
 
     @Override
-    public CompletionStage<Void> commitAsync() {
-        return null;
-    }
-
-    @Override
-    public CompletionStage<Void> rollbackAsync() {
-        return null;
-    }
-
-    @Override
     public Result run(String query, Value parameters) {
-        return null;
+        return FakeResult.parseStatement(query);
     }
 
     @Override
     public Result run(String query, Map<String, Object> parameters) {
-        return null;
+        return FakeResult.parseStatement(query);
     }
 
     @Override
     public Result run(String query, Record parameters) {
-        return null;
+        return FakeResult.parseStatement(query);
     }
 
     @Override
     public Result run(String query) {
-        return null;
+        return FakeResult.parseStatement(query);
     }
 
     @Override
-    public Result run(Statement statement) {
-        return null;
+    public Result run(Query query) {
+        return FakeResult.parseStatement(query.text());
     }
 
-    @Override
-    public TypeSystem typeSystem() {
-        return null;
-    }
-
-    @Override
-    public CompletionStage<ResultCursor> runAsync( String statement, Map<String,Object> parameters)
-    {
-        return null;
-    }
-
-    @Override
-    public CompletionStage<ResultCursor> runAsync(String statementTemplate, Value parameters) {
-        return null;
-    }
-
-    @Override
-    public CompletionStage<ResultCursor> runAsync(String statementTemplate, Record statementParameters) {
-        return null;
-    }
-
-    @Override
-    public CompletionStage<ResultCursor> runAsync(String statementTemplate) {
-        return null;
-    }
-
-    @Override
-    public CompletionStage<ResultCursor> runAsync(Statement statement) {
-        return null;
-    }
 }

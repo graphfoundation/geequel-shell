@@ -23,13 +23,13 @@ import org.neo4j.driver.Record;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.exceptions.NoSuchRecordException;
 import org.neo4j.driver.summary.ResultSummary;
-import org.neo4j.driver.util.Function;
 import org.neo4j.shell.test.Util;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -87,6 +87,7 @@ class FakeResult implements Result {
         return records;
     }
 
+
     @Override
     public <T> List<T> list(Function<Record, T> mapFunction) {
         throw new Util.NotImplementedYetException("Not implemented yet");
@@ -94,12 +95,6 @@ class FakeResult implements Result {
 
     @Override
     public ResultSummary consume() {
-        return new FakeResultSummary();
-    }
-
-    @Override
-    public ResultSummary summary()
-    {
         return new FakeResultSummary();
     }
 

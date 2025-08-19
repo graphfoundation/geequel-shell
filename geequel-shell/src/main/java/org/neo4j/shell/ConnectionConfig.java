@@ -29,6 +29,7 @@ public class ConnectionConfig {
     private final int port;
     private String username;
     private String password;
+    private boolean encryption;
 
     public ConnectionConfig(@Nonnull String scheme, @Nonnull String host, int port,
                             @Nonnull String username, @Nonnull String password, boolean encryption) {
@@ -37,6 +38,7 @@ public class ConnectionConfig {
         this.username = fallbackToEnvVariable(username, "ONGDB_USERNAME");
         this.password = fallbackToEnvVariable(password, "ONGDB_PASSWORD");
         this.scheme = scheme;
+        this.encryption = encryption;
     }
 
     /**
@@ -73,6 +75,11 @@ public class ConnectionConfig {
     @Nonnull
     public String password() {
         return password;
+    }
+
+    @Nonnull
+    public Boolean encryption() {
+        return encryption;
     }
 
     @Nonnull

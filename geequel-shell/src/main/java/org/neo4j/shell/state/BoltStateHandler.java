@@ -139,7 +139,6 @@ public class BoltStateHandler implements TransactionHandler, Connector {
         session = driver.session(sessionConfig);
         Result run = session.run("RETURN 1");
         this.version = run.consume().server().version();
-        run.consume();
     }
 
     @Nonnull
@@ -242,8 +241,10 @@ public class BoltStateHandler implements TransactionHandler, Connector {
     }
 
     private Driver getDriver(@Nonnull ConnectionConfig connectionConfig, @Nullable AuthToken authToken) {
-        Config config = Config.builder()
-                              .withLogging(NullLogging.NULL_LOGGING).withUserAgent( USER_AGENT ).build();
+        Config.ConfigBuilder configBuilder = Config.builder()
+                              .withLogging(NullLogging.NULL_LOGGING).withUserAgent( USER_AGENT );
+        Config config;
+        if (connectionConfig.encryption()){config = configBuilder.withEncryption().build();} else {config = configBuilder.build();}
 
         String driverUrl = connectionConfig.driverUrl();
         return driverProvider.apply(driverUrl, authToken, config);

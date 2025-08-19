@@ -25,14 +25,15 @@ import org.neo4j.driver.types.Entity;
 import org.neo4j.driver.types.Node;
 import org.neo4j.driver.types.Path;
 import org.neo4j.driver.types.Relationship;
-import org.neo4j.driver.util.Function;
 import org.neo4j.driver.util.Pair;
 import org.neo4j.shell.test.Util;
 
 import javax.annotation.Nonnull;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -53,6 +54,11 @@ class FakeRecord implements Record {
     @Override
     public List<Value> values() {
         return valueMap.values().stream().collect(Collectors.toList());
+    }
+
+    @Override
+    public <T> Iterable<T> values(Function<Value, T> function) {
+        return null;
     }
 
     @Override
@@ -242,8 +248,8 @@ class FakeRecord implements Record {
     }
 
     @Override
-    public <T> List<T> get(String key, List<T> defaultValue, Function<Value, T> mapFunc) {
-        return null;
+    public <T> List<T> get(String s, List<T> list, Function<Value, T> function) {
+        return Collections.emptyList();
     }
 
     @Override
