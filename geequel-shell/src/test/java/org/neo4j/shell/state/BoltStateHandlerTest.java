@@ -84,8 +84,8 @@ public class BoltStateHandlerTest {
                 return new FakeDriver() {
                     @Override
                    public Session session() {
-                                               return new FakeSession();
-                                           }
+                       return new FakeSession();
+                   }
                 };
             }
         };
