@@ -54,9 +54,7 @@ public class BoltStateHandler implements TransactionHandler, Connector {
     }
 
     BoltStateHandler(TriFunction<String, AuthToken, Config, Driver> driverProvider) {
-        System.out.println("Creating BoltStateHandler");
         this.driverProvider = driverProvider;
-        System.out.println("Created BoltStateHandler");
     }
 
     @Override
@@ -117,11 +115,8 @@ public class BoltStateHandler implements TransactionHandler, Connector {
         final AuthToken authToken = AuthTokens.basic(connectionConfig.username(), connectionConfig.password());
 
         try {
-            System.out.println("About to get driver");
             driver = getDriver(connectionConfig, authToken);
-            System.out.println("Got driver");
             reconnect();
-            System.out.println("Reconnected");
         } catch (Throwable t) {
             try {
                 System.err.println("Error connecting to ONgDB: " + t.getMessage());
@@ -140,14 +135,10 @@ public class BoltStateHandler implements TransactionHandler, Connector {
             bookmark = session.lastBookmark();
             session.close();
         }
-        System.out.println("Reconnecting with bookmark: " + bookmark);
         SessionConfig sessionConfig = SessionConfig.builder().withDefaultAccessMode(AccessMode.WRITE).withBookmarks( bookmark).build();
         session = driver.session(sessionConfig);
-        System.out.println("Reconnected with bookmark: " + session);
         Result run = session.run("RETURN 1");
-        System.out.println("About to consume result");
         this.version = run.consume().server().version();
-        System.out.println("Consumed result, version: " + version);
         run.consume();
     }
 
@@ -254,9 +245,7 @@ public class BoltStateHandler implements TransactionHandler, Connector {
         Config config = Config.builder()
                               .withLogging(NullLogging.NULL_LOGGING).withUserAgent( USER_AGENT ).build();
 
-        System.out.println("About to get driver with authToken: " + authToken);
         String driverUrl = connectionConfig.driverUrl();
-        System.out.println("About to get driver with url: " + driverUrl);
         return driverProvider.apply(driverUrl, authToken, config);
     }
 
