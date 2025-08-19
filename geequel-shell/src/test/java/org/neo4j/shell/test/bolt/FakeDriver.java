@@ -89,7 +89,6 @@ public class FakeDriver implements Driver {
 
     @Override
     public void verifyConnectivity() {
-
     }
 
     @Override
