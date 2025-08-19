@@ -59,7 +59,7 @@ public class CliArgHelper {
             parser.handleError(e);
             return null;
         }
-        
+
         // Parse address string, returns null on error
         final Matcher addressMatcher = parseAddressMatcher(parser, ns.getString("address"));
 
