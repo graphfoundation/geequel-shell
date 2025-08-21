@@ -23,19 +23,10 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.neo4j.driver.v1.AccessMode;
-import org.neo4j.driver.v1.AuthToken;
-import org.neo4j.driver.v1.Config;
-import org.neo4j.driver.v1.Driver;
-import org.neo4j.driver.v1.Record;
-import org.neo4j.driver.v1.Session;
-import org.neo4j.driver.v1.Statement;
-import org.neo4j.driver.v1.StatementResult;
-import org.neo4j.driver.v1.Transaction;
-import org.neo4j.driver.v1.Value;
-import org.neo4j.driver.v1.exceptions.SessionExpiredException;
-import org.neo4j.driver.v1.summary.ResultSummary;
-import org.neo4j.driver.v1.summary.ServerInfo;
+import org.neo4j.driver.*;
+import org.neo4j.driver.exceptions.SessionExpiredException;
+import org.neo4j.driver.summary.ResultSummary;
+import org.neo4j.driver.summary.ServerInfo;
 import org.neo4j.shell.ConnectionConfig;
 import org.neo4j.shell.TriFunction;
 import org.neo4j.shell.exception.CommandException;
@@ -45,8 +36,6 @@ import org.neo4j.shell.test.bolt.FakeSession;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
@@ -57,7 +46,6 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.anyObject;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
@@ -76,7 +64,8 @@ public class BoltStateHandlerTest {
 
     @Before
     public void setup() {
-        when(mockDriver.session(any(), anyString())).thenReturn(new FakeSession());
+        when(mockDriver.session()).thenReturn(new FakeSession());
+        when(mockDriver.session(any())).thenReturn(new FakeSession());
         doReturn(System.out).when(logger).getOutputStream();
     }
 
@@ -94,9 +83,9 @@ public class BoltStateHandlerTest {
                 super.apply(uri, authToken, config);
                 return new FakeDriver() {
                     @Override
-                    public Session session(AccessMode accessMode, String bookmark) {
-                        return new FakeSession();
-                    }
+                   public Session session() {
+                       return new FakeSession();
+                   }
                 };
             }
         };
@@ -109,7 +98,7 @@ public class BoltStateHandlerTest {
 
     @Test
     public void versionIsNotEmptyAfterConnect() throws CommandException {
-        Driver driverMock = stubVersionInAnOpenSession(mock(StatementResult.class), mock(Session.class), "ONgDB/1.0.0-alpha01");
+        Driver driverMock = stubVersionInAnOpenSession(mock(Result.class), mock(Session.class), "ONgDB/1.0.0-alpha01");
 
         BoltStateHandler handler = new BoltStateHandler((s, authToken, config) -> driverMock);
         ConnectionConfig config = new ConnectionConfig("bolt://", "", -1, "", "", false);
@@ -133,7 +122,7 @@ public class BoltStateHandlerTest {
     @Test
     public void exceptionsFromSilentDisconnectAreSuppressedToReportOriginalErrors() throws CommandException {
         Session session = mock(Session.class);
-        StatementResult resultMock = mock(StatementResult.class);
+        Result resultMock = mock(Result.class);
 
         RuntimeException originalException = new RuntimeException("original exception");
         RuntimeException thrownFromSilentDisconnect = new RuntimeException("exception from silent disconnect");
@@ -198,13 +187,13 @@ public class BoltStateHandlerTest {
         Transaction transactionMock = mock(Transaction.class);
         Session sessionMock = mock(Session.class);
         when(sessionMock.beginTransaction()).thenReturn(transactionMock);
-        Driver driverMock = stubVersionInAnOpenSession(mock(StatementResult.class), sessionMock, "ongdb-version");
+        Driver driverMock = stubVersionInAnOpenSession(mock(Result.class), sessionMock, "ongdb-version");
 
-        StatementResult result = mock(StatementResult.class);
+        Result result = mock(Result.class);
         ResultSummary resultSummary = mock(ResultSummary.class);
-        when(result.summary()).thenReturn(resultSummary);
+        when(result.consume()).thenReturn(resultSummary);
 
-        when(transactionMock.run((Statement) anyObject())).thenReturn(result);
+        when(transactionMock.run((Query) anyObject())).thenReturn(result);
 
         OfflineBoltStateHandler boltStateHandler = new OfflineBoltStateHandler(driverMock);
         boltStateHandler.connect();
@@ -247,8 +236,8 @@ public class BoltStateHandlerTest {
     @Test
     public void shouldRunCypherQuery() throws CommandException {
         Session sessionMock = mock(Session.class);
-        StatementResult versionMock = mock(StatementResult.class);
-        StatementResult resultMock = mock(StatementResult.class);
+        Result versionMock = mock(Result.class);
+        Result resultMock = mock(Result.class);
         Record recordMock = mock(Record.class);
         Value valueMock = mock(Value.class);
 
@@ -258,7 +247,7 @@ public class BoltStateHandlerTest {
 
         when(valueMock.toString()).thenReturn("999");
         when(recordMock.get(0)).thenReturn(valueMock);
-        when(sessionMock.run(any(Statement.class))).thenReturn(resultMock);
+        when(sessionMock.run(any(Query.class))).thenReturn(resultMock);
 
         OfflineBoltStateHandler boltStateHandler = new OfflineBoltStateHandler(driverMock);
 
@@ -266,7 +255,7 @@ public class BoltStateHandlerTest {
 
         BoltResult boltResult = boltStateHandler.runCypher("RETURN 999",
                 new HashMap<>()).get();
-        verify(sessionMock).run(any(Statement.class));
+        verify(sessionMock).run(any(Query.class));
 
         assertEquals("999", boltResult.getRecords().get(0).get(0).toString());
     }
@@ -274,8 +263,8 @@ public class BoltStateHandlerTest {
     @Test
     public void triesAgainOnSessionExpired() throws Exception {
         Session sessionMock = mock(Session.class);
-        StatementResult versionMock = mock(StatementResult.class);
-        StatementResult resultMock = mock(StatementResult.class);
+        Result versionMock = mock(Result.class);
+        Result resultMock = mock(Result.class);
         Record recordMock = mock(Record.class);
         Value valueMock = mock(Value.class);
 
@@ -285,7 +274,7 @@ public class BoltStateHandlerTest {
 
         when(valueMock.toString()).thenReturn("999");
         when(recordMock.get(0)).thenReturn(valueMock);
-        when(sessionMock.run(any(Statement.class)))
+        when(sessionMock.run(any(Query.class)))
                 .thenThrow(new SessionExpiredException("leaderswitch"))
                 .thenReturn(resultMock);
 
@@ -295,8 +284,8 @@ public class BoltStateHandlerTest {
         BoltResult boltResult = boltStateHandler.runCypher("RETURN 999",
                 new HashMap<>()).get();
 
-        verify(driverMock, times(2)).session(any(), anyString());
-        verify(sessionMock, times(2)).run(any(Statement.class));
+        verify(driverMock, times(2)).session(any());
+        verify(sessionMock, times(2)).run(any(Query.class));
 
         assertEquals("999", boltResult.getRecords().get(0).get(0).toString());
     }
@@ -326,7 +315,7 @@ public class BoltStateHandlerTest {
     public void resetSessionOnReset() throws Exception {
         // given
         Session sessionMock = mock(Session.class);
-        Driver driverMock = stubVersionInAnOpenSession(mock(StatementResult.class), sessionMock, "ongdb-version");
+        Driver driverMock = stubVersionInAnOpenSession(mock(Result.class), sessionMock, "ongdb-version");
 
         OfflineBoltStateHandler boltStateHandler = new OfflineBoltStateHandler(driverMock);
 
@@ -364,7 +353,7 @@ public class BoltStateHandlerTest {
         BoltStateHandler handler = new BoltStateHandler(provider);
         ConnectionConfig config = new ConnectionConfig("bolt://", "", -1, "", "", false);
         handler.connect(config);
-        assertEquals(Config.EncryptionLevel.NONE, provider.config.encryptionLevel());
+        assertFalse(provider.config.encrypted());
     }
 
     @Test
@@ -373,21 +362,23 @@ public class BoltStateHandlerTest {
         BoltStateHandler handler = new BoltStateHandler(provider);
         ConnectionConfig config = new ConnectionConfig("bolt://", "", -1, "", "", true);
         handler.connect(config);
-        assertEquals(Config.EncryptionLevel.REQUIRED, provider.config.encryptionLevel());
+        assertTrue(provider.config.encrypted());
     }
 
-    private Driver stubVersionInAnOpenSession(StatementResult versionMock, Session sessionMock, String value) {
+    private Driver stubVersionInAnOpenSession(Result versionMock, Session sessionMock, String value) {
         Driver driverMock = mock(Driver.class);
         ResultSummary resultSummary = mock(ResultSummary.class);
         ServerInfo serverInfo = mock(ServerInfo.class);
 
         when(resultSummary.server()).thenReturn(serverInfo);
         when(serverInfo.version()).thenReturn(value);
-        when(versionMock.summary()).thenReturn(resultSummary);
+        when(versionMock.consume()).thenReturn(resultSummary);
 
         when(sessionMock.isOpen()).thenReturn(true);
         when(sessionMock.run("RETURN 1")).thenReturn(versionMock);
-        when(driverMock.session(any(), anyString())).thenReturn(sessionMock);
+        when(driverMock.session()).thenReturn(sessionMock);
+        when(driverMock.session(any())).thenReturn(sessionMock);
+
 
         return driverMock;
     }

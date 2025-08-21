@@ -19,16 +19,15 @@
  */
 package org.neo4j.shell.test.bolt;
 
-import org.neo4j.driver.v1.Value;
-import org.neo4j.driver.v1.exceptions.value.Uncoercible;
-import org.neo4j.driver.v1.types.Entity;
-import org.neo4j.driver.v1.types.IsoDuration;
-import org.neo4j.driver.v1.types.Node;
-import org.neo4j.driver.v1.types.Path;
-import org.neo4j.driver.v1.types.Point;
-import org.neo4j.driver.v1.types.Relationship;
-import org.neo4j.driver.v1.types.Type;
-import org.neo4j.driver.v1.util.Function;
+import org.neo4j.driver.Value;
+import org.neo4j.driver.exceptions.value.Uncoercible;
+import org.neo4j.driver.types.Entity;
+import org.neo4j.driver.types.IsoDuration;
+import org.neo4j.driver.types.Node;
+import org.neo4j.driver.types.Path;
+import org.neo4j.driver.types.Point;
+import org.neo4j.driver.types.Relationship;
+import org.neo4j.driver.types.Type;
 
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
@@ -36,8 +35,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.OffsetTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * A fake value
@@ -60,7 +61,7 @@ class FakeValue implements Value {
     }
 
     @Override
-    public <T> Iterable<T> values(Function<Value, T> mapFunction) {
+    public <T> Iterable<T> values(Function<Value, T> function) {
         return null;
     }
 
@@ -70,8 +71,8 @@ class FakeValue implements Value {
     }
 
     @Override
-    public <T> Map<String, T> asMap(Function<Value, T> mapFunction) {
-        throw new Uncoercible(getClass().getSimpleName(), "Map");
+    public <T> Map<String, T> asMap(Function<Value, T> function) {
+        return Collections.emptyMap();
     }
 
     @Override
@@ -130,8 +131,8 @@ class FakeValue implements Value {
     }
 
     @Override
-    public <T> T computeOrDefault(Function<Value, T> mapper, T defaultValue) {
-        throw new UnsupportedOperationException("No implementation");
+    public <T> T computeOrDefault(Function<Value, T> function, T t) {
+        return null;
     }
 
     @Override
@@ -220,13 +221,13 @@ class FakeValue implements Value {
     }
 
     @Override
-    public <T> List<T> asList(Function<Value, T> mapFunction) {
-        throw new Uncoercible(getClass().getSimpleName(), "List");
+    public <T> List<T> asList(Function<Value, T> function) {
+        return Collections.emptyList();
     }
 
     @Override
-    public <T> List<T> asList(Function<Value, T> mapFunction, List<T> defaultValue) {
-        throw new Uncoercible(getClass().getSimpleName(), "List");
+    public <T> List<T> asList(Function<Value, T> function, List<T> list) {
+        return Collections.emptyList();
     }
 
     @Override
@@ -337,8 +338,8 @@ class FakeValue implements Value {
     }
 
     @Override
-    public <T> Map<String, T> asMap(Function<Value, T> mapFunction, Map<String, T> defaultValue) {
-        throw new Uncoercible(getClass().getSimpleName(), "Map");
+    public <T> Map<String, T> asMap(Function<Value, T> function, Map<String, T> map) {
+        return Collections.emptyMap();
     }
 
     @Override
@@ -382,8 +383,8 @@ class FakeValue implements Value {
     }
 
     @Override
-    public <T> List<T> get(String key, List<T> defaultValue, Function<Value, T> mapFunc) {
-        return null;
+    public <T> List<T> get(String s, List<T> list, Function<Value, T> function) {
+        return Collections.emptyList();
     }
 
     @Override
@@ -392,8 +393,8 @@ class FakeValue implements Value {
     }
 
     @Override
-    public <T> Map<String, T> get(String key, Map<String, T> defaultValue, Function<Value, T> mapFunc) {
-        return null;
+    public <T> Map<String, T> get(String s, Map<String, T> map, Function<Value, T> function) {
+        return Collections.emptyMap();
     }
 
     @Override

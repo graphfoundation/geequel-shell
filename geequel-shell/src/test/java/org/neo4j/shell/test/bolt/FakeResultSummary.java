@@ -19,9 +19,9 @@
  */
 package org.neo4j.shell.test.bolt;
 
+import org.neo4j.driver.Query;
 import org.neo4j.driver.internal.summary.InternalSummaryCounters;
-import org.neo4j.driver.v1.Statement;
-import org.neo4j.driver.v1.summary.*;
+import org.neo4j.driver.summary.*;
 import org.neo4j.shell.test.Util;
 
 import java.util.List;
@@ -31,9 +31,10 @@ import java.util.concurrent.TimeUnit;
  * A fake result summary
  */
 class FakeResultSummary implements ResultSummary {
+
     @Override
-    public Statement statement() {
-        throw new Util.NotImplementedYetException("Not implemented yet");
+    public Query query() {
+        return null;
     }
 
     @Override
@@ -42,8 +43,8 @@ class FakeResultSummary implements ResultSummary {
     }
 
     @Override
-    public StatementType statementType() {
-        throw new Util.NotImplementedYetException("Not implemented yet");
+    public QueryType queryType() {
+        return null;
     }
 
     @Override
@@ -97,6 +98,21 @@ class FakeResultSummary implements ResultSummary {
             {
                 return null;
             }
+
+            @Override
+            public String protocolVersion() {
+                return null;
+            }
+
+            @Override
+            public String agent() {
+                return null;
+            }
         };
+    }
+
+    @Override
+    public DatabaseInfo database() {
+        return null;
     }
 }

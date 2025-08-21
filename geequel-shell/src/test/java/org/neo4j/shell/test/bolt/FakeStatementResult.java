@@ -19,31 +19,31 @@
  */
 package org.neo4j.shell.test.bolt;
 
-import org.neo4j.driver.v1.Record;
-import org.neo4j.driver.v1.StatementResult;
-import org.neo4j.driver.v1.exceptions.NoSuchRecordException;
-import org.neo4j.driver.v1.summary.ResultSummary;
-import org.neo4j.driver.v1.util.Function;
+import org.neo4j.driver.Record;
+import org.neo4j.driver.Result;
+import org.neo4j.driver.exceptions.NoSuchRecordException;
+import org.neo4j.driver.summary.ResultSummary;
 import org.neo4j.shell.test.Util;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * A fake StatementResult with fake records and fake values
+ * A fake Result with fake records and fake values
  */
-class FakeStatementResult implements StatementResult {
+class FakeResult implements Result {
 
     private final List<Record> records;
     private int currentRecord = -1;
 
-    FakeStatementResult() {
+    FakeResult() {
         records = new ArrayList<>();
     }
 
@@ -87,6 +87,7 @@ class FakeStatementResult implements StatementResult {
         return records;
     }
 
+
     @Override
     public <T> List<T> list(Function<Record, T> mapFunction) {
         throw new Util.NotImplementedYetException("Not implemented yet");
@@ -97,16 +98,10 @@ class FakeStatementResult implements StatementResult {
         return new FakeResultSummary();
     }
 
-    @Override
-    public ResultSummary summary()
-    {
-        return new FakeResultSummary();
-    }
-
     /**
      * Supports fake parsing of very limited cypher statements, only for basic test purposes
      */
-    static FakeStatementResult parseStatement(@Nonnull final String statement) {
+    static FakeResult parseStatement(@Nonnull final String statement) {
 
         Pattern returnAsPattern = Pattern.compile("^return (.*) as (.*)$", Pattern.CASE_INSENSITIVE);
         Pattern returnPattern = Pattern.compile("^return (.*)$", Pattern.CASE_INSENSITIVE);
@@ -120,9 +115,9 @@ class FakeStatementResult implements StatementResult {
                 if (m.groupCount() > 1) {
                     key = m.group(2);
                 }
-                FakeStatementResult statementResult = new FakeStatementResult();
-                statementResult.records.add(FakeRecord.of(key, value));
-                return statementResult;
+                FakeResult Result = new FakeResult();
+                Result.records.add(FakeRecord.of(key, value));
+                return Result;
             }
         }
         throw new IllegalArgumentException("No idea how to parse this statement");

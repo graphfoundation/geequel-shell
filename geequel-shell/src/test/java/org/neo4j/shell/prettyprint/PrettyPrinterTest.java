@@ -21,17 +21,16 @@ package org.neo4j.shell.prettyprint;
 
 import org.junit.Test;
 import org.neo4j.driver.internal.types.InternalTypeSystem;
-import org.neo4j.driver.v1.Record;
-import org.neo4j.driver.v1.Value;
-import org.neo4j.driver.v1.Values;
-import org.neo4j.driver.v1.summary.ProfiledPlan;
-import org.neo4j.driver.v1.summary.ResultSummary;
-import org.neo4j.driver.v1.summary.StatementType;
-import org.neo4j.driver.v1.summary.SummaryCounters;
-import org.neo4j.driver.v1.types.Node;
-import org.neo4j.driver.v1.types.Path;
-import org.neo4j.driver.v1.types.Relationship;
-import org.neo4j.driver.v1.util.Function;
+import org.neo4j.driver.Record;
+import org.neo4j.driver.Value;
+import org.neo4j.driver.Values;
+import org.neo4j.driver.summary.ProfiledPlan;
+import org.neo4j.driver.summary.QueryType;
+import org.neo4j.driver.summary.ResultSummary;
+import org.neo4j.driver.summary.SummaryCounters;
+import org.neo4j.driver.types.Node;
+import org.neo4j.driver.types.Path;
+import org.neo4j.driver.types.Relationship;
 import org.neo4j.shell.cli.Format;
 import org.neo4j.shell.state.BoltResult;
 import org.neo4j.shell.state.ListBoltResult;
@@ -39,6 +38,7 @@ import org.neo4j.shell.state.ListBoltResult;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
@@ -91,7 +91,7 @@ public class PrettyPrinterTest {
         when(resultSummary.profile()).thenReturn(plan);
         when(resultSummary.resultAvailableAfter(anyObject())).thenReturn(5L);
         when(resultSummary.resultConsumedAfter(anyObject())).thenReturn(7L);
-        when(resultSummary.statementType()).thenReturn(StatementType.READ_ONLY);
+        when(resultSummary.queryType()).thenReturn(QueryType.READ_ONLY);
         Map<String, Value> argumentMap = Values.parameters("Version", "3.1", "Planner", "COST", "Runtime", "INTERPRETED").asMap(v -> v);
         when(plan.arguments()).thenReturn(argumentMap);
 
@@ -126,7 +126,7 @@ public class PrettyPrinterTest {
         when(resultSummary.plan()).thenReturn(plan);
         when(resultSummary.resultAvailableAfter(anyObject())).thenReturn(5L);
         when(resultSummary.resultConsumedAfter(anyObject())).thenReturn(7L);
-        when(resultSummary.statementType()).thenReturn(StatementType.READ_ONLY);
+        when(resultSummary.queryType()).thenReturn(QueryType.READ_ONLY);
         Map<String, Value> argumentMap = Values.parameters("Version", "3.1", "Planner", "COST", "Runtime", "INTERPRETED").asMap(v -> v);
         when(plan.arguments()).thenReturn(argumentMap);
 
@@ -183,9 +183,7 @@ public class PrettyPrinterTest {
         Value value = mock(Value.class);
 
         when(value.type()).thenReturn(InternalTypeSystem.TYPE_SYSTEM.MAP());
-
         when(value.asMap((Function<Value, String>) anyObject())).thenReturn(map);
-
         when(record.keys()).thenReturn(asList("map"));
         when(record.values()).thenReturn(asList(value));
 

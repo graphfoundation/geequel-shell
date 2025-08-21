@@ -20,7 +20,7 @@
 package org.neo4j.shell;
 
 import org.junit.Test;
-import org.neo4j.driver.v1.Config;
+import org.neo4j.driver.Config;
 import org.neo4j.shell.log.Logger;
 
 import static org.junit.Assert.assertEquals;
@@ -59,13 +59,5 @@ public class ConnectionConfigTest {
     @Test
     public void driverUrlDefaultScheme() throws Exception {
         assertEquals("bolt://localhost:1", config.driverUrl());
-    }
-
-    @Test
-    public void encryption() {
-        assertEquals(Config.EncryptionLevel.REQUIRED,
-                new ConnectionConfig("bolt://", "", -1, "", "", true).encryption());
-        assertEquals(Config.EncryptionLevel.NONE,
-                new ConnectionConfig("bolt://", "", -1, "", "", false).encryption());
     }
 }

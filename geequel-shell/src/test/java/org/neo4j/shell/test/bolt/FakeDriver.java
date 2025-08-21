@@ -19,10 +19,11 @@
  */
 package org.neo4j.shell.test.bolt;
 
-import org.neo4j.driver.v1.AccessMode;
-import org.neo4j.driver.v1.Driver;
-import org.neo4j.driver.v1.Session;
-import org.neo4j.driver.v1.exceptions.Neo4jException;
+import org.neo4j.driver.*;
+import org.neo4j.driver.async.AsyncSession;
+import org.neo4j.driver.exceptions.Neo4jException;
+import org.neo4j.driver.reactive.RxSession;
+import org.neo4j.driver.types.TypeSystem;
 
 import java.util.concurrent.CompletionStage;
 
@@ -38,28 +39,28 @@ public class FakeDriver implements Driver {
     }
 
     @Override
-    public Session session(AccessMode mode) {
+    public Session session(SessionConfig sessionConfig) {
         return new FakeSession();
     }
 
     @Override
-    public Session session(String bookmark) {
-        return new FakeSession();
+    public RxSession rxSession() {
+        return null;
     }
 
     @Override
-    public Session session(AccessMode mode, String bookmark) {
-        return new FakeSession();
+    public RxSession rxSession(SessionConfig sessionConfig) {
+        return null;
     }
 
     @Override
-    public Session session(Iterable<String> bookmarks) {
-        return new FakeSession();
+    public AsyncSession asyncSession() {
+        return null;
     }
 
     @Override
-    public Session session(AccessMode mode, Iterable<String> bookmarks) {
-        return new FakeSession();
+    public AsyncSession asyncSession(SessionConfig sessionConfig) {
+        return null;
     }
 
     @Override
@@ -68,6 +69,40 @@ public class FakeDriver implements Driver {
 
     @Override
     public CompletionStage<Void> closeAsync() {
+        return null;
+    }
+
+    @Override
+    public Metrics metrics() {
+        return null;
+    }
+
+    @Override
+    public boolean isMetricsEnabled() {
+        return false;
+    }
+
+    @Override
+    public TypeSystem defaultTypeSystem() {
+        return null;
+    }
+
+    @Override
+    public void verifyConnectivity() {
+    }
+
+    @Override
+    public CompletionStage<Void> verifyConnectivityAsync() {
+        return null;
+    }
+
+    @Override
+    public boolean supportsMultiDb() {
+        return false;
+    }
+
+    @Override
+    public CompletionStage<Boolean> supportsMultiDbAsync() {
         return null;
     }
 }

@@ -21,7 +21,7 @@ package org.neo4j.shell;
 
 import jline.console.ConsoleReader;
 
-import org.neo4j.driver.v1.exceptions.AuthenticationException;
+import org.neo4j.driver.exceptions.AuthenticationException;
 import org.neo4j.shell.config.Build;
 import org.neo4j.shell.cli.CliArgHelper;
 import org.neo4j.shell.cli.CliArgs;

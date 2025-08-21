@@ -19,21 +19,14 @@
  */
 package org.neo4j.shell.state;
 
-import org.neo4j.driver.v1.AccessMode;
-import org.neo4j.driver.v1.AuthToken;
-import org.neo4j.driver.v1.AuthTokens;
-import org.neo4j.driver.v1.Config;
-import org.neo4j.driver.v1.Driver;
-import org.neo4j.driver.v1.GraphDatabase;
-import org.neo4j.driver.v1.Session;
-import org.neo4j.driver.v1.Statement;
-import org.neo4j.driver.v1.StatementResult;
-import org.neo4j.driver.v1.Transaction;
-import org.neo4j.driver.v1.exceptions.SessionExpiredException;
+import org.neo4j.driver.*;
+import org.neo4j.driver.Result;
+import org.neo4j.driver.exceptions.SessionExpiredException;
 import org.neo4j.shell.ConnectionConfig;
 import org.neo4j.shell.Connector;
 import org.neo4j.shell.TransactionHandler;
 import org.neo4j.shell.TriFunction;
+import org.neo4j.shell.config.Build;
 import org.neo4j.shell.exception.CommandException;
 import org.neo4j.shell.log.NullLogging;
 
@@ -49,6 +42,7 @@ import java.util.stream.Collectors;
  * Handles interactions with the driver
  */
 public class BoltStateHandler implements TransactionHandler, Connector {
+    private static final String USER_AGENT = "ongdb-geequel-shell/v" + Build.version();
     private final TriFunction<String, AuthToken, Config, Driver> driverProvider;
     protected Driver driver;
     protected Session session;
@@ -82,7 +76,7 @@ public class BoltStateHandler implements TransactionHandler, Connector {
         if (!isTransactionOpen()) {
             throw new CommandException("There is no open transaction to commit");
         }
-        tx.success();
+        tx.commit();
         tx.close();
         tx = null;
 
@@ -97,7 +91,7 @@ public class BoltStateHandler implements TransactionHandler, Connector {
         if (!isTransactionOpen()) {
             throw new CommandException("There is no open transaction to rollback");
         }
-        tx.failure();
+        tx.rollback();
         tx.close();
         tx = null;
     }
@@ -125,8 +119,10 @@ public class BoltStateHandler implements TransactionHandler, Connector {
             reconnect();
         } catch (Throwable t) {
             try {
+                System.err.println("Error connecting to ONgDB: " + t.getMessage());
                 silentDisconnect();
             } catch (Exception e) {
+                System.err.println("Error disconnecting from ONgDB: " + e.getMessage());
                 t.addSuppressed(e);
             }
             throw t;
@@ -134,15 +130,15 @@ public class BoltStateHandler implements TransactionHandler, Connector {
     }
 
     private void reconnect() {
-        String bookmark = null;
+        Bookmark bookmark = null;
         if (session != null) {
             bookmark = session.lastBookmark();
             session.close();
         }
-        session = driver.session(AccessMode.WRITE, bookmark);
-        StatementResult run = session.run("RETURN 1");
-        this.version = run.summary().server().version();
-        run.consume();
+        SessionConfig sessionConfig = SessionConfig.builder().withDefaultAccessMode(AccessMode.WRITE).withBookmarks( bookmark).build();
+        session = driver.session(sessionConfig);
+        Result run = session.run("RETURN 1");
+        this.version = run.consume().server().version();
     }
 
     @Nonnull
@@ -194,19 +190,19 @@ public class BoltStateHandler implements TransactionHandler, Connector {
      */
     @Nonnull
     private Optional<BoltResult> getBoltResult(@Nonnull String cypher, @Nonnull Map<String, Object> queryParams) throws SessionExpiredException {
-        StatementResult statementResult;
+        Result Result;
 
         if (isTransactionOpen()){
-            statementResult = tx.run(new Statement(cypher, queryParams));
+            Result = tx.run(new Query(cypher, queryParams));
         } else {
-            statementResult = session.run(new Statement(cypher, queryParams));
+            Result = session.run(new Query(cypher, queryParams));
         }
 
-        if (statementResult == null) {
+        if (Result == null) {
             return Optional.empty();
         }
 
-        return Optional.of(new StatementBoltResult(statementResult));
+        return Optional.of(new StatementBoltResult(Result));
     }
 
     /**
@@ -237,7 +233,7 @@ public class BoltStateHandler implements TransactionHandler, Connector {
             // Clear current state
             if (isTransactionOpen()) {
                 // Bolt has already rolled back the transaction but it doesn't close it properly
-                tx.failure();
+                tx.rollback();
                 tx.close();
                 tx = null;
             }
@@ -245,13 +241,16 @@ public class BoltStateHandler implements TransactionHandler, Connector {
     }
 
     private Driver getDriver(@Nonnull ConnectionConfig connectionConfig, @Nullable AuthToken authToken) {
-        Config config = Config.build()
-                              .withLogging(NullLogging.NULL_LOGGING)
-                              .withEncryptionLevel(connectionConfig.encryption()).toConfig();
-        return driverProvider.apply(connectionConfig.driverUrl(), authToken, config);
+        Config.ConfigBuilder configBuilder = Config.builder()
+                              .withLogging(NullLogging.NULL_LOGGING).withUserAgent( USER_AGENT );
+        Config config;
+        if (connectionConfig.encryption()){config = configBuilder.withEncryption().build();} else {config = configBuilder.build();}
+
+        String driverUrl = connectionConfig.driverUrl();
+        return driverProvider.apply(driverUrl, authToken, config);
     }
 
-    private List<BoltResult> executeWithRetry(List<Statement> transactionStatements, BiFunction<Statement, Transaction, BoltResult> biFunction) {
+    private List<BoltResult> executeWithRetry(List<Query> transactionStatements, BiFunction<Query, Transaction, BoltResult> biFunction) {
         return session.writeTransaction(tx ->
                 transactionStatements.stream()
                         .map(transactionStatement -> biFunction.apply(transactionStatement, tx))

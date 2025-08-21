@@ -24,7 +24,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
-import org.neo4j.driver.v1.exceptions.ClientException;
+import org.neo4j.driver.exceptions.ClientException;
 import org.neo4j.shell.CypherShell;
 import org.neo4j.shell.Historian;
 import org.neo4j.shell.StatementExecuter;

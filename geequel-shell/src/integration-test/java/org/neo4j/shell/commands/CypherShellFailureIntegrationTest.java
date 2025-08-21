@@ -24,7 +24,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import org.neo4j.driver.v1.exceptions.AuthenticationException;
+import org.neo4j.driver.exceptions.AuthenticationException;
 import org.neo4j.shell.CypherShell;
 import org.neo4j.shell.StringLinePrinter;
 import org.neo4j.shell.cli.Format;

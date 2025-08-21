@@ -29,6 +29,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.neo4j.driver.*;
 import org.neo4j.driver.internal.InternalIsoDuration;
 import org.neo4j.driver.internal.InternalNode;
 import org.neo4j.driver.internal.InternalPath;
@@ -41,17 +42,12 @@ import org.neo4j.driver.internal.value.NodeValue;
 import org.neo4j.driver.internal.value.PathValue;
 import org.neo4j.driver.internal.value.PointValue;
 import org.neo4j.driver.internal.value.RelationshipValue;
-import org.neo4j.driver.v1.Record;
-import org.neo4j.driver.v1.Statement;
-import org.neo4j.driver.v1.StatementResult;
-import org.neo4j.driver.v1.Value;
-import org.neo4j.driver.v1.Values;
-import org.neo4j.driver.v1.summary.ProfiledPlan;
-import org.neo4j.driver.v1.summary.ResultSummary;
-import org.neo4j.driver.v1.summary.StatementType;
-import org.neo4j.driver.v1.types.Node;
-import org.neo4j.driver.v1.types.Path;
-import org.neo4j.driver.v1.types.Relationship;
+import org.neo4j.driver.summary.ProfiledPlan;
+import org.neo4j.driver.summary.QueryType;
+import org.neo4j.driver.summary.ResultSummary;
+import org.neo4j.driver.types.Node;
+import org.neo4j.driver.types.Path;
+import org.neo4j.driver.types.Relationship;
 import org.neo4j.shell.cli.Format;
 import org.neo4j.shell.state.BoltResult;
 import org.neo4j.shell.state.ListBoltResult;
@@ -86,7 +82,7 @@ public class TableOutputFormatterTest {
         when(resultSummary.profile()).thenReturn(plan);
         when(resultSummary.resultAvailableAfter(anyObject())).thenReturn(5L);
         when(resultSummary.resultConsumedAfter(anyObject())).thenReturn(7L);
-        when(resultSummary.statementType()).thenReturn(StatementType.READ_ONLY);
+        when(resultSummary.queryType()).thenReturn(QueryType.READ_ONLY);
         Map<String, Value> argumentMap = Values.parameters("Version", "3.1", "Planner", "COST", "Runtime", "INTERPRETED").asMap(v -> v);
         when(plan.arguments()).thenReturn(argumentMap);
 
@@ -113,7 +109,7 @@ public class TableOutputFormatterTest {
         when(resultSummary.plan()).thenReturn(plan);
         when(resultSummary.resultAvailableAfter(anyObject())).thenReturn(5L);
         when(resultSummary.resultConsumedAfter(anyObject())).thenReturn(7L);
-        when(resultSummary.statementType()).thenReturn(StatementType.READ_ONLY);
+        when(resultSummary.queryType()).thenReturn(QueryType.READ_ONLY);
         Map<String, Value> argumentMap = Values.parameters("Version", "3.1", "Planner", "COST", "Runtime", "INTERPRETED").asMap(v -> v);
         when(plan.arguments()).thenReturn(argumentMap);
 
@@ -318,7 +314,7 @@ public class TableOutputFormatterTest {
     @Test
     public void basicTable() {
         // GIVEN
-        StatementResult result = mockResult(asList("c1", "c2"), "a", 42);
+        Result result = mockResult(asList("c1", "c2"), "a", 42);
         // WHEN
         String table = formatResult(result);
         // THEN
@@ -329,7 +325,7 @@ public class TableOutputFormatterTest {
     @Test
     public void twoRowsWithNumbersAllSampled() {
         // GIVEN
-        StatementResult result = mockResult(asList("c1", "c2"), "a", 42, "b", 43);
+        Result result = mockResult(asList("c1", "c2"), "a", 42, "b", 43);
         // WHEN
         String table = formatResult(result);
         // THEN
@@ -340,7 +336,7 @@ public class TableOutputFormatterTest {
     @Test
     public void fiveRowsWithNumbersNotAllSampled() {
         // GIVEN
-        StatementResult result = mockResult(asList("c1", "c2"), "a", 42, "b", 43, "c", 44, "d", 45, "e", 46);
+        Result result = mockResult(asList("c1", "c2"), "a", 42, "b", 43, "c", 44, "d", 45, "e", 46);
         // WHEN
         String table = formatResult(result);
         // THEN
@@ -355,10 +351,10 @@ public class TableOutputFormatterTest {
     public void wrapStringContent()
     {
         // GIVEN
-        StatementResult result = mockResult( asList( "c1"), "a", "bb","ccc","dddd","eeeee" );
+        Result result = mockResult( asList( "c1"), "a", "bb","ccc","dddd","eeeee" );
         // WHEN
         ToStringLinePrinter printer = new ToStringLinePrinter();
-        new TableOutputFormatter(true, 2).formatAndCount(new ListBoltResult(result.list(), result.summary()), printer);
+        new TableOutputFormatter(true, 2).formatAndCount(new ListBoltResult(result.list(), result.consume()), printer);
         String table = printer.result();
         // THEN
         assertThat(table, is(String.join(NEWLINE,
@@ -381,7 +377,7 @@ public class TableOutputFormatterTest {
     public void wrapStringContentWithTwoColumns()
     {
         // GIVEN
-        StatementResult result = mockResult( asList( "c1", "c2" ), "a", "b",
+        Result result = mockResult( asList( "c1", "c2" ), "a", "b",
                                              "aa", "bb",
                                              "aaa", "b",
                                              "a", "bbb",
@@ -390,7 +386,7 @@ public class TableOutputFormatterTest {
                                              "aaaaa", "bbbbb" );
         // WHEN
         ToStringLinePrinter printer = new ToStringLinePrinter();
-        new TableOutputFormatter(true, 2).formatAndCount(new ListBoltResult(result.list(), result.summary()), printer);
+        new TableOutputFormatter(true, 2).formatAndCount(new ListBoltResult(result.list(), result.consume()), printer);
         String table = printer.result();
         // THEN
         assertThat(table, is(String.join(NEWLINE,
@@ -417,10 +413,10 @@ public class TableOutputFormatterTest {
     public void wrapNumberContentWithLongSize()
     {
         // GIVEN
-        StatementResult result = mockResult( asList( "c1"), 345, 12, 978623, 132456798, 9223372036854775807L );
+        Result result = mockResult( asList( "c1"), 345, 12, 978623, 132456798, 9223372036854775807L );
         // WHEN
         ToStringLinePrinter printer = new ToStringLinePrinter();
-        new TableOutputFormatter(true, 2).formatAndCount(new ListBoltResult(result.list(), result.summary()), printer);
+        new TableOutputFormatter(true, 2).formatAndCount(new ListBoltResult(result.list(), result.consume()), printer);
         String table = printer.result();
         // THEN
         assertThat(table, is(String.join(NEWLINE,
@@ -440,10 +436,10 @@ public class TableOutputFormatterTest {
     public void truncateContent()
     {
         // GIVEN
-        StatementResult result = mockResult( asList( "c1"), "a", "bb","ccc","dddd","eeeee" );
+        Result result = mockResult( asList( "c1"), "a", "bb","ccc","dddd","eeeee" );
         // WHEN
         ToStringLinePrinter printer = new ToStringLinePrinter();
-        new TableOutputFormatter(false, 2).formatAndCount(new ListBoltResult(result.list(), result.summary()), printer);
+        new TableOutputFormatter(false, 2).formatAndCount(new ListBoltResult(result.list(), result.consume()), printer);
         String table = printer.result();
         // THEN
         assertThat(table, is(String.join(NEWLINE,
@@ -462,7 +458,7 @@ public class TableOutputFormatterTest {
     @Test
     public void formatCollections() {
         // GIVEN
-        StatementResult result = mockResult(asList("a", "b", "c"), singletonMap("a", 42), asList(12, 13),
+        Result result = mockResult(asList("a", "b", "c"), singletonMap("a", 42), asList(12, 13),
                 singletonMap("a", asList(14, 15)));
         // WHEN
         String table = formatResult(result);
@@ -477,7 +473,7 @@ public class TableOutputFormatterTest {
         Map<String, Value> relProperties = singletonMap("since", Values.value(2016));
         InternalNode node = new InternalNode(12, asList("Person"), properties);
         InternalRelationship relationship = new InternalRelationship(24, 12, 12, "TEST", relProperties);
-        StatementResult result =
+        Result result =
                 mockResult(asList("a", "b", "c"), node, relationship, new InternalPath(node, relationship, node));
         // WHEN
         String table = formatResult(result);
@@ -487,17 +483,17 @@ public class TableOutputFormatterTest {
                 "| (:Person {name: \"Mark\"})-[:TEST {since: 2016}]->(:Person {name: \"Mark\"}) |"));
     }
 
-    private String formatResult(StatementResult result) {
+    private String formatResult(Result result) {
         ToStringLinePrinter printer = new ToStringLinePrinter();
-        new TableOutputFormatter(true, 1000).formatAndCount(new ListBoltResult(result.list(), result.summary()), printer);
+        new TableOutputFormatter(true, 1000).formatAndCount(new ListBoltResult(result.list(), result.consume()), printer);
         return printer.result();
     }
 
-    private StatementResult mockResult(List<String> cols, Object... data) {
-        StatementResult result = mock(StatementResult.class);
-        Statement statement = mock(Statement.class);
+    private Result mockResult(List<String> cols, Object... data) {
+        Result result = mock(Result.class);
+        Query statement = mock(Query.class);
         ResultSummary summary = mock(ResultSummary.class);
-        when(summary.statement()).thenReturn(statement);
+        when(summary.query()).thenReturn(statement);
         when(result.keys()).thenReturn(cols);
         List<Record> records = new ArrayList<>();
         List<Object> input = asList(data);
@@ -507,7 +503,6 @@ public class TableOutputFormatterTest {
         }
         when(result.list()).thenReturn(records);
         when(result.consume()).thenReturn(summary);
-        when(result.summary()).thenReturn(summary);
         return result;
     }
 
