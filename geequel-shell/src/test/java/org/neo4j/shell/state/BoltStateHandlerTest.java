@@ -468,6 +468,7 @@ public class BoltStateHandlerTest
         handler.connect( config );
         assertTrue( provider.config.encrypted() );
         assertEquals( Config.TrustStrategy.Strategy.TRUST_ALL_CERTIFICATES, provider.config.trustStrategy().strategy() );
+        assertFalse( provider.config.trustStrategy().isHostnameVerificationEnabled() );
     }
 
     private Driver stubVersionInAnOpenSession( Result versionMock, Session sessionMock, String value )
