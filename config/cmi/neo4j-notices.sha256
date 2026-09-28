@@ -1,0 +1,140 @@
+# Copyright (c) "Graph Foundation,"
+# Graph Foundation, Inc. [https://graphfoundation.org]
+#
+# This file is part of ONgDB.
+#
+# ONgDB is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+# Neo4j notice manifest, checked by config/cmi/check-cmi (make cmi-check, ./gradlew check).
+#
+# One line per file that carries a Neo4j copyright or licence notice: the SHA-256 of the exact
+# bytes of its Neo4j notice block, two spaces, and the path. A notice block is the /* ... */
+# comment that holds the notice, or for plain text the notice paragraph and any following
+# paragraphs that still name Neo4j. A recorded notice must never be edited or removed, and a
+# recorded hash is never re-recorded: the check compares every committed version of this file.
+# A new file with a Neo4j notice is recorded with `config/cmi/check-cmi --write-manifest`.
+# Deleting a recorded file needs its line removed here in the same change.
+#
+8b581885e718e91c6d2441c24efd0aefddd131963298d508fd7a03640b0a2826  LICENSE.txt
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/integration-test/java/org/neo4j/shell/MainIntegrationTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/integration-test/java/org/neo4j/shell/StringLinePrinter.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/integration-test/java/org/neo4j/shell/Version.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/integration-test/java/org/neo4j/shell/Versions.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/integration-test/java/org/neo4j/shell/commands/CypherShellFailureIntegrationTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/integration-test/java/org/neo4j/shell/commands/CypherShellIntegrationTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/integration-test/java/org/neo4j/shell/commands/CypherShellPlainIntegrationTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/integration-test/java/org/neo4j/shell/commands/CypherShellProtocolIntegrationTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/integration-test/java/org/neo4j/shell/commands/CypherShellVerboseIntegrationTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/ConnectionConfig.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/Connector.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/CypherShell.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/Historian.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/Main.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/ParameterMap.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/ShellRunner.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/StatementExecuter.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/TransactionHandler.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/TriFunction.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/UserMessagesHandler.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/cli/CliArgHelper.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/cli/CliArgs.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/cli/Encryption.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/cli/FailBehavior.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/cli/FileHistorian.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/cli/Format.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/cli/InteractiveShellRunner.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/cli/NonInteractiveShellRunner.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/cli/StringShellRunner.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/commands/Begin.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/commands/Command.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/commands/CommandExecutable.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/commands/CommandHelper.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/commands/Commit.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/commands/Exit.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/commands/Help.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/commands/History.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/commands/Param.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/commands/Params.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/commands/Rollback.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/config/Build.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/exception/AnsiFormattedException.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/exception/CommandException.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/exception/DuplicateCommandException.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/exception/ExitException.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/exception/IncompleteStatementException.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/exception/NoMoreInputException.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/exception/UnconsumedStatementException.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/log/AnsiFormattedText.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/log/AnsiLogger.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/log/Logger.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/log/NullLogger.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/log/NullLogging.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/parser/ShellStatementParser.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/parser/StatementParser.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/prettyprint/CypherVariablesFormatter.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/prettyprint/LinePrinter.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/prettyprint/OutputFormatter.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/prettyprint/PrettyConfig.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/prettyprint/PrettyPrinter.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/prettyprint/SimpleOutputFormatter.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/prettyprint/StatisticsCollector.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/prettyprint/TableOutputFormatter.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/prettyprint/TablePlanFormatter.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/state/BoltResult.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/state/BoltStateHandler.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/state/ListBoltResult.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/state/ParamValue.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/state/StatementBoltResult.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/main/java/org/neo4j/shell/system/Utils.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/ConnectionConfigTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/CypherShellTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/HistorianTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/MainTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/OfflineTestShell.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/ShellRunnerTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/UserMessagesHandlerTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/cli/AddressArgPatternTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/cli/CliArgHelperTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/cli/CliArgsTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/cli/CommandHelperTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/cli/FileHistorianTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/cli/InteractiveShellRunnerTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/cli/NonInteractiveShellRunnerTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/cli/StringShellRunnerTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/commands/BeginTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/commands/CommitTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/commands/ExitTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/commands/HelpTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/commands/HistoryTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/commands/ParamTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/commands/ParamsTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/commands/RollbackTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/log/AnsiFormattedTextTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/log/AnsiLoggerTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/parser/ShellStatementParserTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/prettyprint/CypherVariablesFormatterTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/prettyprint/OutputFormatterTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/prettyprint/PrettyPrinterTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/prettyprint/StatisticsCollectorTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/prettyprint/TableOutputFormatterTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/prettyprint/ToStringLinePrinter.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/state/BoltStateHandlerTest.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/test/Util.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/test/bolt/FakeDriver.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/test/bolt/FakeRecord.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/test/bolt/FakeResultSummary.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/test/bolt/FakeSession.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/test/bolt/FakeStatementResult.java
+6bae1afc7850f2e2db6fd43833cb9191545a792bbf06e6f48a1929fe41439671  geequel-shell/src/test/java/org/neo4j/shell/test/bolt/FakeValue.java
+8b0cb09305daa28ad2d68667a93b3a48b34eb94eb1d147223bd39437ee8804dd  packaging/debian/copyright

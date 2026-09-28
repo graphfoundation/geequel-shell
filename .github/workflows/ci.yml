@@ -18,6 +18,8 @@ jobs:
           java-version: '8'
           distribution: 'corretto'
           cache: gradle
+      - name: Check headers and Neo4j notices
+        run: make cmi-check
       - name: Build with Makefile
         run: |
           make info

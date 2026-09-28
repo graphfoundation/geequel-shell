@@ -1,0 +1,334 @@
+#!/usr/bin/env python3
+# Copyright (c) "Graph Foundation,"
+# Graph Foundation, Inc. [https://graphfoundation.org]
+#
+# This file is part of ONgDB.
+#
+# ONgDB is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+"""Copyright management information (CMI) check for geequel-shell.
+
+Rules:
+  GF-HEADER        every Java file, both launchers and these CMI files start with the
+                   Graph Foundation GPLv3 header, byte for byte, in their comment syntax
+  GF-HEADER-COUNT  the Graph Foundation copyright line appears exactly once in those files
+  NEO4J-MISSING    a file listed in the manifest is missing (to delete one, remove its
+                   manifest line in the same change)
+  NEO4J-CHANGED    a listed file no longer contains its recorded Neo4j notice byte for
+                   byte (the notice was removed or edited)
+  NEO4J-UNRECORDED a file carries a Neo4j notice but has no manifest entry
+  NEO4J-HISTORY    an entry of any committed version of the manifest was changed, or dropped
+                   while its file still exists (a notice hash can never be re-recorded)
+  MANIFEST         the manifest is malformed
+
+Usage:
+  config/cmi/check-cmi                   check the tree
+  config/cmi/check-cmi --write-manifest  record NEW Neo4j-noticed files only; refuses to run
+                                         while any existing entry fails
+"""
+import hashlib
+import os
+import re
+import subprocess
+import sys
+
+ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..'))
+MANIFEST = 'config/cmi/neo4j-notices.sha256'
+
+# The Graph Foundation header text, as the files carry it. The copyright line is split so that
+# this script itself contains it exactly once (in its own header).
+GF_COPYRIGHT = 'Copyright (c) "Graph ' + 'Foundation,"'
+GF_LINES = [
+    GF_COPYRIGHT,
+    'Graph Foundation, Inc. [https://graphfoundation.org]',
+    '',
+    'This file is part of ONgDB.',
+    '',
+    'ONgDB is free software: you can redistribute it and/or modify',
+    'it under the terms of the GNU General Public License as published by',
+    'the Free Software Foundation, either version 3 of the License, or',
+    '(at your option) any later version.',
+    '',
+    'This program is distributed in the hope that it will be useful,',
+    'but WITHOUT ANY WARRANTY; without even the implied warranty of',
+    'MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the',
+    'GNU General Public License for more details.',
+    '',
+    'You should have received a copy of the GNU General Public License',
+    'along with this program.  If not, see <http://www.gnu.org/licenses/>.',
+]
+
+
+def _prefixed(prefix, lines, eol):
+    return ''.join((prefix + ' ' + l if l else prefix) + eol for l in lines).encode('utf-8')
+
+
+JAVA_HEADER = ('/*\n' + ''.join((' * ' + l if l else ' *') + '\n' for l in GF_LINES) + ' */\n').encode('utf-8')
+HASH_HEADER = _prefixed('#', GF_LINES, '\n')
+# geequel-shell.bat carries the header without its last two lines, with CRLF line ends
+BAT_FIRST_LINE = b'@if "%DEBUG%" == "" @echo off\r\n'
+BAT_HEADER = _prefixed('rem', GF_LINES[:14], '\r\n')
+
+# Files that carry the '#' form of the header (after a '#!' line, if they have one), and the
+# Windows launcher, which carries the 'rem' form. Every *.java file carries the Java form.
+HASH_FORM_FILES = {'geequel-shell/src/dist/geequel-shell', 'config/cmi/check-cmi', MANIFEST}
+BAT_FORM_FILES = {'geequel-shell/src/dist/geequel-shell.bat'}
+
+# A line that marks a Neo4j copyright or licence notice. Built from pieces so that this script
+# does not match itself.
+_N = 'neo' + '4j'
+_NT = 'neo' + ' technology'
+NOTICE_MARKERS = [
+    re.compile(r'copyright\s*\(c\).*(' + _N + '|' + _NT + ')', re.IGNORECASE),
+    re.compile(r'this file is part of ' + _N, re.IGNORECASE),
+    re.compile(r'referred to in this notice as "' + _NT + '"', re.IGNORECASE),
+]
+# A following paragraph of a plain-text notice that still names Neo4j belongs to the notice
+CONTINUATION = re.compile('(' + _N + '|' + _NT + '|neotechnology)', re.IGNORECASE)
+
+
+def git(*args):
+    return subprocess.run(['git'] + list(args), cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+
+def in_git():
+    r = git('rev-parse', '--is-inside-work-tree')
+    return r.returncode == 0 and r.stdout.strip() == b'true'
+
+
+def list_files():
+    if in_git():
+        out = git('ls-files', '-z', '--cached', '--others', '--exclude-standard').stdout
+        paths = sorted(set(p.decode('utf-8') for p in out.split(b'\0') if p))
+        return [p for p in paths if os.path.isfile(os.path.join(ROOT, p))]
+    skip = {'.git', '.gradle', 'build', 'out', 'tmp'}
+    result = []
+    for d, dirs, files in os.walk(ROOT):
+        dirs[:] = [x for x in dirs if x not in skip]
+        for f in files:
+            result.append(os.path.relpath(os.path.join(d, f), ROOT).replace(os.sep, '/'))
+    return sorted(result)
+
+
+def read(path):
+    with open(os.path.join(ROOT, path), 'rb') as f:
+        return f.read()
+
+
+def is_binary(data):
+    return b'\0' in data[:8192]
+
+
+def notice_blocks(data):
+    """Return the Neo4j notice blocks of a file as (first line, last line) pairs, 0-based.
+
+    A notice inside a /* ... */ comment is that whole comment. A notice in plain text is its
+    paragraph, plus any directly following paragraphs that still name Neo4j."""
+    lines = data.splitlines(True)
+    text = [l.decode('utf-8', 'replace') for l in lines]
+    n = len(text)
+    blocks = []
+    for i, line in enumerate(text):
+        if not any(m.search(line) for m in NOTICE_MARKERS):
+            continue
+        if any(s <= i <= e for s, e in blocks):
+            continue
+        start = end = None
+        for j in range(i, -1, -1):
+            if j != i and '*/' in text[j]:
+                break
+            if text[j].lstrip().startswith('/*'):
+                start = j
+                break
+        if start is not None:
+            for k in range(i, n):
+                if '*/' in text[k]:
+                    end = k
+                    break
+        if start is None or end is None:
+            start = i
+            while start > 0 and text[start - 1].strip():
+                start -= 1
+            end = i
+            while end + 1 < n and text[end + 1].strip():
+                end += 1
+            while True:
+                k = end + 1
+                while k < n and not text[k].strip():
+                    k += 1
+                if k >= n:
+                    break
+                pe = k
+                while pe + 1 < n and text[pe + 1].strip():
+                    pe += 1
+                if not any(CONTINUATION.search(t) for t in text[k:pe + 1]):
+                    break
+                end = pe
+        blocks.append((start, end))
+    return sorted(blocks), lines
+
+
+def notice_hash(data):
+    blocks, lines = notice_blocks(data)
+    if not blocks:
+        return None
+    h = hashlib.sha256()
+    for s, e in blocks:
+        h.update(b''.join(lines[s:e + 1]))
+    return h.hexdigest()
+
+
+def parse_manifest(content, source, problems):
+    entries = {}
+    for no, raw in enumerate(content.decode('utf-8', 'replace').splitlines(), 1):
+        line = raw.strip()
+        if not line or line.startswith('#'):
+            continue
+        m = re.match(r'^([0-9a-f]{64})  (\S.*)$', raw)
+        if not m:
+            problems.append(('MANIFEST', source, 'line %d is not "<sha256>  <path>": %r' % (no, raw)))
+            continue
+        if m.group(2) in entries:
+            problems.append(('MANIFEST', source, 'line %d lists %s twice' % (no, m.group(2))))
+            continue
+        entries[m.group(2)] = m.group(1)
+    return entries
+
+
+def check_gf_header(path, data, problems):
+    if path.endswith('.java'):
+        ok = data.startswith(JAVA_HEADER)
+        form = 'Java /* */'
+    elif path in BAT_FORM_FILES:
+        ok = data.startswith(BAT_FIRST_LINE + BAT_HEADER)
+        form = 'rem (after the @if/@echo off line)'
+    else:
+        body = data
+        if body.startswith(b'#!'):
+            body = body[body.find(b'\n') + 1:]
+        ok = body.startswith(HASH_HEADER)
+        form = '# (after the #! line, if any)'
+    if not ok:
+        problems.append(('GF-HEADER', path, 'does not start with the Graph Foundation header (%s form)' % form))
+    count = sum(1 for l in data.decode('utf-8', 'replace').splitlines() if GF_COPYRIGHT in l)
+    if count != 1:
+        problems.append(('GF-HEADER-COUNT', path, 'the Graph Foundation copyright line appears %d times, expected 1' % count))
+
+
+def history_problems(current, problems):
+    """Every entry of every committed manifest must still hold while its file exists."""
+    if not in_git():
+        return 'history check skipped (not a git work tree)'
+    if git('rev-parse', '--is-shallow-repository').stdout.strip() == b'true':
+        return 'history check skipped (shallow clone; fetch full history to run it)'
+    revs = git('log', '--format=%H', '--', MANIFEST).stdout.decode().split()
+    seen = set()
+    for rev in reversed(revs):
+        show = git('show', '%s:%s' % (rev, MANIFEST))
+        if show.returncode != 0:
+            continue
+        for path, digest in parse_manifest(show.stdout, '%s at %s' % (MANIFEST, rev[:12]), []).items():
+            if (path, digest) in seen:
+                continue
+            seen.add((path, digest))
+            if not os.path.isfile(os.path.join(ROOT, path)):
+                continue
+            if path not in current:
+                problems.append(('NEO4J-HISTORY', path, 'was recorded in %s at %s, the file still exists, but its entry is gone'
+                                 % (MANIFEST, rev[:12])))
+            elif current[path] != digest:
+                problems.append(('NEO4J-HISTORY', path, 'recorded notice hash %s at %s, the manifest now says %s'
+                                 % (digest[:16], rev[:12], current[path][:16])))
+    return 'history check: %d committed manifest version(s)' % len(revs)
+
+
+def main(argv):
+    write = '--write-manifest' in argv
+    unknown = [a for a in argv if a != '--write-manifest']
+    if unknown:
+        print(__doc__)
+        return 2
+    problems = []
+    files = list_files()
+
+    manifest_path = os.path.join(ROOT, MANIFEST)
+    manifest_data = read(MANIFEST) if os.path.isfile(manifest_path) else b''
+    if not manifest_data:
+        problems.append(('MANIFEST', MANIFEST, 'missing or empty'))
+    manifest = parse_manifest(manifest_data, MANIFEST, problems)
+
+    gf_checked = 0
+    noticed = {}
+    for path in files:
+        data = read(path)
+        if is_binary(data):
+            continue
+        if path.endswith('.java') or path in BAT_FORM_FILES or path in HASH_FORM_FILES:
+            check_gf_header(path, data, problems)
+            gf_checked += 1
+        digest = notice_hash(data)
+        if digest:
+            noticed[path] = digest
+
+    for path in sorted(manifest):
+        if not os.path.isfile(os.path.join(ROOT, path)):
+            problems.append(('NEO4J-MISSING', path, 'is listed in %s but does not exist' % MANIFEST))
+        elif path not in noticed:
+            problems.append(('NEO4J-CHANGED', path, 'no longer carries a Neo4j notice (recorded %s)' % manifest[path][:16]))
+        elif noticed[path] != manifest[path]:
+            problems.append(('NEO4J-CHANGED', path, 'Neo4j notice differs from the recorded one (recorded %s, found %s)'
+                             % (manifest[path][:16], noticed[path][:16])))
+    unrecorded = sorted(p for p in noticed if p not in manifest)
+    history = history_problems(manifest, problems)
+
+    if write:
+        blocking = [p for p in problems if p[0] not in ('NEO4J-UNRECORDED',)]
+        if blocking:
+            for rule, path, msg in blocking:
+                print('FAIL [%s] %s: %s' % (rule, path, msg))
+            print('check-cmi: --write-manifest refused: fix the failures above first. It only records new files and '
+                  'never changes or drops an existing entry.')
+            return 1
+        if not unrecorded:
+            print('check-cmi: nothing to record; %d entries unchanged' % len(manifest))
+            return 0
+        text = manifest_data.decode('utf-8')
+        if text and not text.endswith('\n'):
+            text += '\n'
+        header = [l for l in text.splitlines(True) if l.strip().startswith('#') or not l.strip()]
+        entries = dict(manifest)
+        for p in unrecorded:
+            entries[p] = noticed[p]
+            print('recorded %s  %s' % (noticed[p], p))
+        body = ''.join('%s  %s\n' % (entries[p], p) for p in sorted(entries))
+        with open(manifest_path, 'w', newline='\n') as f:
+            f.write(''.join(header) + body)
+        print('check-cmi: recorded %d new file(s); %d existing entries unchanged' % (len(unrecorded), len(manifest)))
+        return 0
+
+    for p in unrecorded:
+        problems.append(('NEO4J-UNRECORDED', p, 'carries a Neo4j notice but has no entry in %s '
+                                               '(record it with config/cmi/check-cmi --write-manifest)' % MANIFEST))
+    for rule, path, msg in problems:
+        print('FAIL [%s] %s: %s' % (rule, path, msg))
+    summary = '%d files checked for the Graph Foundation header, %d Neo4j notices recorded, %s' % (
+        gf_checked, len(manifest), history)
+    if problems:
+        print('check-cmi: FAIL, %d problem(s); %s' % (len(problems), summary))
+        return 1
+    print('check-cmi: PASS; %s' % summary)
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main(sys.argv[1:]))

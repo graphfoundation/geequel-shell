@@ -59,6 +59,15 @@ subprojects {
     }
 }
 
+// Graph Foundation headers and recorded Neo4j notices (config/cmi/neo4j-notices.sha256)
+task cmiCheck(type: Exec) {
+    description = 'Checks the Graph Foundation headers and the recorded Neo4j notices.'
+    group = 'verification'
+    workingDir rootProject.projectDir
+    commandLine 'python3', 'config/cmi/check-cmi'
+}
+check.dependsOn cmiCheck
+
 ext {
     // Only match tags starting with a number to avoid ongdb-xxx / geequel-xxx changelog tags
     gitVersion = 'git describe --tags --match [0-9]*'.execute([], project.rootDir).text.trim()

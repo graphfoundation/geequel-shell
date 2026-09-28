@@ -1,5 +1,5 @@
 .DEFAULT: help
-.PHONY: help build clean zip run untested-zip test integration-test tyrekicking-test mutation-test install info
+.PHONY: help build clean zip run untested-zip test integration-test tyrekicking-test cmi-check mutation-test install info
 
 gitdescribe := $(shell git describe --tags --match '[0-9]*' 2>/dev/null || echo 0.0.1-alpha)
 gitafter := $(shell git describe --tags --match '[0-9]*' --all 2>/dev/null | perl -pe 'exit unless /-\d+-/;s<^tags/><>;s<^(?:\d+\.)+\d+-><>;s<-.*><>; s/^/modified-/ if /./')
@@ -72,6 +72,9 @@ test: geequel-shell/build/test-results/binary/test/results.bin ## Run all unit t
 integration-test: geequel-shell/build/test-results/binary/integrationTest/results.bin ## Run all integration tests
 
 tyrekicking-test: tmp/.tests-pass ## Test that the shell script can actually start
+
+cmi-check: ## Check the Graph Foundation headers and the recorded Neo4j notices
+	python3 config/cmi/check-cmi
 
 mutation-test: geequel-shell/build/reports/pitest/index.html ## Generate a mutation testing report
 
