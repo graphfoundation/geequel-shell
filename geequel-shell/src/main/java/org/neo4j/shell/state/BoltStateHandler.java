@@ -322,7 +322,15 @@ public class BoltStateHandler implements TransactionHandler, Connector
         Config config;
         if ( connectionConfig.encryption() )
         {
-            config = configBuilder.withEncryption().build();
+            // Certificate trust parity with the driver 1.7 based shell. Driver 1.7 trusted every server
+            // certificate when encryption was on, so the shell connected to ONgDB's auto-generated
+            // self-signed certificate. Driver 4.x trusts only certificates signed by the system CA
+            // store by default and rejects that certificate. Keep the 1.7 behaviour: the connection is
+            // encrypted, but the server certificate is not verified. --encryption false still turns
+            // encryption off.
+            config = configBuilder.withEncryption()
+                                  .withTrustStrategy( Config.TrustStrategy.trustAllCertificates() )
+                                  .build();
         }
         else
         {

@@ -426,6 +426,18 @@ public class BoltStateHandlerTest
         assertTrue( provider.config.encrypted() );
     }
 
+    @Test
+    public void trustAllCertificatesWhenEncrypted() throws CommandException
+    {
+        // Same trust as the driver 1.7 based shell, so self-signed ONgDB certificates are accepted
+        RecordingDriverProvider provider = new RecordingDriverProvider();
+        BoltStateHandler handler = new BoltStateHandler( provider );
+        ConnectionConfig config = new ConnectionConfig( "bolt://", "", -1, "", "", true );
+        handler.connect( config );
+        assertTrue( provider.config.encrypted() );
+        assertEquals( Config.TrustStrategy.Strategy.TRUST_ALL_CERTIFICATES, provider.config.trustStrategy().strategy() );
+    }
+
     private Driver stubVersionInAnOpenSession( Result versionMock, Session sessionMock, String value )
     {
         Driver driverMock = mock( Driver.class );
