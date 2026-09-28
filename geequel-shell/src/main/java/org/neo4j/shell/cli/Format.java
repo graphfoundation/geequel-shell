@@ -34,14 +34,18 @@ public enum Format
     PLAIN;
     // TODO JSON, strictly intended for machine consumption with data formatted in JSON
 
-    public static Format parse(@Nonnull String format, @Nonnull CliArgs cliArgs) {
-        if (format.equalsIgnoreCase(PLAIN.name())) {
+    public static Format parse( @Nonnull String format, @Nonnull CliArgs cliArgs )
+    {
+        if ( format.equalsIgnoreCase(PLAIN.name()) )
+        {
             return PLAIN;
         }
         else if ( format.equalsIgnoreCase( VERBOSE.name() ) )
         {
             return VERBOSE;
-        } else {
+        }
+        else
+        {
             return isInputInteractive(cliArgs) && isOutputInteractive() ? VERBOSE : PLAIN;
         }
     }

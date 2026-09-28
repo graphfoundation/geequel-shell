@@ -54,7 +54,7 @@ public class BoltStateHandler implements TransactionHandler, Connector
     protected Driver driver;
     protected Session session;
     private String version;
-    private Transaction tx = null;
+    private Transaction tx;
 
     public BoltStateHandler()
     {
@@ -67,9 +67,11 @@ public class BoltStateHandler implements TransactionHandler, Connector
     }
 
     @Override
-    public void beginTransaction() throws CommandException {
-        if (!isConnected()) {
-            throw new CommandException("Not connected to ONgDB");
+    public void beginTransaction() throws CommandException
+    {
+        if ( !isConnected() )
+        {
+            throw new CommandException( "Not connected to ONgDB" );
         }
         if ( isTransactionOpen() )
         {
@@ -79,9 +81,11 @@ public class BoltStateHandler implements TransactionHandler, Connector
     }
 
     @Override
-    public Optional<List<BoltResult>> commitTransaction() throws CommandException {
-        if (!isConnected()) {
-            throw new CommandException("Not connected to ONgDB");
+    public Optional<List<BoltResult>> commitTransaction() throws CommandException
+    {
+        if ( !isConnected() )
+        {
+            throw new CommandException( "Not connected to ONgDB" );
         }
         if ( !isTransactionOpen() )
         {
@@ -95,9 +99,11 @@ public class BoltStateHandler implements TransactionHandler, Connector
     }
 
     @Override
-    public void rollbackTransaction() throws CommandException {
-        if (!isConnected()) {
-            throw new CommandException("Not connected to ONgDB");
+    public void rollbackTransaction() throws CommandException
+    {
+        if ( !isConnected() )
+        {
+            throw new CommandException( "Not connected to ONgDB" );
         }
         if ( !isTransactionOpen() )
         {
@@ -109,7 +115,8 @@ public class BoltStateHandler implements TransactionHandler, Connector
     }
 
     @Override
-    public boolean isTransactionOpen() {
+    public boolean isTransactionOpen()
+    {
         return tx != null;
     }
 
@@ -184,16 +191,22 @@ public class BoltStateHandler implements TransactionHandler, Connector
     }
 
     @Nonnull
-    public Optional<BoltResult> runCypher(@Nonnull String cypher,
-                                          @Nonnull Map<String, Object> queryParams) throws CommandException {
-        if (!isConnected()) {
-            throw new CommandException("Not connected to ONgDB");
+    public Optional<BoltResult> runCypher( @Nonnull String cypher,
+                                          @Nonnull Map<String, Object> queryParams ) throws CommandException
+                                          {
+        if ( !isConnected() )
+        {
+            throw new CommandException( "Not connected to ONgDB" );
         }
-        if (isTransactionOpen()) {
+        if ( isTransactionOpen() )
+        {
             // If this fails, don't try any funny business - just let it die
             return getBoltResult(cypher, queryParams);
-        } else {
-            try {
+        }
+        else
+        {
+            try
+            {
                 // Note that PERIODIC COMMIT can't execute in a transaction, so if the user has not typed BEGIN, then
                 // the statement should NOT be executed in a transaction.
                 return getBoltResult( cypher, queryParams );
@@ -212,13 +225,17 @@ public class BoltStateHandler implements TransactionHandler, Connector
      * @throws SessionExpiredException when server no longer serves writes anymore
      */
     @Nonnull
-    private Optional<BoltResult> getBoltResult(@Nonnull String cypher, @Nonnull Map<String, Object> queryParams) throws SessionExpiredException {
+    private Optional<BoltResult> getBoltResult( @Nonnull String cypher, @Nonnull Map<String, Object> queryParams ) throws SessionExpiredException
+    {
         StatementResult statementResult;
 
-        if (isTransactionOpen()){
-            statementResult = tx.run(new Statement(cypher, queryParams));
-        } else {
-            statementResult = session.run(new Statement(cypher, queryParams));
+        if ( isTransactionOpen() )
+        {
+            statementResult = tx.run(new Statement( cypher, queryParams ));
+        }
+        else
+        {
+            statementResult = session.run(new Statement( cypher, queryParams ));
         }
 
         if ( statementResult == null )
@@ -272,14 +289,16 @@ public class BoltStateHandler implements TransactionHandler, Connector
         }
     }
 
-    private Driver getDriver(@Nonnull ConnectionConfig connectionConfig, @Nullable AuthToken authToken) {
+    private Driver getDriver( @Nonnull ConnectionConfig connectionConfig, @Nullable AuthToken authToken )
+    {
         Config config = Config.build()
                               .withLogging( NullLogging.NULL_LOGGING )
                               .withEncryptionLevel( connectionConfig.encryption() ).toConfig();
         return driverProvider.apply( connectionConfig.driverUrl(), authToken, config );
     }
 
-    private List<BoltResult> executeWithRetry(List<Statement> transactionStatements, BiFunction<Statement, Transaction, BoltResult> biFunction) {
+    private List<BoltResult> executeWithRetry( List<Statement> transactionStatements, BiFunction<Statement, Transaction, BoltResult> biFunction )
+    {
         return session.writeTransaction(tx ->
                 transactionStatements.stream()
                         .map(transactionStatement -> biFunction.apply(transactionStatement, tx))

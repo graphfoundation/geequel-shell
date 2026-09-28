@@ -128,7 +128,8 @@ public class CliArgsTest
     }
 
     @Test
-    public void setFile() throws Exception {
+    public void setFile() throws Exception
+    {
         // default
         assertFalse(cliArgs.getFile().isPresent());
 

@@ -155,7 +155,8 @@ public class CypherShellTest
     }
 
     @Test
-    public void executeOfflineThrows() throws CommandException {
+    public void executeOfflineThrows() throws CommandException
+    {
         thrown.expect(CommandException.class);
         thrown.expectMessage("Not connected to ONgDB");
 
@@ -321,16 +322,17 @@ public class CypherShellTest
         }
     }
 
-
     @Test
-    public void specifyingACypherStringShouldAlwaysGiveAStringRunner() throws IOException {
+    public void specifyingACypherStringShouldAlwaysGiveAStringRunner() throws IOException
+    {
         CliArgs cliArgs = CliArgHelper.parse("-f", "test-file", "MATCH (n) RETURN n ");
 
         ConnectionConfig connectionConfig = mock(ConnectionConfig.class);
 
         ShellRunner shellRunner = ShellRunner.getShellRunner(cliArgs, offlineTestShell, logger, connectionConfig);
 
-        if (!(shellRunner instanceof StringShellRunner)) {
+        if ( !(shellRunner instanceof StringShellRunner) )
+        {
             fail("Expected a different runner than: " + shellRunner.getClass().getSimpleName());
         }
 
@@ -338,17 +340,18 @@ public class CypherShellTest
 
         shellRunner = ShellRunner.getShellRunner(cliArgs, offlineTestShell, logger, connectionConfig);
 
-        if (!(shellRunner instanceof StringShellRunner)) {
+        if ( !(shellRunner instanceof StringShellRunner) )
+        {
             fail("Expected a different runner than: " + shellRunner.getClass().getSimpleName());
         }
     }
 
-
     @Test
-    public void specifyingAFilePathShouldGiveANonInteractiveRunner() throws IOException {
+    public void specifyingAFilePathShouldGiveANonInteractiveRunner() throws IOException
+    {
         File file = File.createTempFile("test-file", ".cypher");
         file.deleteOnExit();
-        FileOutputStream fos = new FileOutputStream(file);
+        FileOutputStream fos = new FileOutputStream( file );
         fos.write("RETURN 1;".getBytes());
         fos.close();
         CliArgs cliArgs = CliArgHelper.parse("-f", file.getAbsolutePath());
@@ -357,20 +360,25 @@ public class CypherShellTest
 
         ShellRunner shellRunner = ShellRunner.getShellRunner(cliArgs, offlineTestShell, logger, connectionConfig);
 
-        if (!(shellRunner instanceof NonInteractiveShellRunner)) {
+        if ( !(shellRunner instanceof NonInteractiveShellRunner) )
+        {
             fail("Expected a different runner than: " + shellRunner.getClass().getSimpleName());
         }
     }
 
     @Test
-    public void specifyingANonexistentFilePathShouldThrowAnError() throws IOException {
+    public void specifyingANonexistentFilePathShouldThrowAnError() throws IOException
+    {
         CliArgs cliArgs = CliArgHelper.parse("-f", "test-file");
 
         ConnectionConfig connectionConfig = mock(ConnectionConfig.class);
 
-        try {
+        try
+        {
             ShellRunner.getShellRunner(cliArgs, offlineTestShell, logger, connectionConfig);
-        } catch (IOException e) {
+        }
+        catch ( IOException e )
+        {
             assertEquals("java.nio.file.NoSuchFileException: test-file", e.toString());
             return;
         }

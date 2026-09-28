@@ -90,11 +90,14 @@ public class Main
         return hasSpecialInteractiveOutputStream ? this.out : ShellRunner.getOutputStreamForInteractivePrompt();
     }
 
-    void startShell(@Nonnull CliArgs cliArgs) {
-        if (cliArgs.getVersion()) {
+    void startShell( @Nonnull CliArgs cliArgs )
+    {
+        if ( cliArgs.getVersion() )
+        {
             out.println("Geequel-Shell " + Build.version());
         }
-        if (cliArgs.getDriverVersion()) {
+        if ( cliArgs.getDriverVersion() )
+        {
             out.println("ONgDB Driver " + Build.driverVersion());
         }
         if ( cliArgs.getVersion() || cliArgs.getDriverVersion() )

@@ -100,8 +100,8 @@ public class FileHistorian implements Historian
     public static File getDefaultHistoryFile()
     {
         // Storing in same directory as driver uses
-        File dir = new File(getProperty("user.home"), ".ongdb");
-        return new File(dir, ".ongdb_history");
+        File dir = new File( getProperty("user.home"), ".ongdb" );
+        return new File( dir, ".ongdb_history" );
     }
 
     @Nonnull

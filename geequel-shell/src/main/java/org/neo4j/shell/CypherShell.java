@@ -105,8 +105,9 @@ public class CypherShell implements StatementExecuter, Connector, TransactionHan
         }
 
         // Else it will be parsed as Cypher, but for that we need to be connected
-        if (!isConnected()) {
-            throw new CommandException("Not connected to ONgDB");
+        if ( !isConnected() )
+        {
+            throw new CommandException( "Not connected to ONgDB" );
         }
 
         executeCypher( cmdString );

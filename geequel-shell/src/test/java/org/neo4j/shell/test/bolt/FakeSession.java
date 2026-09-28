@@ -42,7 +42,8 @@ public class FakeSession implements Session
     private boolean open = true;
 
     @Override
-    public Transaction beginTransaction() {
+    public Transaction beginTransaction()
+    {
         return new FakeTransaction();
     }
 

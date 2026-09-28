@@ -144,19 +144,22 @@ public class CliArgs
     }
 
     @Nonnull
-    public Optional<String> getFile() {
+    public Optional<String> getFile()
+    {
         return file;
     }
 
     /**
      * Set the file path to the cypher script to execute
      */
-    public void setFile (@Nullable String file) {
+    public void setFile( @Nullable String file )
+    {
         this.file = Optional.ofNullable(file);
     }
 
     @Nonnull
-    public Format getFormat() {
+    public Format getFormat()
+    {
         return format;
     }
 

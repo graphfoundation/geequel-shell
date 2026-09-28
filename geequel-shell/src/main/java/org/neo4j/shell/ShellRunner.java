@@ -71,13 +71,15 @@ public interface ShellRunner
         else if ( shouldBeInteractive( cliArgs ) )
         {
             UserMessagesHandler userMessagesHandler =
-                    new UserMessagesHandler(connectionConfig, cypherShell.getServerVersion());
-            return new InteractiveShellRunner(cypherShell, cypherShell, logger, new ShellStatementParser(),
-                    System.in, FileHistorian.getDefaultHistoryFile(), userMessagesHandler);
-        } else {
+                    new UserMessagesHandler( connectionConfig, cypherShell.getServerVersion() );
+            return new InteractiveShellRunner( cypherShell, cypherShell, logger, new ShellStatementParser(),
+                    System.in, FileHistorian.getDefaultHistoryFile(), userMessagesHandler );
+        }
+        else
+        {
             InputStream inputStream = cliArgs.getFile().isPresent() ? Files.newInputStream(Paths.get(cliArgs.getFile().get())) : System.in;
-            return new NonInteractiveShellRunner(cliArgs.getFailBehavior(), cypherShell, logger,
-                    new ShellStatementParser(), inputStream);
+            return new NonInteractiveShellRunner( cliArgs.getFailBehavior(), cypherShell, logger,
+                    new ShellStatementParser(), inputStream );
         }
     }
 
@@ -101,8 +103,10 @@ public interface ShellRunner
      *
      * @return true if the shell is reading from an interactive terminal, false otherwise (e.g., we are reading from a file).
      */
-    static boolean isInputInteractive(@Nonnull CliArgs cliArgs) {
-        if (isWindows()) {
+    static boolean isInputInteractive( @Nonnull CliArgs cliArgs )
+    {
+        if ( isWindows() )
+        {
             // Input will never be a TTY on windows and it isatty seems to be able to block forever on Windows so avoid
             // calling it.
             return System.console() != null && !cliArgs.getFile().isPresent();

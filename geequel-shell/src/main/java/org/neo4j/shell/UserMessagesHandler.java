@@ -37,7 +37,8 @@ public class UserMessagesHandler
     }
 
     @Nonnull
-    public String getWelcomeMessage() {
+    public String getWelcomeMessage()
+    {
         AnsiFormattedText welcomeMessage = AnsiFormattedText.from("Connected to ONgDB at ")
                                                             .bold().append(connectionConfig.driverUrl()).boldOff();
 

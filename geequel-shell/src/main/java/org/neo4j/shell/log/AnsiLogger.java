@@ -181,10 +181,15 @@ public class AnsiLogger implements Logger
                          .append("\nPlease specify --username, and optionally --password, as argument(s)")
                          .append("\nor as environment variable(s), ONGDB_USERNAME, and ONGDB_PASSWORD respectively.")
                          .append("\nSee --help for more info.");
-            } else {
-                if (cause.getMessage() != null) {
+            }
+            else
+            {
+                if ( cause.getMessage() != null )
+                {
                     msg = msg.append(cause.getMessage());
-                } else {
+                }
+                else
+                {
                     msg = msg.append(cause.getClass().getSimpleName());
                 }
             }

@@ -138,7 +138,7 @@ public class CliArgHelper
         if ( !matcher.matches() )
         {
             // Match behavior in built-in error handling
-            PrintWriter printWriter = new PrintWriter(System.err);
+            PrintWriter printWriter = new PrintWriter( System.err );
             parser.printUsage(printWriter);
             printWriter.println("geequel-shell: error: Failed to parse address: '" + address + "'");
             printWriter.println("\n  Address should be of the form: [scheme://][username:password@][host][:port]");
@@ -193,7 +193,7 @@ public class CliArgHelper
                 .choices(new CollectionArgumentChoice<>(
                         Format.AUTO.name().toLowerCase(),
                         Format.VERBOSE.name().toLowerCase(),
-                        Format.PLAIN.name().toLowerCase()))
+                        Format.PLAIN.name().toLowerCase() ))
                 .setDefault(Format.AUTO.name().toLowerCase());
 
         parser.addArgument("--debug")

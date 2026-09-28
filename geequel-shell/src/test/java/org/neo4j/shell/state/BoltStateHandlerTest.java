@@ -116,7 +116,8 @@ public class BoltStateHandlerTest
     }
 
     @Test
-    public void versionIsNotEmptyAfterConnect() throws CommandException {
+    public void versionIsNotEmptyAfterConnect() throws CommandException
+    {
         Driver driverMock = stubVersionInAnOpenSession(mock(StatementResult.class), mock(Session.class), "ONgDB/1.0.0-alpha01");
 
         BoltStateHandler handler = new BoltStateHandler( ( s, authToken, config ) -> driverMock );
@@ -149,7 +150,7 @@ public class BoltStateHandlerTest
         RuntimeException thrownFromSilentDisconnect = new RuntimeException( "exception from silent disconnect" );
 
         Driver mockedDriver = stubVersionInAnOpenSession(resultMock, session, "ongdb-version");
-        OfflineBoltStateHandler boltStateHandler = new OfflineBoltStateHandler(mockedDriver);
+        OfflineBoltStateHandler boltStateHandler = new OfflineBoltStateHandler( mockedDriver );
 
         when( resultMock.consume() ).thenThrow( originalException );
         doThrow( thrownFromSilentDisconnect ).when( session ).close();
@@ -179,7 +180,8 @@ public class BoltStateHandlerTest
     }
 
     @Test
-    public void beginNeedsToBeConnected() throws CommandException {
+    public void beginNeedsToBeConnected() throws CommandException
+    {
         thrown.expect(CommandException.class);
         thrown.expectMessage("Not connected to ONgDB");
 
@@ -189,7 +191,8 @@ public class BoltStateHandlerTest
     }
 
     @Test
-    public void commitNeedsToBeConnected() throws CommandException {
+    public void commitNeedsToBeConnected() throws CommandException
+    {
         thrown.expect(CommandException.class);
         thrown.expectMessage("Not connected to ONgDB");
 
@@ -208,7 +211,8 @@ public class BoltStateHandlerTest
     }
 
     @Test
-    public void whenInTransactionHandlerLetsTransactionDoTheWork() throws CommandException {
+    public void whenInTransactionHandlerLetsTransactionDoTheWork() throws CommandException
+    {
         Transaction transactionMock = mock(Transaction.class);
         Session sessionMock = mock(Session.class);
         when(sessionMock.beginTransaction()).thenReturn(transactionMock);
@@ -220,7 +224,7 @@ public class BoltStateHandlerTest
 
         when(transactionMock.run((Statement) anyObject())).thenReturn(result);
 
-        OfflineBoltStateHandler boltStateHandler = new OfflineBoltStateHandler(driverMock);
+        OfflineBoltStateHandler boltStateHandler = new OfflineBoltStateHandler( driverMock );
         boltStateHandler.connect();
         boltStateHandler.beginTransaction();
         BoltResult boltResult = boltStateHandler.runCypher("UNWIND [1,2] as num RETURN *", Collections.emptyMap()).get();
@@ -233,7 +237,8 @@ public class BoltStateHandlerTest
     }
 
     @Test
-    public void rollbackNeedsToBeConnected() throws CommandException {
+    public void rollbackNeedsToBeConnected() throws CommandException
+    {
         thrown.expect(CommandException.class);
         thrown.expectMessage("Not connected to ONgDB");
 
@@ -243,7 +248,8 @@ public class BoltStateHandlerTest
     }
 
     @Test
-    public void executeNeedsToBeConnected() throws CommandException {
+    public void executeNeedsToBeConnected() throws CommandException
+    {
         thrown.expect(CommandException.class);
         thrown.expectMessage("Not connected to ONgDB");
 

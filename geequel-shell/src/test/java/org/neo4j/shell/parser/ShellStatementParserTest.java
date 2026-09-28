@@ -398,7 +398,8 @@ public class ShellStatementParserTest
     }
 
     @Test
-    public void quoteInBlockComment() throws Exception {
+    public void quoteInBlockComment() throws Exception
+    {
         // when
         parser.parseMoreText( "/* `;\n;*/\n;" );
 
