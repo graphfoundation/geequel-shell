@@ -168,12 +168,10 @@ public class BoltStateHandler implements TransactionHandler, Connector
         {
             try
             {
-                System.err.println( "Error connecting to ONgDB: " + t.getMessage() );
                 silentDisconnect();
             }
             catch ( Exception e )
             {
-                System.err.println( "Error disconnecting from ONgDB: " + e.getMessage() );
                 t.addSuppressed( e );
             }
             throw t;

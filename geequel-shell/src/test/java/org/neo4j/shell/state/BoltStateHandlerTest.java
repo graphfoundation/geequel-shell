@@ -43,6 +43,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -183,6 +185,36 @@ public class BoltStateHandlerTest
             assertThat( e.getSuppressed()[0], is( thrownFromSilentDisconnect ) );
             assertThat( e, is( originalException ) );
         }
+    }
+
+    @Test
+    public void connectFailureIsLeftToTheCallerToReport() throws CommandException
+    {
+        // Main prints the error; the handler must not print it a second time
+        Session session = mock( Session.class );
+        Result resultMock = mock( Result.class );
+        RuntimeException originalException = new RuntimeException( "original exception" );
+        Driver mockedDriver = stubVersionInAnOpenSession( resultMock, session, "ongdb-version" );
+        OfflineBoltStateHandler boltStateHandler = new OfflineBoltStateHandler( mockedDriver );
+        when( resultMock.consume() ).thenThrow( originalException );
+
+        ByteArrayOutputStream err = new ByteArrayOutputStream();
+        PrintStream originalErr = System.err;
+        System.setErr( new PrintStream( err ) );
+        try
+        {
+            boltStateHandler.connect();
+            fail( "should fail to connect" );
+        }
+        catch ( Exception e )
+        {
+            assertThat( e, is( originalException ) );
+        }
+        finally
+        {
+            System.setErr( originalErr );
+        }
+        assertEquals( "", err.toString() );
     }
 
     @Test
