@@ -178,9 +178,13 @@ public class CliArgHelper
                         "  cat some-geequel.txt | geequel-shell" ) );
 
         ArgumentGroup connGroup = parser.addArgumentGroup("connection arguments");
+        // The default is bolt://, not neo4j://. With neo4j:// the 4.x driver first runs routing discovery
+        // (dbms.cluster.routing.getRoutingTable). ONgDB 1.x standalone servers (Neo4j 3.5 based) register
+        // that procedure only in causal cluster mode, so discovery fails with "No routing server available"
+        // against every standalone ONgDB 1.x server. neo4j:// can still be given explicitly for a cluster.
         connGroup.addArgument("-a", "--address")
                 .help("address and port to connect to")
-                .setDefault("neo4j://localhost:7687");
+                .setDefault("bolt://localhost:7687");
         connGroup.addArgument("-u", "--username")
                 .setDefault("")
                 .help("username to connect as. Can also be specified using environment variable ONGDB_USERNAME");

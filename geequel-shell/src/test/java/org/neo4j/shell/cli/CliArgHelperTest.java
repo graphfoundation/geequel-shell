@@ -174,6 +174,22 @@ public class CliArgHelperTest
     }
 
     @Test
+    public void defaultAddressIsDirectBolt()
+    {
+        // neo4j:// needs routing procedures, which standalone ONgDB 1.x servers do not have
+        CliArgs cliArgs = CliArgHelper.parse( asArray() );
+        assertEquals( "bolt://", cliArgs.getScheme() );
+        assertEquals( "localhost", cliArgs.getHost() );
+        assertEquals( 7687, cliArgs.getPort() );
+    }
+
+    @Test
+    public void explicitNeo4jSchemeIsKept()
+    {
+        assertEquals( "neo4j://", CliArgHelper.parse( "-a", "neo4j://localhost:7687" ).getScheme() );
+    }
+
+    @Test
     public void parsePassword() throws Exception
     {
         assertEquals( "foo", CliArgHelper.parse( "--password", "foo" ).getPassword() );
