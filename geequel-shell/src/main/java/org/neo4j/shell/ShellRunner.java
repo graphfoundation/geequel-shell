@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2018-2020 "Graph Foundation"
- * Graph Foundation, Inc. [https://graphfoundation.org]
+ * Copyright (c) 2002-2020 "Neo4j,"
+ * Neo4j Sweden AB [http://neo4j.com]
  *
- * This file is part of ONgDB.
+ * This file is part of Neo4j.
  *
- * ONgDB is free software: you can redistribute it and/or modify
- * it underm the terms of the GNU General Public License as published by
+ * Neo4j is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
@@ -22,6 +22,16 @@ package org.neo4j.shell;
 import org.apache.commons.io.output.NullOutputStream;
 import org.apache.commons.io.output.WriterOutputStream;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import javax.annotation.Nonnull;
+
 import org.neo4j.shell.cli.CliArgs;
 import org.neo4j.shell.cli.FileHistorian;
 import org.neo4j.shell.cli.InteractiveShellRunner;
@@ -30,31 +40,13 @@ import org.neo4j.shell.cli.StringShellRunner;
 import org.neo4j.shell.log.Logger;
 import org.neo4j.shell.parser.ShellStatementParser;
 
-import javax.annotation.Nonnull;
-import java.io.*;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 import static org.fusesource.jansi.internal.CLibrary.STDIN_FILENO;
 import static org.fusesource.jansi.internal.CLibrary.STDOUT_FILENO;
 import static org.fusesource.jansi.internal.CLibrary.isatty;
 import static org.neo4j.shell.system.Utils.isWindows;
 
-public interface ShellRunner {
-
-    /**
-     * Run and handle user input until end of file
-     *
-     * @return error code to exit with
-     */
-    int runUntilEnd();
-
-    /**
-     * @return an object which can provide the history of commands executed
-     */
-    @Nonnull
-    Historian getHistorian();
+public interface ShellRunner
+{
 
     /**
      * Get an appropriate shellrunner depending on the given arguments and if we are running in a TTY.
@@ -67,13 +59,17 @@ public interface ShellRunner {
      * @throws IOException
      */
     @Nonnull
-    static ShellRunner getShellRunner(@Nonnull CliArgs cliArgs,
-                                      @Nonnull CypherShell cypherShell,
-                                      @Nonnull Logger logger,
-                                      @Nonnull ConnectionConfig connectionConfig) throws IOException {
-        if (cliArgs.getCypher().isPresent()) {
-            return new StringShellRunner(cliArgs, cypherShell, logger);
-        } else if (shouldBeInteractive(cliArgs)) {
+    static ShellRunner getShellRunner( @Nonnull CliArgs cliArgs,
+                                       @Nonnull CypherShell cypherShell,
+                                       @Nonnull Logger logger,
+                                       @Nonnull ConnectionConfig connectionConfig ) throws IOException
+    {
+        if ( cliArgs.getCypher().isPresent() )
+        {
+            return new StringShellRunner( cliArgs, cypherShell, logger );
+        }
+        else if ( shouldBeInteractive( cliArgs ) )
+        {
             UserMessagesHandler userMessagesHandler =
                     new UserMessagesHandler(connectionConfig, cypherShell.getServerVersion());
             return new InteractiveShellRunner(cypherShell, cypherShell, logger, new ShellStatementParser(),
@@ -89,8 +85,10 @@ public interface ShellRunner {
      * @param cliArgs
      * @return true if an interactive shellrunner should be used, false otherwise
      */
-    static boolean shouldBeInteractive(@Nonnull CliArgs cliArgs) {
-        if (cliArgs.getNonInteractive()) {
+    static boolean shouldBeInteractive( @Nonnull CliArgs cliArgs )
+    {
+        if ( cliArgs.getNonInteractive() )
+        {
             return false;
         }
 
@@ -98,11 +96,10 @@ public interface ShellRunner {
     }
 
     /**
-     * Checks if STDIN is a TTY. In case TTY checking is not possible (lack of libc), then the check falls back to
-     * the built in Java {@link System#console()} which checks if EITHER STDIN or STDOUT has been redirected.
+     * Checks if STDIN is a TTY. In case TTY checking is not possible (lack of libc), then the check falls back to the built in Java {@link System#console()}
+     * which checks if EITHER STDIN or STDOUT has been redirected.
      *
-     * @return true if the shell is reading from an interactive terminal, false otherwise (e.g., we are reading from a
-     * file).
+     * @return true if the shell is reading from an interactive terminal, false otherwise (e.g., we are reading from a file).
      */
     static boolean isInputInteractive(@Nonnull CliArgs cliArgs) {
         if (isWindows()) {
@@ -110,9 +107,12 @@ public interface ShellRunner {
             // calling it.
             return System.console() != null && !cliArgs.getFile().isPresent();
         }
-        try {
-            return 1 == isatty(STDIN_FILENO);
-        } catch (Throwable ignored) {
+        try
+        {
+            return 1 == isatty( STDIN_FILENO );
+        }
+        catch ( Throwable ignored )
+        {
             // system is not using libc (like Alpine Linux)
             // Fallback to checking stdin OR stdout
             return System.console() != null && !cliArgs.getFile().isPresent();
@@ -120,49 +120,78 @@ public interface ShellRunner {
     }
 
     /**
-     * Checks if STDOUT is a TTY. In case TTY checking is not possible (lack of libc), then the check falls back to
-     * the built in Java {@link System#console()} which checks if EITHER STDIN or STDOUT has been redirected.
+     * Checks if STDOUT is a TTY. In case TTY checking is not possible (lack of libc), then the check falls back to the built in Java {@link System#console()}
+     * which checks if EITHER STDIN or STDOUT has been redirected.
      *
-     * @return true if the shell is outputting to an interactive terminal, false otherwise (e.g., we are outputting
-     * to a file)
+     * @return true if the shell is outputting to an interactive terminal, false otherwise (e.g., we are outputting to a file)
      */
-    static boolean isOutputInteractive() {
-        if (isWindows()) {
+    static boolean isOutputInteractive()
+    {
+        if ( isWindows() )
+        {
             // Input will never be a TTY on windows and it isatty seems to be able to block forever on Windows so avoid
             // calling it.
             return System.console() != null;
         }
-        try {
-            return 1 == isatty(STDOUT_FILENO);
-        } catch (Throwable ignored) {
+        try
+        {
+            return 1 == isatty( STDOUT_FILENO );
+        }
+        catch ( Throwable ignored )
+        {
             // system is not using libc (like Alpine Linux)
             // Fallback to checking stdin OR stdout
             return System.console() != null;
         }
     }
 
-    static OutputStream getOutputStreamForInteractivePrompt() {
-        if (isWindows()) {
+    static OutputStream getOutputStreamForInteractivePrompt()
+    {
+        if ( isWindows() )
+        {
             // Output will never be a TTY on windows and it isatty seems to be able to block forever on Windows so avoid
             // calling it.
-            if (System.console() != null) {
-                return new WriterOutputStream(System.console().writer(), Charset.defaultCharset());
+            if ( System.console() != null )
+            {
+                return new WriterOutputStream( System.console().writer(), Charset.defaultCharset() );
             }
-        } else {
-            try {
-                if (1 == isatty(STDOUT_FILENO)) {
+        }
+        else
+        {
+            try
+            {
+                if ( 1 == isatty( STDOUT_FILENO ) )
+                {
                     return System.out;
-                } else {
-                    return new FileOutputStream(new File("/dev/tty"));
                 }
-            } catch (Throwable ignored) {
+                else
+                {
+                    return new FileOutputStream( new File( "/dev/tty" ) );
+                }
+            }
+            catch ( Throwable ignored )
+            {
                 // system is not using libc (like Alpine Linux)
                 // Fallback to checking stdin OR stdout
-                if (System.console() != null) {
-                    return new WriterOutputStream(System.console().writer(), Charset.defaultCharset());
+                if ( System.console() != null )
+                {
+                    return new WriterOutputStream( System.console().writer(), Charset.defaultCharset() );
                 }
             }
         }
         return new NullOutputStream();
     }
+
+    /**
+     * Run and handle user input until end of file
+     *
+     * @return error code to exit with
+     */
+    int runUntilEnd();
+
+    /**
+     * @return an object which can provide the history of commands executed
+     */
+    @Nonnull
+    Historian getHistorian();
 }

@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2018-2020 "Graph Foundation"
- * Graph Foundation, Inc. [https://graphfoundation.org]
+ * Copyright (c) 2002-2020 "Neo4j,"
+ * Neo4j Sweden AB [http://neo4j.com]
  *
- * This file is part of ONgDB.
+ * This file is part of Neo4j.
  *
- * ONgDB is free software: you can redistribute it and/or modify
- * it underm the terms of the GNU General Public License as published by
+ * Neo4j is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
@@ -19,24 +19,25 @@
  */
 package org.neo4j.shell;
 
-
 import org.neo4j.shell.log.Logger;
 import org.neo4j.shell.prettyprint.PrettyPrinter;
 import org.neo4j.shell.state.BoltStateHandler;
 
 /**
- * This class initializes a {@link CypherShell} with a fake
- * {@link org.neo4j.shell.state.BoltStateHandler} which allows for faked sessions and faked results to test some basic
- * shell functionality without requiring a full integration test.
+ * This class initializes a {@link CypherShell} with a fake {@link org.neo4j.shell.state.BoltStateHandler} which allows for faked sessions and faked results to
+ * test some basic shell functionality without requiring a full integration test.
  */
-public class OfflineTestShell extends CypherShell {
+public class OfflineTestShell extends CypherShell
+{
 
-    public OfflineTestShell(Logger logger, BoltStateHandler boltStateHandler, PrettyPrinter prettyPrinter) {
-        super(logger, boltStateHandler, prettyPrinter);
+    public OfflineTestShell( Logger logger, BoltStateHandler boltStateHandler, PrettyPrinter prettyPrinter )
+    {
+        super( logger, boltStateHandler, prettyPrinter );
     }
 
     @Override
-    protected void addRuntimeHookToResetShell() {
+    protected void addRuntimeHookToResetShell()
+    {
         //Do Nothing
     }
 }

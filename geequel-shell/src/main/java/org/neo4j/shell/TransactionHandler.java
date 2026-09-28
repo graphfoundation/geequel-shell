@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2018-2020 "Graph Foundation"
- * Graph Foundation, Inc. [https://graphfoundation.org]
+ * Copyright (c) 2002-2020 "Neo4j,"
+ * Neo4j Sweden AB [http://neo4j.com]
  *
- * This file is part of ONgDB.
+ * This file is part of Neo4j.
  *
- * ONgDB is free software: you can redistribute it and/or modify
- * it underm the terms of the GNU General Public License as published by
+ * Neo4j is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
@@ -19,31 +19,29 @@
  */
 package org.neo4j.shell;
 
-import org.neo4j.shell.exception.CommandException;
-import org.neo4j.shell.state.BoltResult;
-
 import java.util.List;
 import java.util.Optional;
+
+import org.neo4j.shell.exception.CommandException;
+import org.neo4j.shell.state.BoltResult;
 
 /**
  * An object capable of starting, committing, and rolling back transactions.
  */
-public interface TransactionHandler {
+public interface TransactionHandler
+{
 
     /**
-     *
      * @throws CommandException if a new transaction could not be started
      */
     void beginTransaction() throws CommandException;
 
     /**
-     *
      * @throws CommandException if current transaction could not be committed
      */
     Optional<List<BoltResult>> commitTransaction() throws CommandException;
 
     /**
-     *
      * @throws CommandException if current transaction could not be rolled back
      */
     void rollbackTransaction() throws CommandException;

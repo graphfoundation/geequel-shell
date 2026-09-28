@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2018-2020 "Graph Foundation"
- * Graph Foundation, Inc. [https://graphfoundation.org]
+ * Copyright (c) 2002-2020 "Neo4j,"
+ * Neo4j Sweden AB [http://neo4j.com]
  *
- * This file is part of ONgDB.
+ * This file is part of Neo4j.
  *
- * ONgDB is free software: you can redistribute it and/or modify
- * it underm the terms of the GNU General Public License as published by
+ * Neo4j is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
@@ -19,11 +19,12 @@
  */
 package org.neo4j.shell;
 
-import org.neo4j.driver.v1.Config;
-
 import javax.annotation.Nonnull;
 
-public class ConnectionConfig {
+import org.neo4j.driver.v1.Config;
+
+public class ConnectionConfig
+{
     private final String scheme;
     private final String host;
     private final int port;
@@ -31,8 +32,9 @@ public class ConnectionConfig {
     private String username;
     private String password;
 
-    public ConnectionConfig(@Nonnull String scheme, @Nonnull String host, int port,
-                            @Nonnull String username, @Nonnull String password, boolean encryption) {
+    public ConnectionConfig( @Nonnull String scheme, @Nonnull String host, int port,
+                             @Nonnull String username, @Nonnull String password, boolean encryption )
+    {
         this.host = host;
         this.port = port;
         this.username = fallbackToEnvVariable(username, "ONGDB_USERNAME");
@@ -45,53 +47,64 @@ public class ConnectionConfig {
      * @return preferredValue if not empty, else the contents of the fallback environment variable
      */
     @Nonnull
-    static String fallbackToEnvVariable(@Nonnull String preferredValue, @Nonnull String fallbackEnvVar) {
-        String result = System.getenv(fallbackEnvVar);
-        if (result == null || !preferredValue.isEmpty()) {
+    static String fallbackToEnvVariable( @Nonnull String preferredValue, @Nonnull String fallbackEnvVar )
+    {
+        String result = System.getenv( fallbackEnvVar );
+        if ( result == null || !preferredValue.isEmpty() )
+        {
             result = preferredValue;
         }
         return result;
     }
 
     @Nonnull
-    public String scheme() {
+    public String scheme()
+    {
         return scheme;
     }
 
     @Nonnull
-    public String host() {
+    public String host()
+    {
         return host;
     }
 
-    public int port() {
+    public int port()
+    {
         return port;
     }
 
     @Nonnull
-    public String username() {
+    public String username()
+    {
         return username;
     }
 
     @Nonnull
-    public String password() {
+    public String password()
+    {
         return password;
     }
 
     @Nonnull
-    public String driverUrl() {
-        return String.format("%s%s:%d", scheme(), host(), port());
+    public String driverUrl()
+    {
+        return String.format( "%s%s:%d", scheme(), host(), port() );
     }
 
     @Nonnull
-    public Config.EncryptionLevel encryption() {
+    public Config.EncryptionLevel encryption()
+    {
         return encryption;
     }
 
-    public void setUsername(@Nonnull String username) {
+    public void setUsername( @Nonnull String username )
+    {
         this.username = username;
     }
 
-    public void setPassword(@Nonnull String password) {
+    public void setPassword( @Nonnull String password )
+    {
         this.password = password;
     }
 }

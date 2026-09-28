@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2018-2020 "Graph Foundation"
- * Graph Foundation, Inc. [https://graphfoundation.org]
+ * Copyright (c) 2002-2020 "Neo4j,"
+ * Neo4j Sweden AB [http://neo4j.com]
  *
- * This file is part of ONgDB.
+ * This file is part of Neo4j.
  *
- * ONgDB is free software: you can redistribute it and/or modify
- * it underm the terms of the GNU General Public License as published by
+ * Neo4j is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
@@ -19,33 +19,39 @@
  */
 package org.neo4j.shell.prettyprint;
 
-import org.neo4j.driver.v1.Record;
-import org.neo4j.driver.v1.Value;
-import org.neo4j.driver.v1.summary.ResultSummary;
-import org.neo4j.shell.state.BoltResult;
-
-import javax.annotation.Nonnull;
 import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
 
-import static org.neo4j.shell.prettyprint.OutputFormatter.Capabilities.*;
+import org.neo4j.driver.v1.Record;
+import org.neo4j.driver.v1.Value;
+import org.neo4j.driver.v1.summary.ResultSummary;
+import org.neo4j.shell.state.BoltResult;
 
-public class SimpleOutputFormatter implements OutputFormatter {
+import static org.neo4j.shell.prettyprint.OutputFormatter.Capabilities.INFO;
+import static org.neo4j.shell.prettyprint.OutputFormatter.Capabilities.RESULT;
+import static org.neo4j.shell.prettyprint.OutputFormatter.Capabilities.STATISTICS;
+
+public class SimpleOutputFormatter implements OutputFormatter
+{
 
     @Override
-    public int formatAndCount(@Nonnull BoltResult result, @Nonnull LinePrinter output) {
+    public int formatAndCount( @Nonnull BoltResult result, @Nonnull LinePrinter output )
+    {
         Iterator<Record> records = result.iterate();
         int numberOfRows = 0;
-        if (records.hasNext()) {
+        if ( records.hasNext() )
+        {
             Record firstRow = records.next();
-            output.printOut(String.join(COMMA_SEPARATOR, firstRow.keys()));
-            output.printOut(formatRecord(firstRow));
+            output.printOut( String.join( COMMA_SEPARATOR, firstRow.keys() ) );
+            output.printOut( formatRecord( firstRow ) );
             numberOfRows++;
-            while (records.hasNext()) {
-                output.printOut(formatRecord(records.next()));
+            while ( records.hasNext() )
+            {
+                output.printOut( formatRecord( records.next() ) );
                 numberOfRows++;
             }
         }
@@ -53,23 +59,27 @@ public class SimpleOutputFormatter implements OutputFormatter {
     }
 
     @Nonnull
-    private String formatRecord(@Nonnull final Record record) {
-        return record.values().stream().map(this::formatValue).collect(Collectors.joining(COMMA_SEPARATOR));
+    private String formatRecord( @Nonnull final Record record )
+    {
+        return record.values().stream().map( this::formatValue ).collect( Collectors.joining( COMMA_SEPARATOR ) );
     }
 
     @Nonnull
     @Override
-    public String formatInfo(@Nonnull ResultSummary summary) {
-        if (!summary.hasPlan()) {
+    public String formatInfo( @Nonnull ResultSummary summary )
+    {
+        if ( !summary.hasPlan() )
+        {
             return "";
         }
-        Map<String, Value> info = OutputFormatter.info(summary);
+        Map<String, Value> info = OutputFormatter.info( summary );
         return info.entrySet().stream()
-                .map( e -> String.format("%s: %s",e.getKey(),e.getValue())).collect(Collectors.joining(NEWLINE));
+                   .map( e -> String.format( "%s: %s", e.getKey(), e.getValue() ) ).collect( Collectors.joining( NEWLINE ) );
     }
 
     @Override
-    public Set<Capabilities> capabilities() {
-        return EnumSet.of(INFO, STATISTICS, RESULT);
+    public Set<Capabilities> capabilities()
+    {
+        return EnumSet.of( INFO, STATISTICS, RESULT );
     }
 }

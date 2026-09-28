@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2018-2020 "Graph Foundation"
- * Graph Foundation, Inc. [https://graphfoundation.org]
+ * Copyright (c) 2002-2020 "Neo4j,"
+ * Neo4j Sweden AB [http://neo4j.com]
  *
- * This file is part of ONgDB.
+ * This file is part of Neo4j.
  *
- * ONgDB is free software: you can redistribute it and/or modify
- * it underm the terms of the GNU General Public License as published by
+ * Neo4j is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
@@ -19,55 +19,65 @@
  */
 package org.neo4j.shell.test.bolt;
 
+import java.util.concurrent.CompletionStage;
+
 import org.neo4j.driver.v1.AccessMode;
 import org.neo4j.driver.v1.Driver;
 import org.neo4j.driver.v1.Session;
 import org.neo4j.driver.v1.exceptions.Neo4jException;
 
-import java.util.concurrent.CompletionStage;
-
-public class FakeDriver implements Driver {
+public class FakeDriver implements Driver
+{
     @Override
-    public boolean isEncrypted() {
+    public boolean isEncrypted()
+    {
         return false;
     }
 
     @Override
-    public Session session() {
+    public Session session()
+    {
         return new FakeSession();
     }
 
     @Override
-    public Session session(AccessMode mode) {
+    public Session session( AccessMode mode )
+    {
         return new FakeSession();
     }
 
     @Override
-    public Session session(String bookmark) {
+    public Session session( String bookmark )
+    {
         return new FakeSession();
     }
 
     @Override
-    public Session session(AccessMode mode, String bookmark) {
+    public Session session( AccessMode mode, String bookmark )
+    {
         return new FakeSession();
     }
 
     @Override
-    public Session session(Iterable<String> bookmarks) {
+    public Session session( Iterable<String> bookmarks )
+    {
         return new FakeSession();
     }
 
     @Override
-    public Session session(AccessMode mode, Iterable<String> bookmarks) {
+    public Session session( AccessMode mode, Iterable<String> bookmarks )
+    {
         return new FakeSession();
     }
 
     @Override
-    public void close() throws Neo4jException {
+    public void close() throws Neo4jException
+    {
     }
 
     @Override
-    public CompletionStage<Void> closeAsync() {
+    public CompletionStage<Void> closeAsync()
+    {
         return null;
     }
 }

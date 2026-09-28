@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2018-2020 "Graph Foundation"
- * Graph Foundation, Inc. [https://graphfoundation.org]
+ * Copyright (c) 2002-2020 "Neo4j,"
+ * Neo4j Sweden AB [http://neo4j.com]
  *
- * This file is part of ONgDB.
+ * This file is part of Neo4j.
  *
- * ONgDB is free software: you can redistribute it and/or modify
- * it underm the terms of the GNU General Public License as published by
+ * Neo4j is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
@@ -19,13 +19,14 @@
  */
 package org.neo4j.shell.log;
 
+import java.io.PrintStream;
+import javax.annotation.Nonnull;
+
 import org.neo4j.shell.cli.Format;
 import org.neo4j.shell.prettyprint.LinePrinter;
 
-import javax.annotation.Nonnull;
-import java.io.PrintStream;
-
-public interface Logger extends LinePrinter {
+public interface Logger extends LinePrinter
+{
     /**
      * @return the output stream
      */
@@ -39,19 +40,18 @@ public interface Logger extends LinePrinter {
     PrintStream getErrorStream();
 
     /**
-     * Print a sanitized cause of the specified error.
-     * If debug mode is enabled, a full stacktrace should be printed as well.
+     * Print a sanitized cause of the specified error. If debug mode is enabled, a full stacktrace should be printed as well.
      *
      * @param throwable to print to the error stream
      */
-    void printError(@Nonnull Throwable throwable);
+    void printError( @Nonnull Throwable throwable );
 
     /**
      * Print the designated text to configured error stream.
      *
      * @param text to print to the error stream
      */
-    void printError(@Nonnull String text);
+    void printError( @Nonnull String text );
 
     /**
      * @return the current format of the logger
@@ -64,7 +64,7 @@ public interface Logger extends LinePrinter {
      *
      * @param format to set
      */
-    void setFormat(@Nonnull Format format);
+    void setFormat( @Nonnull Format format );
 
     /**
      * @return true if debug mode is enabled, false otherwise
@@ -76,33 +76,37 @@ public interface Logger extends LinePrinter {
      *
      * @param text to print to the output stream
      */
-    default void printIfDebug(@Nonnull String text) {
-        if (isDebugEnabled()) {
-            printOut(text);
+    default void printIfDebug( @Nonnull String text )
+    {
+        if ( isDebugEnabled() )
+        {
+            printOut( text );
         }
     }
 
     /**
-     * Convenience method which only prints the given text to the output stream if the format set
-     * is {@link Format#VERBOSE}.
+     * Convenience method which only prints the given text to the output stream if the format set is {@link Format#VERBOSE}.
      *
      * @param text to print to the output stream
      */
-    default void printIfVerbose(@Nonnull String text) {
-        if (Format.VERBOSE.equals(getFormat())) {
-            printOut(text);
+    default void printIfVerbose( @Nonnull String text )
+    {
+        if ( Format.VERBOSE.equals( getFormat() ) )
+        {
+            printOut( text );
         }
     }
 
     /**
-     * Convenience method which only prints the given text to the output stream if the format set
-     * is {@link Format#PLAIN}.
+     * Convenience method which only prints the given text to the output stream if the format set is {@link Format#PLAIN}.
      *
      * @param text to print to the output stream
      */
-    default void printIfPlain(@Nonnull String text) {
-        if (Format.PLAIN.equals(getFormat())) {
-            printOut(text);
+    default void printIfPlain( @Nonnull String text )
+    {
+        if ( Format.PLAIN.equals( getFormat() ) )
+        {
+            printOut( text );
         }
     }
 }

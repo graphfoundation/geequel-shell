@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2018-2020 "Graph Foundation"
- * Graph Foundation, Inc. [https://graphfoundation.org]
+ * Copyright (c) 2002-2020 "Neo4j,"
+ * Neo4j Sweden AB [http://neo4j.com]
  *
- * This file is part of ONgDB.
+ * This file is part of Neo4j.
  *
- * ONgDB is free software: you can redistribute it and/or modify
- * it underm the terms of the GNU General Public License as published by
+ * Neo4j is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
@@ -45,7 +45,8 @@ import static org.neo4j.driver.internal.summary.InternalProfiledPlan.PROFILED_PL
 public class OutputFormatterTest
 {
     @Test
-    public void shouldReportTotalDBHits() {
+    public void shouldReportTotalDBHits()
+    {
         Value labelScan = buildOperator( "NodeByLabelScan", 1002L, 1001L, null );
         Value filter = buildOperator( "Filter", 1402, 280, labelScan );
         Value planMap = buildOperator( "ProduceResults", 0, 280, filter );
@@ -63,18 +64,20 @@ public class OutputFormatterTest
                 55 );
 
         // When
-        Map<String,Value> info = OutputFormatter.info( summary );
+        Map<String, Value> info = OutputFormatter.info( summary );
 
         //Then
         assertThat( info.get( "DbHits" ).asLong(), equalTo( 2404L ) );
     }
 
-    private Value buildOperator( String operator, long dbHits, long rows, Value child ) {
+    private Value buildOperator( String operator, long dbHits, long rows, Value child )
+    {
         Map<String, Value> operatorMap = new HashMap<>();
         operatorMap.put( "operatorType", Values.value( operator ) );
         operatorMap.put( "dbHits", Values.value( dbHits ) );
         operatorMap.put( "rows", Values.value( rows ) );
-        if ( child != null ) {
+        if ( child != null )
+        {
             operatorMap.put( "children", new ListValue( child ) );
         }
         return new MapValue( operatorMap );

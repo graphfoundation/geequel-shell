@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2018-2020 "Graph Foundation"
- * Graph Foundation, Inc. [https://graphfoundation.org]
+ * Copyright (c) 2002-2020 "Neo4j,"
+ * Neo4j Sweden AB [http://neo4j.com]
  *
- * This file is part of ONgDB.
+ * This file is part of Neo4j.
  *
- * ONgDB is free software: you can redistribute it and/or modify
- * it underm the terms of the GNU General Public License as published by
+ * Neo4j is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
@@ -19,51 +19,58 @@
  */
 package org.neo4j.shell.commands;
 
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import java.util.Arrays;
+
 import org.neo4j.shell.Historian;
 import org.neo4j.shell.exception.CommandException;
 import org.neo4j.shell.log.Logger;
 
-import java.util.Arrays;
-
 import static junit.framework.TestCase.fail;
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-public class HistoryTest {
+public class HistoryTest
+{
 
     @Rule
     public final ExpectedException thrown = ExpectedException.none();
 
-    private Logger logger = mock(Logger.class);
-    private Historian historian = mock(Historian.class);
+    private Logger logger = mock( Logger.class );
+    private Historian historian = mock( Historian.class );
     private Command cmd;
 
     @Before
-    public void setup() {
-        this.cmd = new History(logger, historian);
+    public void setup()
+    {
+        this.cmd = new History( logger, historian );
     }
 
     @Test
-    public void shouldNotAcceptArgs() throws CommandException {
-        thrown.expect(CommandException.class);
-        thrown.expectMessage(containsString("Incorrect number of arguments"));
+    public void shouldNotAcceptArgs() throws CommandException
+    {
+        thrown.expect( CommandException.class );
+        thrown.expectMessage( containsString( "Incorrect number of arguments" ) );
 
-        cmd.execute("bob");
-        fail("Should not accept args");
+        cmd.execute( "bob" );
+        fail( "Should not accept args" );
     }
 
     @Test
-    public void shouldPrintHistoryCorrectlyNumberedFrom1() throws CommandException {
-        when(historian.getHistory()).thenReturn(Arrays.asList(":help", ":exit"));
+    public void shouldPrintHistoryCorrectlyNumberedFrom1() throws CommandException
+    {
+        when( historian.getHistory() ).thenReturn( Arrays.asList( ":help", ":exit" ) );
 
-        cmd.execute("");
+        cmd.execute( "" );
 
-        verify(logger).printOut(eq(" 1  :help\n" +
-                " 2  :exit\n"));
+        verify( logger ).printOut( eq( " 1  :help\n" +
+                                       " 2  :exit\n" ) );
     }
 }

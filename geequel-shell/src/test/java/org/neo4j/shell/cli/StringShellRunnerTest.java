@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2018-2020 "Graph Foundation"
- * Graph Foundation, Inc. [https://graphfoundation.org]
+ * Copyright (c) 2002-2020 "Neo4j,"
+ * Neo4j Sweden AB [http://neo4j.com]
  *
- * This file is part of ONgDB.
+ * This file is part of Neo4j.
  *
- * ONgDB is free software: you can redistribute it and/or modify
- * it underm the terms of the GNU General Public License as published by
+ * Neo4j is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
@@ -19,17 +19,17 @@
  */
 package org.neo4j.shell.cli;
 
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+
+import java.io.IOException;
+
 import org.neo4j.driver.v1.exceptions.ClientException;
 import org.neo4j.shell.Historian;
 import org.neo4j.shell.StatementExecuter;
 import org.neo4j.shell.exception.CommandException;
 import org.neo4j.shell.log.Logger;
-
-import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;
@@ -39,52 +39,57 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.neo4j.shell.cli.CliArgHelper.parse;
 
-public class StringShellRunnerTest {
+public class StringShellRunnerTest
+{
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    private Logger logger = mock(Logger.class);
-    private StatementExecuter statementExecuter = mock(StatementExecuter.class);
+    private Logger logger = mock( Logger.class );
+    private StatementExecuter statementExecuter = mock( StatementExecuter.class );
 
     @Test
-    public void nullCypherShouldThrowException() throws IOException {
-        thrown.expect(NullPointerException.class);
-        thrown.expectMessage("No cypher string specified");
+    public void nullCypherShouldThrowException() throws IOException
+    {
+        thrown.expect( NullPointerException.class );
+        thrown.expectMessage( "No cypher string specified" );
 
-        new StringShellRunner(new CliArgs(), statementExecuter, logger);
+        new StringShellRunner( new CliArgs(), statementExecuter, logger );
     }
 
     @Test
-    public void cypherShouldBePassedToRun() throws IOException, CommandException {
+    public void cypherShouldBePassedToRun() throws IOException, CommandException
+    {
         String cypherString = "nonsense string";
-        StringShellRunner runner = new StringShellRunner(parse(cypherString), statementExecuter, logger);
+        StringShellRunner runner = new StringShellRunner( parse( cypherString ), statementExecuter, logger );
 
         int code = runner.runUntilEnd();
 
-        assertEquals("Wrong exit code", 0, code);
-        verify(statementExecuter).execute("nonsense string");
-        verifyNoMoreInteractions(statementExecuter);
+        assertEquals( "Wrong exit code", 0, code );
+        verify( statementExecuter ).execute( "nonsense string" );
+        verifyNoMoreInteractions( statementExecuter );
     }
 
     @Test
-    public void errorsShouldThrow() throws IOException, CommandException {
-        ClientException kaboom = new ClientException("Error kaboom");
-        doThrow(kaboom).when(statementExecuter).execute(anyString());
+    public void errorsShouldThrow() throws IOException, CommandException
+    {
+        ClientException kaboom = new ClientException( "Error kaboom" );
+        doThrow( kaboom ).when( statementExecuter ).execute( anyString() );
 
-        StringShellRunner runner = new StringShellRunner(parse("nan anana"), statementExecuter, logger);
+        StringShellRunner runner = new StringShellRunner( parse( "nan anana" ), statementExecuter, logger );
 
         int code = runner.runUntilEnd();
 
-        assertEquals("Wrong exit code", 1, code);
-        verify(logger).printError(kaboom);
+        assertEquals( "Wrong exit code", 1, code );
+        verify( logger ).printError( kaboom );
     }
 
     @Test
-    public void shellRunnerHasNoHistory() throws Exception {
+    public void shellRunnerHasNoHistory() throws Exception
+    {
         // given
-        StringShellRunner runner = new StringShellRunner(parse("nan anana"), statementExecuter, logger);
+        StringShellRunner runner = new StringShellRunner( parse( "nan anana" ), statementExecuter, logger );
 
         // when then
-        assertEquals(Historian.empty, runner.getHistorian());
+        assertEquals( Historian.empty, runner.getHistorian() );
     }
 }

@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2018-2020 "Graph Foundation"
- * Graph Foundation, Inc. [https://graphfoundation.org]
+ * Copyright (c) 2002-2020 "Neo4j,"
+ * Neo4j Sweden AB [http://neo4j.com]
  *
- * This file is part of ONgDB.
+ * This file is part of Neo4j.
  *
- * ONgDB is free software: you can redistribute it and/or modify
- * it underm the terms of the GNU General Public License as published by
+ * Neo4j is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
@@ -21,22 +21,26 @@ package org.neo4j.shell.prettyprint;
 
 import javax.annotation.Nonnull;
 
-public class ToStringLinePrinter implements LinePrinter {
+public class ToStringLinePrinter implements LinePrinter
+{
 
     final StringBuilder sb;
 
-    public ToStringLinePrinter() {
+    public ToStringLinePrinter()
+    {
         this.sb = new StringBuilder();
     }
 
     @Override
-    public void printOut(String line) {
-        sb.append(line);
-        sb.append(OutputFormatter.NEWLINE);
+    public void printOut( String line )
+    {
+        sb.append( line );
+        sb.append( OutputFormatter.NEWLINE );
     }
 
     @Nonnull
-    public String result() {
+    public String result()
+    {
         return sb.toString();
     }
 }

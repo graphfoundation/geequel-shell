@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2018-2020 "Graph Foundation"
- * Graph Foundation, Inc. [https://graphfoundation.org]
+ * Copyright (c) 2002-2020 "Neo4j,"
+ * Neo4j Sweden AB [http://neo4j.com]
  *
- * This file is part of ONgDB.
+ * This file is part of Neo4j.
  *
- * ONgDB is free software: you can redistribute it and/or modify
- * it underm the terms of the GNU General Public License as published by
+ * Neo4j is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
@@ -19,17 +19,19 @@
  */
 package org.neo4j.shell;
 
+import javax.annotation.Nonnull;
+
 import org.neo4j.shell.commands.Exit;
 import org.neo4j.shell.commands.Help;
 import org.neo4j.shell.log.AnsiFormattedText;
 
-import javax.annotation.Nonnull;
-
-public class UserMessagesHandler {
+public class UserMessagesHandler
+{
     private ConnectionConfig connectionConfig;
     private String serverVersion;
 
-    public UserMessagesHandler(@Nonnull ConnectionConfig connectionConfig, @Nonnull String serverVersion) {
+    public UserMessagesHandler( @Nonnull ConnectionConfig connectionConfig, @Nonnull String serverVersion )
+    {
         this.connectionConfig = connectionConfig;
         this.serverVersion = serverVersion;
     }
@@ -39,10 +41,11 @@ public class UserMessagesHandler {
         AnsiFormattedText welcomeMessage = AnsiFormattedText.from("Connected to ONgDB at ")
                                                             .bold().append(connectionConfig.driverUrl()).boldOff();
 
-        if (!connectionConfig.username().isEmpty()) {
+        if ( !connectionConfig.username().isEmpty() )
+        {
             welcomeMessage = welcomeMessage
-                    .append(" as user ")
-                    .bold().append(connectionConfig.username()).boldOff();
+                    .append( " as user " )
+                    .bold().append( connectionConfig.username() ).boldOff();
         }
 
         return welcomeMessage
@@ -56,7 +59,8 @@ public class UserMessagesHandler {
     }
 
     @Nonnull
-    public String getExitMessage() {
-        return AnsiFormattedText.s().append("\nBye!").formattedString();
+    public String getExitMessage()
+    {
+        return AnsiFormattedText.s().append( "\nBye!" ).formattedString();
     }
 }

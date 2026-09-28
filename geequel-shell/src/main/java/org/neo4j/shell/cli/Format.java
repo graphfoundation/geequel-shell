@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2018-2020 "Graph Foundation"
- * Graph Foundation, Inc. [https://graphfoundation.org]
+ * Copyright (c) 2002-2020 "Neo4j,"
+ * Neo4j Sweden AB [http://neo4j.com]
  *
- * This file is part of ONgDB.
+ * This file is part of Neo4j.
  *
- * ONgDB is free software: you can redistribute it and/or modify
- * it underm the terms of the GNU General Public License as published by
+ * Neo4j is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
@@ -24,7 +24,8 @@ import javax.annotation.Nonnull;
 import static org.neo4j.shell.ShellRunner.isInputInteractive;
 import static org.neo4j.shell.ShellRunner.isOutputInteractive;
 
-public enum Format {
+public enum Format
+{
     // Will select depending based on STDOUT and STDIN redirection
     AUTO,
     // Intended for human consumption
@@ -36,7 +37,9 @@ public enum Format {
     public static Format parse(@Nonnull String format, @Nonnull CliArgs cliArgs) {
         if (format.equalsIgnoreCase(PLAIN.name())) {
             return PLAIN;
-        } else if (format.equalsIgnoreCase( VERBOSE.name() )) {
+        }
+        else if ( format.equalsIgnoreCase( VERBOSE.name() ) )
+        {
             return VERBOSE;
         } else {
             return isInputInteractive(cliArgs) && isOutputInteractive() ? VERBOSE : PLAIN;

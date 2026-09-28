@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2018-2020 "Graph Foundation"
- * Graph Foundation, Inc. [https://graphfoundation.org]
+ * Copyright (c) 2002-2020 "Neo4j,"
+ * Neo4j Sweden AB [http://neo4j.com]
  *
- * This file is part of ONgDB.
+ * This file is part of Neo4j.
  *
- * ONgDB is free software: you can redistribute it and/or modify
- * it underm the terms of the GNU General Public License as published by
+ * Neo4j is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
@@ -35,25 +35,32 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.neo4j.shell.commands.CommandHelper.simpleArgParse;
 
-public class CommandHelperTest {
+public class CommandHelperTest
+{
 
     @Test
-    public void emptyStringIsNoArgs() throws CommandException {
-        assertEquals(0, simpleArgParse("", 0, "", "").length);
+    public void emptyStringIsNoArgs() throws CommandException
+    {
+        assertEquals( 0, simpleArgParse( "", 0, "", "" ).length );
     }
 
     @Test
-    public void whitespaceStringIsNoArgs() throws CommandException {
-        assertEquals(0, simpleArgParse("    \t  ", 0, "", "").length);
+    public void whitespaceStringIsNoArgs() throws CommandException
+    {
+        assertEquals( 0, simpleArgParse( "    \t  ", 0, "", "" ).length );
     }
 
     @Test
-    public void oneArg() {
-        try {
-            assertEquals(0, simpleArgParse("bob", 0, "", ""));
+    public void oneArg()
+    {
+        try
+        {
+            assertEquals( 0, simpleArgParse( "bob", 0, "", "" ) );
             fail();
-        } catch (CommandException e) {
-            assertTrue(e.getMessage().contains("Incorrect number of arguments"));
+        }
+        catch ( CommandException e )
+        {
+            assertTrue( e.getMessage().contains( "Incorrect number of arguments" ) );
         }
     }
 
@@ -62,7 +69,7 @@ public class CommandHelperTest {
     {
         // Given
         AnsiLogger logger = new AnsiLogger( false );
-        CommandHelper commandHelper = new CommandHelper( logger, Historian.empty, new CypherShell(logger, PrettyConfig.DEFAULT) );
+        CommandHelper commandHelper = new CommandHelper( logger, Historian.empty, new CypherShell( logger, PrettyConfig.DEFAULT ) );
 
         // When
         Command begin = commandHelper.getCommand( ":BEGIN" );

@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2018-2020 "Graph Foundation"
- * Graph Foundation, Inc. [https://graphfoundation.org]
+ * Copyright (c) 2002-2020 "Neo4j,"
+ * Neo4j Sweden AB [http://neo4j.com]
  *
- * This file is part of ONgDB.
+ * This file is part of Neo4j.
  *
- * ONgDB is free software: you can redistribute it and/or modify
- * it underm the terms of the GNU General Public License as published by
+ * Neo4j is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
@@ -19,17 +19,18 @@
  */
 package org.neo4j.shell.config;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import javax.annotation.Nonnull;
 
 /**
  * This class provides access to build time variables
  */
-public class Build {
+public class Build
+{
 
-    private static Properties props = null;
+    private static Properties props;
 
     /**
      * Reads the build generated properties file the first time it is called.
@@ -37,17 +38,25 @@ public class Build {
      * @return build properties
      */
     @Nonnull
-    private static Properties getProperties() {
-        if (props == null) {
+    private static Properties getProperties()
+    {
+        if ( props == null )
+        {
             props = new Properties();
-            try (InputStream stream = Build.class.getClassLoader().getResourceAsStream("build.properties")) {
-                if (stream == null) {
-                    throw new IllegalStateException("Cannot read build.properties");
-                } else {
-                    props.load(stream);
+            try ( InputStream stream = Build.class.getClassLoader().getResourceAsStream( "build.properties" ) )
+            {
+                if ( stream == null )
+                {
+                    throw new IllegalStateException( "Cannot read build.properties" );
                 }
-            } catch (IOException e) {
-                System.err.println("Could not read build properties: " + e.getMessage());
+                else
+                {
+                    props.load( stream );
+                }
+            }
+            catch ( IOException e )
+            {
+                System.err.println( "Could not read build properties: " + e.getMessage() );
             }
         }
 
@@ -58,15 +67,17 @@ public class Build {
      * @return the revision of the source code, or "dev" if no properties file could be read.
      */
     @Nonnull
-    public static String version() {
-        return getProperties().getProperty("version", "dev");
+    public static String version()
+    {
+        return getProperties().getProperty( "version", "dev" );
     }
 
     /**
      * @return the revision of the Neo4j Driver, or "dev" if no properties file could be read.
      */
     @Nonnull
-    public static String driverVersion() {
-        return getProperties().getProperty("driverVersion", "dev");
+    public static String driverVersion()
+    {
+        return getProperties().getProperty( "driverVersion", "dev" );
     }
 }

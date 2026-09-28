@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2018-2020 "Graph Foundation"
- * Graph Foundation, Inc. [https://graphfoundation.org]
+ * Copyright (c) 2002-2020 "Neo4j,"
+ * Neo4j Sweden AB [http://neo4j.com]
  *
- * This file is part of ONgDB.
+ * This file is part of Neo4j.
  *
- * ONgDB is free software: you can redistribute it and/or modify
- * it underm the terms of the GNU General Public License as published by
+ * Neo4j is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
@@ -19,34 +19,39 @@
  */
 package org.neo4j.shell.exception;
 
-import org.neo4j.shell.log.AnsiFormattedText;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import org.neo4j.shell.log.AnsiFormattedText;
 
 /**
  * A type of exception where the message can formatted with Ansi codes.
  */
-public class AnsiFormattedException extends Exception {
+public class AnsiFormattedException extends Exception
+{
     private final AnsiFormattedText message;
 
-    public AnsiFormattedException(@Nullable String message) {
-        super(message);
-        this.message = AnsiFormattedText.from(message);
+    public AnsiFormattedException( @Nullable String message )
+    {
+        super( message );
+        this.message = AnsiFormattedText.from( message );
     }
 
-    public AnsiFormattedException(@Nullable String message, Throwable cause) {
-        super(message, cause);
-        this.message = AnsiFormattedText.from(message);
+    public AnsiFormattedException( @Nullable String message, Throwable cause )
+    {
+        super( message, cause );
+        this.message = AnsiFormattedText.from( message );
     }
 
-    public AnsiFormattedException(@Nonnull AnsiFormattedText message) {
-        super(message.plainString());
+    public AnsiFormattedException( @Nonnull AnsiFormattedText message )
+    {
+        super( message.plainString() );
         this.message = message;
     }
 
     @Nonnull
-    public AnsiFormattedText getFormattedMessage() {
+    public AnsiFormattedText getFormattedMessage()
+    {
         return message;
     }
 }

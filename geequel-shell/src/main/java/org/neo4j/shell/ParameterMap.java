@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2018-2020 "Graph Foundation"
- * Graph Foundation, Inc. [https://graphfoundation.org]
+ * Copyright (c) 2002-2020 "Neo4j,"
+ * Neo4j Sweden AB [http://neo4j.com]
  *
- * This file is part of ONgDB.
+ * This file is part of Neo4j.
  *
- * ONgDB is free software: you can redistribute it and/or modify
- * it underm the terms of the GNU General Public License as published by
+ * Neo4j is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
@@ -19,22 +19,23 @@
  */
 package org.neo4j.shell;
 
+import java.util.Map;
+import javax.annotation.Nonnull;
+
 import org.neo4j.shell.exception.CommandException;
 import org.neo4j.shell.state.ParamValue;
-
-import javax.annotation.Nonnull;
-import java.util.Map;
 
 /**
  * An object which keeps named parameters and allows them to be set/unset.
  */
-public interface ParameterMap {
+public interface ParameterMap
+{
     /**
-     * @param name of variable to set value for
+     * @param name        of variable to set value for
      * @param valueString to interpret the value from
      * @return the evaluated value
      */
-    Object setParameter(@Nonnull String name, @Nonnull String valueString) throws CommandException;
+    Object setParameter( @Nonnull String name, @Nonnull String valueString ) throws CommandException;
 
     /**
      * @return map of all currently set variables and their values

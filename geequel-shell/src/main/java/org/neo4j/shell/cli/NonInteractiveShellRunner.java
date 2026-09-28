@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2018-2020 "Graph Foundation"
- * Graph Foundation, Inc. [https://graphfoundation.org]
+ * Copyright (c) 2002-2020 "Neo4j,"
+ * Neo4j Sweden AB [http://neo4j.com]
  *
- * This file is part of ONgDB.
+ * This file is part of Neo4j.
  *
- * ONgDB is free software: you can redistribute it and/or modify
- * it underm the terms of the GNU General Public License as published by
+ * Neo4j is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
@@ -19,6 +19,12 @@
  */
 package org.neo4j.shell.cli;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.List;
+import javax.annotation.Nonnull;
+
 import org.neo4j.shell.Historian;
 import org.neo4j.shell.ShellRunner;
 import org.neo4j.shell.StatementExecuter;
@@ -26,18 +32,12 @@ import org.neo4j.shell.exception.ExitException;
 import org.neo4j.shell.log.Logger;
 import org.neo4j.shell.parser.StatementParser;
 
-import javax.annotation.Nonnull;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.List;
-
-
 /**
- * A shell runner which reads all of STDIN and executes commands until completion. In case of errors, the failBehavior
- * determines if the shell exits immediately, or if it should keep trying the next commands.
+ * A shell runner which reads all of STDIN and executes commands until completion. In case of errors, the failBehavior determines if the shell exits
+ * immediately, or if it should keep trying the next commands.
  */
-public class NonInteractiveShellRunner implements ShellRunner {
+public class NonInteractiveShellRunner implements ShellRunner
+{
 
     private final FailBehavior failBehavior;
     @Nonnull
@@ -46,11 +46,12 @@ public class NonInteractiveShellRunner implements ShellRunner {
     private final StatementParser statementParser;
     private final InputStream inputStream;
 
-    public NonInteractiveShellRunner(@Nonnull FailBehavior failBehavior,
-                                     @Nonnull StatementExecuter executer,
-                                     @Nonnull Logger logger,
-                                     @Nonnull StatementParser statementParser,
-                                     @Nonnull InputStream inputStream) {
+    public NonInteractiveShellRunner( @Nonnull FailBehavior failBehavior,
+                                      @Nonnull StatementExecuter executer,
+                                      @Nonnull Logger logger,
+                                      @Nonnull StatementParser statementParser,
+                                      @Nonnull InputStream inputStream )
+    {
         this.failBehavior = failBehavior;
         this.executer = executer;
         this.logger = logger;
@@ -59,29 +60,44 @@ public class NonInteractiveShellRunner implements ShellRunner {
     }
 
     @Override
-    public int runUntilEnd() {
+    public int runUntilEnd()
+    {
         List<String> statements;
-        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
+        try ( BufferedReader bufferedReader = new BufferedReader( new InputStreamReader( inputStream ) ) )
+        {
             bufferedReader
                     .lines()
-                    .forEach(line -> statementParser.parseMoreText(line + "\n"));
+                    .forEach( line -> statementParser.parseMoreText( line + "\n" ) );
             statements = statementParser.consumeStatements();
-        } catch (Throwable e) {
-            logger.printError(e);
+        }
+        catch ( Throwable e )
+        {
+            logger.printError( e );
             return 1;
         }
 
         int exitCode = 0;
-        for (String statement : statements) {
-            try {
-                executer.execute(statement);
-            } catch (ExitException e) {
+
+        // Executing this could fail but we try anyway to avoid hiding errors
+        statementParser.incompleteStatement().ifPresent( statements::add );
+
+        for ( String statement : statements )
+        {
+            try
+            {
+                executer.execute( statement );
+            }
+            catch ( ExitException e )
+            {
                 // These exceptions are always fatal
                 return e.getCode();
-            } catch (Throwable e) {
+            }
+            catch ( Throwable e )
+            {
                 exitCode = 1;
-                logger.printError(e);
-                if (FailBehavior.FAIL_AT_END != failBehavior) {
+                logger.printError( e );
+                if ( FailBehavior.FAIL_AT_END != failBehavior )
+                {
                     return exitCode;
                 }
             }
@@ -91,7 +107,8 @@ public class NonInteractiveShellRunner implements ShellRunner {
 
     @Nonnull
     @Override
-    public Historian getHistorian() {
+    public Historian getHistorian()
+    {
         return Historian.empty;
     }
 }
