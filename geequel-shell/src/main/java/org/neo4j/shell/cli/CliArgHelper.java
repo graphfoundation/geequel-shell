@@ -1,11 +1,30 @@
 /*
- * Copyright (c) 2018-2020 "Graph Foundation"
+ * Copyright (c) "Graph Foundation,"
  * Graph Foundation, Inc. [https://graphfoundation.org]
  *
  * This file is part of ONgDB.
  *
  * ONgDB is free software: you can redistribute it and/or modify
- * it underm the terms of the GNU General Public License as published by
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+/*
+ * Copyright (c) 2002-2020 "Neo4j,"
+ * Neo4j Sweden AB [http://neo4j.com]
+ *
+ * This file is part of Neo4j.
+ *
+ * Neo4j is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
@@ -24,7 +43,13 @@ import net.sourceforge.argparse4j.impl.action.StoreConstArgumentAction;
 import net.sourceforge.argparse4j.impl.action.StoreTrueArgumentAction;
 import net.sourceforge.argparse4j.impl.choice.CollectionArgumentChoice;
 import net.sourceforge.argparse4j.impl.type.BooleanArgumentType;
-import net.sourceforge.argparse4j.inf.*;
+import net.sourceforge.argparse4j.inf.Argument;
+import net.sourceforge.argparse4j.inf.ArgumentGroup;
+import net.sourceforge.argparse4j.inf.ArgumentParser;
+import net.sourceforge.argparse4j.inf.ArgumentParserException;
+import net.sourceforge.argparse4j.inf.ArgumentType;
+import net.sourceforge.argparse4j.inf.MutuallyExclusiveGroup;
+import net.sourceforge.argparse4j.inf.Namespace;
 
 import java.io.PrintWriter;
 import java.util.regex.Matcher;
@@ -39,53 +64,61 @@ import static org.neo4j.shell.cli.FailBehavior.FAIL_FAST;
 /**
  * Command line argument parsing and related stuff
  */
-public class CliArgHelper {
+public class CliArgHelper
+{
 
     static final Pattern ADDRESS_ARG_PATTERN =
-            Pattern.compile("\\s*(?<scheme>[a-zA-Z0-9+\\-.]+://)?((?<username>\\w+):(?<password>[^\\s]+)@)?(?<host>[a-zA-Z\\d\\-.]+)?(:(?<port>\\d+))?\\s*");
+            Pattern.compile( "\\s*(?<scheme>[a-zA-Z0-9+\\-.]+://)?((?<username>\\w+):(?<password>[^\\s]+)@)?(?<host>[a-zA-Z\\d\\-.]+)?(:(?<port>\\d+))?\\s*" );
 
     /**
      * @param args to parse
      * @return null in case of error, commandline arguments otherwise
      */
     @Nullable
-    public static CliArgs parse(@Nonnull String... args) {
+    public static CliArgs parse( @Nonnull String... args )
+    {
         final ArgumentParser parser = setupParser();
         final Namespace ns;
 
-        try {
-            ns = parser.parseArgs(args);
-        } catch (ArgumentParserException e) {
-            parser.handleError(e);
+        try
+        {
+            ns = parser.parseArgs( args );
+        }
+        catch ( ArgumentParserException e )
+        {
+            parser.handleError( e );
             return null;
         }
 
         // Parse address string, returns null on error
-        final Matcher addressMatcher = parseAddressMatcher(parser, ns.getString("address"));
+        final Matcher addressMatcher = parseAddressMatcher( parser, ns.getString( "address" ) );
 
-        if (addressMatcher == null) {
+        if ( addressMatcher == null )
+        {
             return null;
         }
 
         CliArgs cliArgs = new CliArgs();
 
-        cliArgs.setScheme(addressMatcher.group("scheme"), "bolt://");
-        cliArgs.setHost(addressMatcher.group("host"), "localhost");
+        cliArgs.setScheme( addressMatcher.group( "scheme" ), "bolt://" );
+        cliArgs.setHost( addressMatcher.group( "host" ), "localhost" );
         // Safe, regex only matches integers
-        String portString = addressMatcher.group("port");
-        cliArgs.setPort(portString == null ? 7687 : Integer.parseInt(portString));
+        String portString = addressMatcher.group( "port" );
+        cliArgs.setPort( portString == null ? 7687 : Integer.parseInt( portString ) );
         // Also parse username and password from address if available
-        cliArgs.setUsername(addressMatcher.group("username"), "");
-        cliArgs.setPassword(addressMatcher.group("password"), "");
+        cliArgs.setUsername( addressMatcher.group( "username" ), "" );
+        cliArgs.setPassword( addressMatcher.group( "password" ), "" );
 
         // Only overwrite user/pass from address string if the arguments were specified
-        String user = ns.getString("username");
-        if (!user.isEmpty()) {
-            cliArgs.setUsername(user, cliArgs.getUsername());
+        String user = ns.getString( "username" );
+        if ( !user.isEmpty() )
+        {
+            cliArgs.setUsername( user, cliArgs.getUsername() );
         }
-        String pass = ns.getString("password");
-        if (!pass.isEmpty()) {
-            cliArgs.setPassword(pass, cliArgs.getPassword());
+        String pass = ns.getString( "password" );
+        if ( !pass.isEmpty() )
+        {
+            cliArgs.setPassword( pass, cliArgs.getPassword() );
         }
 
         // Other arguments
@@ -97,19 +130,19 @@ public class CliArgHelper {
         //Set Output format
         cliArgs.setFormat(Format.parse(ns.get("format"), cliArgs));
 
-        cliArgs.setEncryption(ns.getBoolean("encryption"));
+        cliArgs.setEncryption( ns.getBoolean( "encryption" ) );
 
-        cliArgs.setDebugMode(ns.getBoolean("debug"));
+        cliArgs.setDebugMode( ns.getBoolean( "debug" ) );
 
-        cliArgs.setNonInteractive(ns.getBoolean("force-non-interactive"));
+        cliArgs.setNonInteractive( ns.getBoolean( "force-non-interactive" ) );
 
-        cliArgs.setWrap(ns.getBoolean("wrap"));
+        cliArgs.setWrap( ns.getBoolean( "wrap" ) );
 
-        cliArgs.setNumSampleRows(ns.getInt("sample-rows"));
+        cliArgs.setNumSampleRows( ns.getInt( "sample-rows" ) );
 
-        cliArgs.setVersion(ns.getBoolean("version"));
+        cliArgs.setVersion( ns.getBoolean( "version" ) );
 
-        cliArgs.setDriverVersion(ns.getBoolean("driver-version"));
+        cliArgs.setDriverVersion( ns.getBoolean( "driver-version" ) );
 
         // Fail behavior as sensible default and returns a proper type
         cliArgs.setFailBehavior(ns.get("fail-behavior"));
@@ -118,11 +151,13 @@ public class CliArgHelper {
     }
 
     @Nullable
-    private static Matcher parseAddressMatcher(ArgumentParser parser, String address) {
-        Matcher matcher = ADDRESS_ARG_PATTERN.matcher(address);
-        if (!matcher.matches()) {
+    private static Matcher parseAddressMatcher( ArgumentParser parser, String address )
+    {
+        Matcher matcher = ADDRESS_ARG_PATTERN.matcher( address );
+        if ( !matcher.matches() )
+        {
             // Match behavior in built-in error handling
-            PrintWriter printWriter = new PrintWriter(System.err);
+            PrintWriter printWriter = new PrintWriter( System.err );
             parser.printUsage(printWriter);
             printWriter.println("geequel-shell: error: Failed to parse address: '" + address + "'");
             printWriter.println("\n  Address should be of the form: [scheme://][username:password@][host][:port]");
@@ -177,7 +212,7 @@ public class CliArgHelper {
                 .choices(new CollectionArgumentChoice<>(
                         Format.AUTO.name().toLowerCase(),
                         Format.VERBOSE.name().toLowerCase(),
-                        Format.PLAIN.name().toLowerCase()))
+                        Format.PLAIN.name().toLowerCase() ))
                 .setDefault(Format.AUTO.name().toLowerCase());
 
         parser.addArgument("--debug")
@@ -220,15 +255,23 @@ public class CliArgHelper {
         return parser;
     }
 
-    private static class PositiveIntegerType implements ArgumentType<Integer> {
+    private static class PositiveIntegerType implements ArgumentType<Integer>
+    {
         @Override
-        public Integer convert(ArgumentParser parser, Argument arg, String value) throws ArgumentParserException {
-            try {
-                int result = Integer.parseInt(value);
-                if (result < 1) throw new NumberFormatException(value);
+        public Integer convert( ArgumentParser parser, Argument arg, String value ) throws ArgumentParserException
+        {
+            try
+            {
+                int result = Integer.parseInt( value );
+                if ( result < 1 )
+                {
+                    throw new NumberFormatException( value );
+                }
                 return result;
-            } catch (NumberFormatException nfe) {
-                throw new ArgumentParserException("Invalid value: "+value, parser);
+            }
+            catch ( NumberFormatException nfe )
+            {
+                throw new ArgumentParserException( "Invalid value: " + value, parser );
             }
         }
     }

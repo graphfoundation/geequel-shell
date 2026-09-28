@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2018-2020 "Graph Foundation"
+ * Copyright (c) "Graph Foundation,"
  * Graph Foundation, Inc. [https://graphfoundation.org]
  *
  * This file is part of ONgDB.
  *
  * ONgDB is free software: you can redistribute it and/or modify
- * it underm the terms of the GNU General Public License as published by
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
@@ -19,56 +19,66 @@
  */
 package org.neo4j.shell.test.bolt;
 
-import org.neo4j.driver.*;
-import org.neo4j.driver.types.TypeSystem;
+import org.neo4j.driver.Query;
+import org.neo4j.driver.Record;
+import org.neo4j.driver.Result;
+import org.neo4j.driver.Transaction;
+import org.neo4j.driver.Value;
 
-import java.util.concurrent.CompletionStage;
 import java.util.Map;
 
-public class FakeTransaction implements Transaction {
+public class FakeTransaction implements Transaction
+{
     @Override
-    public boolean isOpen() {
+    public boolean isOpen()
+    {
         return true;
     }
 
-
     @Override
-    public void commit() {
+    public void commit()
+    {
     }
 
     @Override
-    public void rollback() {
-
-    }
-
-    @Override
-    public void close() {
+    public void rollback()
+    {
 
     }
 
     @Override
-    public Result run(String query, Value parameters) {
-        return FakeResult.parseStatement(query);
+    public void close()
+    {
+
     }
 
     @Override
-    public Result run(String query, Map<String, Object> parameters) {
-        return FakeResult.parseStatement(query);
+    public Result run( String query, Value parameters )
+    {
+        return FakeResult.parseStatement( query );
     }
 
     @Override
-    public Result run(String query, Record parameters) {
-        return FakeResult.parseStatement(query);
+    public Result run( String query, Map<String, Object> parameters )
+    {
+        return FakeResult.parseStatement( query );
     }
 
     @Override
-    public Result run(String query) {
-        return FakeResult.parseStatement(query);
+    public Result run( String query, Record parameters )
+    {
+        return FakeResult.parseStatement( query );
     }
 
     @Override
-    public Result run(Query query) {
-        return FakeResult.parseStatement(query.text());
+    public Result run( String query )
+    {
+        return FakeResult.parseStatement( query );
     }
 
+    @Override
+    public Result run( Query query )
+    {
+        return FakeResult.parseStatement( query.text() );
+    }
 }

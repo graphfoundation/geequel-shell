@@ -13,6 +13,7 @@ buildscript {
 
 allprojects {
     apply plugin: 'java'
+    apply plugin: 'checkstyle'
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
@@ -27,7 +28,7 @@ allprojects {
     }
 
     group = 'org.graphfoundation.ongdb.shell'
-    version = '1.0.7-SNAPSHOT'
+    version = '1.1.0-SNAPSHOT'
 
     repositories {
         mavenCentral()
