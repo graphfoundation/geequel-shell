@@ -105,6 +105,11 @@ public interface ShellRunner
      */
     static boolean isInputInteractive( @Nonnull CliArgs cliArgs )
     {
+        if ( cliArgs.getFile().isPresent() )
+        {
+            // Statements come from the file given with --file, not from the terminal
+            return false;
+        }
         if ( isWindows() )
         {
             // Input will never be a TTY on windows and it isatty seems to be able to block forever on Windows so avoid

@@ -140,5 +140,9 @@ public class CliArgsTest
 
         cliArgs.setFile(null);
         assertFalse(cliArgs.getFile().isPresent());
+
+        // the --file option defaults to the empty string, which means no file
+        cliArgs.setFile("");
+        assertFalse(cliArgs.getFile().isPresent());
     }
 }

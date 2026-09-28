@@ -23,10 +23,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import org.neo4j.shell.cli.CliArgHelper;
 import org.neo4j.shell.cli.CliArgs;
 import org.neo4j.shell.cli.NonInteractiveShellRunner;
 import org.neo4j.shell.log.Logger;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.neo4j.shell.ShellRunner.getShellRunner;
@@ -45,5 +47,17 @@ public class ShellRunnerTest
         ShellRunner runner = getShellRunner( args, mock( CypherShell.class ), mock( Logger.class ), connectionConfig );
         assertTrue( "Should be non-interactive shell runner when forced",
                     runner instanceof NonInteractiveShellRunner );
+    }
+
+    @Test
+    public void inputIsNonInteractiveWithFileArgument()
+    {
+        assertFalse( "--file input should not be interactive", ShellRunner.isInputInteractive( CliArgHelper.parse( "-f", "some-file" ) ) );
+    }
+
+    @Test
+    public void fileIsAbsentWithoutFileArgument()
+    {
+        assertFalse( "no --file given", CliArgHelper.parse( "RETURN 1;" ).getFile().isPresent() );
     }
 }

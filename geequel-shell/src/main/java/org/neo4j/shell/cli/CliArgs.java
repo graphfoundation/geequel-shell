@@ -154,7 +154,7 @@ public class CliArgs
      */
     public void setFile( @Nullable String file )
     {
-        this.file = Optional.ofNullable(file);
+        this.file = Optional.ofNullable( file ).filter( f -> !f.isEmpty() );
     }
 
     @Nonnull
