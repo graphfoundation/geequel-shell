@@ -36,19 +36,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.neo4j.shell.commands;
+package org.neo4j.shell.cli;
 
-import org.neo4j.shell.ConnectionConfig;
-import org.neo4j.shell.CypherShell;
-import org.neo4j.shell.cli.Encryption;
-import org.neo4j.shell.exception.CommandException;
+import javax.annotation.Nonnull;
 
-abstract class CypherShellIntegrationTest
+public enum Encryption
 {
-    CypherShell shell;
+    TRUE,
+    FALSE,
+    DEFAULT;
 
-    void connect( String password ) throws CommandException
+    public static Encryption parse( @Nonnull String format )
     {
-        shell.connect( new ConnectionConfig( "bolt://", "localhost", 7687, "ongdb", password, Encryption.DEFAULT ) );
+        if ( format.equalsIgnoreCase( TRUE.name() ) )
+        {
+            return TRUE;
+        }
+        else if ( format.equalsIgnoreCase( FALSE.name() ) )
+        {
+            return FALSE;
+        }
+        else
+        {
+            return DEFAULT;
+        }
     }
 }

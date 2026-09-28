@@ -245,15 +245,38 @@ public class CliArgHelperTest
     }
 
     @Test
-    public void defaultsEncryptionToTrue()
+    public void defaultsEncryptionToDefault()
     {
-        assertEquals( true, CliArgHelper.parse().getEncryption() );
+        assertEquals( Encryption.DEFAULT, CliArgHelper.parse().getEncryption() );
     }
 
     @Test
     public void allowsEncryptionToBeTurnedOnOrOff()
     {
-        assertEquals( true, CliArgHelper.parse( "--encryption", "true" ).getEncryption() );
-        assertEquals( false, CliArgHelper.parse( "--encryption", "false" ).getEncryption() );
+        assertEquals( Encryption.TRUE, CliArgHelper.parse( "--encryption", "true" ).getEncryption() );
+        assertEquals( Encryption.FALSE, CliArgHelper.parse( "--encryption", "false" ).getEncryption() );
+        assertEquals( Encryption.DEFAULT, CliArgHelper.parse( "--encryption", "default" ).getEncryption() );
+    }
+
+    @Test
+    public void shouldNotAcceptInvalidEncryption()
+    {
+        ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        System.setErr( new PrintStream( bout ) );
+
+        assertNull( CliArgHelper.parse( "--encryption", "bugaluga" ) );
+        // The error is wrapped and padded to the terminal width
+        String error = bout.toString().replaceAll( "\\s+", " " );
+        assertTrue( "expected error: " + error,
+                    error.contains( "argument --encryption: invalid choice: 'bugaluga' (choose from {true,false,default})" ) );
+    }
+
+    @Test
+    public void keepsSecureSchemes()
+    {
+        assertEquals( "bolt+s://", CliArgHelper.parse( "-a", "bolt+s://localhost:7687" ).getScheme() );
+        assertEquals( "bolt+ssc://", CliArgHelper.parse( "-a", "bolt+ssc://localhost:7687" ).getScheme() );
+        assertEquals( "neo4j+s://", CliArgHelper.parse( "-a", "neo4j+s://localhost:7687" ).getScheme() );
+        assertEquals( "neo4j+ssc://", CliArgHelper.parse( "-a", "neo4j+ssc://localhost:7687" ).getScheme() );
     }
 }

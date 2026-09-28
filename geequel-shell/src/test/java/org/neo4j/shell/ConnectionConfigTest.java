@@ -40,18 +40,17 @@ package org.neo4j.shell;
 
 import org.junit.Test;
 
+import org.neo4j.shell.cli.Encryption;
 import org.neo4j.shell.log.Logger;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 public class ConnectionConfigTest
 {
     private Logger logger = mock( Logger.class );
     private ConnectionConfig config = new ConnectionConfig( "bolt://", "localhost", 1, "bob",
-                                                            "pass", false );
+                                                            "pass", Encryption.DEFAULT );
 
     @Test
     public void scheme() throws Exception
@@ -92,7 +91,8 @@ public class ConnectionConfigTest
     @Test
     public void encryption()
     {
-        assertTrue( new ConnectionConfig( "bolt://", "", -1, "", "", true ).encryption() );
-        assertFalse( new ConnectionConfig( "bolt://", "", -1, "", "", false ).encryption() );
+        assertEquals( Encryption.DEFAULT, new ConnectionConfig( "bolt://", "", -1, "", "", Encryption.DEFAULT ).encryption() );
+        assertEquals( Encryption.TRUE, new ConnectionConfig( "bolt://", "", -1, "", "", Encryption.TRUE ).encryption() );
+        assertEquals( Encryption.FALSE, new ConnectionConfig( "bolt://", "", -1, "", "", Encryption.FALSE ).encryption() );
     }
 }

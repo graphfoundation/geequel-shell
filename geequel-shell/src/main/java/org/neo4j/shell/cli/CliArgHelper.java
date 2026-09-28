@@ -130,7 +130,7 @@ public class CliArgHelper
         //Set Output format
         cliArgs.setFormat(Format.parse(ns.get("format"), cliArgs));
 
-        cliArgs.setEncryption( ns.getBoolean( "encryption" ) );
+        cliArgs.setEncryption( Encryption.parse( ns.get( "encryption" ) ) );
 
         cliArgs.setDebugMode( ns.getBoolean( "debug" ) );
 
@@ -191,11 +191,16 @@ public class CliArgHelper
         connGroup.addArgument("-p", "--password")
                 .setDefault("")
                 .help("password to connect with. Can also be specified using environment variable ONGDB_PASSWORD");
-        connGroup.addArgument("--encryption")
-                .help("whether the connection to ONgDB should be encrypted; must be consistent with ONgDB's " +
-                        "configuration")
-                .type(new BooleanArgumentType())
-                .setDefault(true);
+        connGroup.addArgument( "--encryption" )
+                 .help( "whether the connection to ONgDB should be encrypted. This must be consistent with ONgDB's " +
+                        "configuration. If choosing '" + Encryption.DEFAULT.name().toLowerCase() +
+                        "' the encryption setting is deduced from the specified address. " +
+                        "For example the 'neo4j+ssc' protocol would use encryption." )
+                 .choices( new CollectionArgumentChoice<>(
+                         Encryption.TRUE.name().toLowerCase(),
+                         Encryption.FALSE.name().toLowerCase(),
+                         Encryption.DEFAULT.name().toLowerCase() ) )
+                 .setDefault( Encryption.DEFAULT.name().toLowerCase() );
 
         MutuallyExclusiveGroup failGroup = parser.addMutuallyExclusiveGroup();
         failGroup.addArgument("--fail-fast")

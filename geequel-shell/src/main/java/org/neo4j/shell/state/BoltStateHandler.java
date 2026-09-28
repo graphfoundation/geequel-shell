@@ -317,28 +317,18 @@ public class BoltStateHandler implements TransactionHandler, Connector
         Config.ConfigBuilder configBuilder = Config.builder()
                                                    .withLogging( NullLogging.NULL_LOGGING )
                                                    .withUserAgent( USER_AGENT );
-        Config config;
-        if ( connectionConfig.encryption() )
+        switch ( connectionConfig.encryption() )
         {
-            // Certificate trust parity with the driver 1.7 based shell. Driver 1.7 trusted every server
-            // certificate when encryption was on, so the shell connected to ONgDB's auto-generated
-            // self-signed certificate. Driver 4.x trusts only certificates signed by the system CA
-            // store by default and rejects that certificate. Keep the 1.7 behaviour: the connection is
-            // encrypted, but the server certificate is not verified. --encryption false still turns
-            // encryption off. Driver 1.7 did not check the host name either, while the 4.x trust-all
-            // strategy does by default, which rejects the certificate for any address other than
-            // localhost (for example 127.0.0.1 or a cluster member's advertised address).
-            config = configBuilder.withEncryption()
-                                  .withTrustStrategy( Config.TrustStrategy.trustAllCertificates().withoutHostnameVerification() )
-                                  .build();
+        case TRUE:
+            configBuilder = configBuilder.withEncryption();
+            break;
+        case FALSE:
+            configBuilder = configBuilder.withoutEncryption();
+            break;
+        default:
+            // Do nothing
         }
-        else
-        {
-            config = configBuilder.build();
-        }
-
-        String driverUrl = connectionConfig.driverUrl();
-        return driverProvider.apply( driverUrl, authToken, config );
+        return driverProvider.apply( connectionConfig.driverUrl(), authToken, configBuilder.build() );
     }
 
     private List<BoltResult> executeWithRetry( List<Query> transactionStatements, BiFunction<Query, Transaction, BoltResult> biFunction )

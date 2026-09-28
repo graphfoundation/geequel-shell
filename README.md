@@ -50,6 +50,33 @@ docker run --detach -p 7687:7687 -e ONGDB_AUTH=none graphfoundation/ongdb:1.0
 make run
 ```
 
+## Connection encryption
+
+The URI scheme of `-a/--address` decides whether the connection is
+encrypted and how the server certificate is checked:
+
+| Scheme                         | Encryption | Certificate                                       |
+|--------------------------------|------------|---------------------------------------------------|
+| `bolt://`, `neo4j://`          | off        | -                                                 |
+| `bolt+s://`, `neo4j+s://`      | on         | must be signed by a CA the JVM trusts, host name checked |
+| `bolt+ssc://`, `neo4j+ssc://`  | on         | any certificate, including self-signed            |
+
+`--encryption` takes `default` (the default), `true` or `false`.
+With `default` the scheme alone decides, as in the table. `true` and
+`false` only apply to `bolt://` and `neo4j://`: `true` encrypts and
+verifies the certificate against the JVM truststore with host name
+checking, like `+s`. `--encryption true` cannot be combined with a
+`+s` or `+ssc` scheme.
+
+To connect to the self-signed certificate ONgDB generates on first
+start, use `bolt+ssc://` (or `neo4j+ssc://` for a cluster). To trust
+your own CA with `bolt+s://`, add it to a truststore and pass it to the
+JVM, for example
+`JAVA_OPTS="-Djavax.net.ssl.trustStore=/path/to/truststore.jks -Djavax.net.ssl.trustStorePassword=..."`.
+
+`neo4j://` needs a causal cluster (it uses the cluster routing
+procedures); use `bolt://` with a standalone server.
+
 ## How to build packages
 
 Packages require you to have [`pandoc`](https://pandoc.org/) available.

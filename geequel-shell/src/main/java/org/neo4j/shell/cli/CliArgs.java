@@ -56,7 +56,7 @@ public class CliArgs
     private FailBehavior failBehavior = FailBehavior.FAIL_FAST;
     private Format format = Format.AUTO;
     private Optional<String> cypher = Optional.empty();
-    private boolean encryption;
+    private Encryption encryption = Encryption.DEFAULT;
     private boolean debugMode;
     private boolean nonInteractive;
     private boolean version;
@@ -190,7 +190,7 @@ public class CliArgs
         this.format = format;
     }
 
-    public boolean getEncryption()
+    public Encryption getEncryption()
     {
         return encryption;
     }
@@ -198,7 +198,7 @@ public class CliArgs
     /**
      * Set whether the connection should be encrypted
      */
-    public void setEncryption( boolean encryption )
+    public void setEncryption( Encryption encryption )
     {
         this.encryption = encryption;
     }

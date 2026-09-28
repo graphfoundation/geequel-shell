@@ -51,19 +51,23 @@ import java.util.List;
 import java.util.Optional;
 
 import org.neo4j.driver.AuthToken;
+import org.neo4j.driver.AuthTokens;
 import org.neo4j.driver.Config;
 import org.neo4j.driver.Driver;
+import org.neo4j.driver.GraphDatabase;
 import org.neo4j.driver.Query;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.Result;
 import org.neo4j.driver.Session;
 import org.neo4j.driver.Transaction;
 import org.neo4j.driver.Value;
+import org.neo4j.driver.exceptions.ClientException;
 import org.neo4j.driver.exceptions.SessionExpiredException;
 import org.neo4j.driver.summary.ResultSummary;
 import org.neo4j.driver.summary.ServerInfo;
 import org.neo4j.shell.ConnectionConfig;
 import org.neo4j.shell.TriFunction;
+import org.neo4j.shell.cli.Encryption;
 import org.neo4j.shell.exception.CommandException;
 import org.neo4j.shell.log.Logger;
 import org.neo4j.shell.test.bolt.FakeDriver;
@@ -129,7 +133,7 @@ public class BoltStateHandlerTest
             }
         };
         BoltStateHandler handler = new BoltStateHandler( provider );
-        ConnectionConfig config = new ConnectionConfig( "bolt://", "", -1, "", "", false );
+        ConnectionConfig config = new ConnectionConfig( "bolt://", "", -1, "", "", Encryption.DEFAULT );
         handler.connect( config );
 
         assertEquals( "", handler.getServerVersion() );
@@ -141,7 +145,7 @@ public class BoltStateHandlerTest
         Driver driverMock = stubVersionInAnOpenSession(mock(Result.class), mock(Session.class), "ONgDB/1.0.0-alpha01");
 
         BoltStateHandler handler = new BoltStateHandler( ( s, authToken, config ) -> driverMock );
-        ConnectionConfig config = new ConnectionConfig( "bolt://", "", -1, "", "", false );
+        ConnectionConfig config = new ConnectionConfig( "bolt://", "", -1, "", "", Encryption.DEFAULT );
         handler.connect( config );
 
         assertEquals("1.0.0-alpha01", handler.getServerVersion());
@@ -443,7 +447,7 @@ public class BoltStateHandlerTest
     {
         RecordingDriverProvider provider = new RecordingDriverProvider();
         BoltStateHandler handler = new BoltStateHandler( provider );
-        ConnectionConfig config = new ConnectionConfig( "bolt://", "", -1, "", "", false );
+        ConnectionConfig config = new ConnectionConfig( "bolt://", "", -1, "", "", Encryption.FALSE );
         handler.connect( config );
         assertFalse( provider.config.encrypted() );
     }
@@ -453,22 +457,76 @@ public class BoltStateHandlerTest
     {
         RecordingDriverProvider provider = new RecordingDriverProvider();
         BoltStateHandler handler = new BoltStateHandler( provider );
-        ConnectionConfig config = new ConnectionConfig( "bolt://", "", -1, "", "", true );
+        ConnectionConfig config = new ConnectionConfig( "bolt://", "", -1, "", "", Encryption.TRUE );
         handler.connect( config );
         assertTrue( provider.config.encrypted() );
     }
 
     @Test
-    public void trustAllCertificatesWhenEncrypted() throws CommandException
+    public void encryptionTrueUsesTheDriverDefaultTrust() throws CommandException
     {
-        // Same trust as the driver 1.7 based shell, so self-signed ONgDB certificates are accepted
+        // As upstream: no trust strategy is set, so the driver verifies the certificate against the
+        // system CAs (the JVM truststore) and checks the host name
         RecordingDriverProvider provider = new RecordingDriverProvider();
         BoltStateHandler handler = new BoltStateHandler( provider );
-        ConnectionConfig config = new ConnectionConfig( "bolt://", "", -1, "", "", true );
+        ConnectionConfig config = new ConnectionConfig( "bolt://", "", -1, "", "", Encryption.TRUE );
         handler.connect( config );
         assertTrue( provider.config.encrypted() );
-        assertEquals( Config.TrustStrategy.Strategy.TRUST_ALL_CERTIFICATES, provider.config.trustStrategy().strategy() );
-        assertFalse( provider.config.trustStrategy().isHostnameVerificationEnabled() );
+        assertEquals( Config.TrustStrategy.Strategy.TRUST_SYSTEM_CA_SIGNED_CERTIFICATES, provider.config.trustStrategy().strategy() );
+        assertTrue( provider.config.trustStrategy().isHostnameVerificationEnabled() );
+    }
+
+    @Test
+    public void defaultEncryptionLeavesTheSecuritySettingsToTheScheme() throws CommandException
+    {
+        for ( String scheme : new String[]{"bolt://", "neo4j://", "bolt+s://", "bolt+ssc://", "neo4j+s://", "neo4j+ssc://"} )
+        {
+            RecordingDriverProvider provider = new RecordingDriverProvider();
+            BoltStateHandler handler = new BoltStateHandler( provider );
+            ConnectionConfig config = new ConnectionConfig( scheme, "localhost", 7687, "", "", Encryption.DEFAULT );
+            handler.connect( config );
+            assertEquals( scheme + "localhost:7687", provider.uri );
+            assertEquals( Config.defaultConfig().encrypted(), provider.config.encrypted() );
+            assertEquals( Config.defaultConfig().trustStrategy().strategy(), provider.config.trustStrategy().strategy() );
+            assertEquals( Config.defaultConfig().trustStrategy().isHostnameVerificationEnabled(),
+                          provider.config.trustStrategy().isHostnameVerificationEnabled() );
+        }
+    }
+
+    @Test
+    public void secureSchemesWorkWithTheRealDriverOnlyWithoutManualEncryption()
+    {
+        // The driver builds its security plan when it is created, before it connects, so no server is needed
+        for ( String scheme : new String[]{"bolt+s://", "bolt+ssc://", "neo4j+s://", "neo4j+ssc://"} )
+        {
+            String uri = scheme + "localhost:7687";
+            GraphDatabase.driver( uri, AuthTokens.none(), configFor( Encryption.DEFAULT ) ).close();
+            GraphDatabase.driver( uri, AuthTokens.none(), configFor( Encryption.FALSE ) ).close();
+            try
+            {
+                GraphDatabase.driver( uri, AuthTokens.none(), configFor( Encryption.TRUE ) ).close();
+                fail( "Expected " + uri + " to be rejected with --encryption true" );
+            }
+            catch ( ClientException e )
+            {
+                assertEquals( "Scheme " + scheme.substring( 0, scheme.indexOf( ':' ) ) +
+                              " is not configurable with manual encryption and trust settings", e.getMessage() );
+            }
+        }
+    }
+
+    private static Config configFor( Encryption encryption )
+    {
+        RecordingDriverProvider provider = new RecordingDriverProvider();
+        try
+        {
+            new BoltStateHandler( provider ).connect( new ConnectionConfig( "bolt://", "localhost", 7687, "", "", encryption ) );
+        }
+        catch ( CommandException e )
+        {
+            throw new AssertionError( e );
+        }
+        return provider.config;
     }
 
     private Driver stubVersionInAnOpenSession( Result versionMock, Session sessionMock, String value )
@@ -502,18 +560,20 @@ public class BoltStateHandlerTest
 
         public void connect() throws CommandException
         {
-            connect( new ConnectionConfig( "bolt://", "", 1, "", "", false ) );
+            connect( new ConnectionConfig( "bolt://", "", 1, "", "", Encryption.DEFAULT ) );
         }
     }
 
-    private class RecordingDriverProvider implements TriFunction<String, AuthToken, Config, Driver>
+    private static class RecordingDriverProvider implements TriFunction<String, AuthToken, Config, Driver>
     {
         public Config config;
+        public String uri;
 
         @Override
         public Driver apply( String uri, AuthToken authToken, Config config )
         {
             this.config = config;
+            this.uri = uri;
             return new FakeDriver();
         }
     }
